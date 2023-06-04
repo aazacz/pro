@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt')
-
+const wishlistdb=require('../model/wishlistdb')
 const Otp = require('../model/otpdb')
 const otpGenerator = require('otp-generator')
 const nodemailer = require('nodemailer')
@@ -292,8 +292,11 @@ exports.category = async (req, res) => {
 
         // console.log(product);
         const title = req.flash("title");
+        
         let user= await customerdetail.findOne({_id:req.session.userid}).populate('address').populate('cartId')
+
         const miniCart= await cartdb.findOne({userId:req.session.userid}).populate('product.product_id').exec()
+
         res.render("category", {title: title[0] || "", product: product, session: session,user:user,miniCart:miniCart })
     } catch (error) {
         console.log(error.message)
@@ -365,6 +368,8 @@ exports.signup_post = async (req, res) => {
                     await newCustomer.validate(); // Validate the newCustomer document
                     const insertdata = await newCustomer.save();
                    
+
+                    //creating a new address DATABASE for the user   &&    Inserting the addressDB id in to the customer DB
                     const newaddress = new addressdb({
                         name:insertdata.name,
                         houseno:" ",
@@ -376,29 +381,24 @@ exports.signup_post = async (req, res) => {
                         customerid:new ObjectId(insertdata._id)
                     })
 
-                    //creating a new address DATABASE for the user
                     const insertedAddress = await newaddress.save();  
-                   
-                    //inserting the addressDB id in to the customer DB
                     await customerdetail.findByIdAndUpdate(insertdata._id,{address:[new ObjectId(insertedAddress._id)]})
 
 
-                    //creating a new cart DATABASE for the user
+                    //creating a new cart DATABASE for the user   &&   inserting the cartDB_id in to the customer DB
                     const addtocart = new cartdb({ userId: insertdata._id,product:[]});
                     const cart=await addtocart.save()
-                    
-                    //inserting the cartDB_id in to the customer DB
                     await customerdetail.findByIdAndUpdate(insertdata._id,{cartId:[new ObjectId(cart._id)]})
+                    
+                    //creating a new wishlist Db for the user && inserting the cartDB_id in to the customer DB
+                    const newWishListDb=new wishlistdb({ userId: insertdata._id,product:[] })
+                    const newWishlist=await newWishListDb.save()
+                    await customerdetail.findByIdAndUpdate(insertdata._id,{wishlistId:[new ObjectId(newWishlist._id)]})
 
-
-
-
-                    console.log(insertedAddress);
-                    // console.log(newcart);
 
                     if (insertdata) {
                         req.flash("title", "Successfully registered");
-                        res.redirect('/signup')
+                        res.redirect('/login')
                     } else {
                         req.flash("title", "Registration Error");
                         res.redirect('/signup')

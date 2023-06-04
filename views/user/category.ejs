@@ -96,12 +96,12 @@
                                         <div class="product product-7 text-center">
                                             <figure class="product-media">
                                                 <span class="product-label label-new">New</span>
-                                                <a href="/product?productid=<%=product._id%>" >
+                                                <a href="/product?productid=<%=product._id%>">
                                                     <img src="/upload/<%=product.image[0]%>" alt="Product image" class="product-image" > 
                                                 </a>
 
                                                 <div class="product-action-vertical">
-                                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"> <span>add to wishlist </span> </a>
+                 <!-- add to wishlist -->    <button type="radio" style="border: none;" data-id="<%=product._id%>" class="addtowishlist btn-product-icon btn-wishlist btn-expandable"> <span>add to wishlist </span> </button>
                                                   
                                            
                                                 </div> <!-- End .product-action-vertical -->
@@ -111,6 +111,7 @@
 					<!-- add to cart -->			<button type="button" class="addtocart btn-product btn-cart" data-id="<%=product._id%>" > Add to cart </button>
                                               
                                                 </div><!-- End .product-action -->
+
                                             </figure><!-- End .product-media -->
 
                                             <div class="product-body">
@@ -431,8 +432,8 @@
     };
 
     $.ajax({
-      url: `/Category`,
-      method: "post",
+      url: `/addtocart`,
+      method: "put",
       data: data,
       success: function(response) {
 		
@@ -464,6 +465,60 @@
     });
   
 })
+
+
+$('.addtowishlist').on('click',function(){
+				var idFrombutton = $(this).data('id');
+				console.log(idFrombutton)
+							
+ 				const session = '<%=session %>';
+ 				
+				console.log("session Printing : "+session);
+				console.log("product id is : " +idFrombutton);
+    			
+  
+    const data = {
+      _id: idFrombutton,
+      userid: session
+    };
+
+    $.ajax({
+      url: `/addtowishlist`,
+      method: "PUT",
+      data: data,
+      success: function(response) {
+		
+		  toastr.options = {
+          "closeButton": false,
+          "debug": false,
+          "newestOnTop": false,
+          "progressBar": false,
+          "positionClass": "toast-top-right",
+          "preventDuplicates": false,
+          "showDuration": "200",
+          "hideDuration": "500",
+          "timeOut": "1000",
+          "extendedTimeOut": "1000",
+          "showEasing": "swing",
+          "hideEasing": "linear",
+          "showMethod": "fadeIn",
+          "hideMethod": "fadeOut"
+        };
+
+        if (response.message == "Added To Wishlist") {
+			toastr["success"]("Product Added to the cart", "Added");
+           } else {
+			toastr["info"]("Product Already Added to your cart", "Don't worry");
+        }
+      }
+    });
+  
+})
+
+
+
+
+
 });
 
 			</script>

@@ -2,6 +2,7 @@ const express = require('express');
 const user_route = express();
 const userController = require('../Controllers/usercontrol');
 const cartController = require('../Controllers/cartcontrol');
+const wishlistController = require('../Controllers/wishlistcontrol');
 const session = require('express-session');
 const nocache = require('nocache');
 const flash = require('connect-flash');
@@ -58,9 +59,10 @@ user_route.put('/cart',cartController.increaseQuantity)
 user_route.put('/cartd',cartController.decreaseQuantity)
 user_route.put('/cartdel',cartController.cartdel)
 
-
+//      <-----------CATEGORY PAGE----------->
 user_route.get('/category',userController.category)
-user_route.post('/Category',cartController.addtocart) //add to cart
+user_route.put('/addtocart',cartController.addtocart) //add to cart
+user_route.put('/addtowishlist',wishlistController.addtowishlist) //add to wishlist
 
 
 

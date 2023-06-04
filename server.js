@@ -6,7 +6,7 @@ mongoose.connect("mongodb://0.0.0.0:27017/kenvilldb")
         .then(() =>console.log("Database Connected"))
         .catch(() => console.log("Database Disconnected"))
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 4000
 
 
 

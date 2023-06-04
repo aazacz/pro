@@ -17,10 +17,6 @@ exports.cart = async (req, res) => {
 
   const cart = await cartdb.find({userId:req.session.userid}).populate('product.product_id');
  
-       
-  // console.log(cart[0].product.length)
-  // console.log(cart[0].product[0])
-  
   const miniCart= await cartdb.findOne({userId:req.session.userid}).populate('product.product_id').exec()
 
   res.render('cart', { session: session, cart: cart, user: user,miniCart:miniCart })
