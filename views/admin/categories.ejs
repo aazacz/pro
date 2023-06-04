@@ -1,0 +1,219 @@
+<%-include('../partials/adminheader')-%>
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Categories </h2>
+                <p>Add, edit or delete a category</p>
+            </div>
+            <div>
+                <input type="text" placeholder="Search Categories" class="form-control bg-white">
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <!--   <form action="/admin/addcategory" method="post"> -->
+                        <div class="mb-4">
+                            <label for="product_name" class="form-label">Name</label>
+                            <input type="text" name="name" placeholder="Type here" class="form-control name"
+                                id="product_name" />
+                        </div>
+
+
+                        <div class="mb-4">
+                            <label class="form-label">Description</label>
+                            <textarea placeholder="Type here" id="dis" name="description"
+                                class="form-control description"></textarea>
+                        </div>
+                        <div class="d-grid">
+                            <button id="addcategory" type="submit" class="btn btn-primary">Create category</button>
+                        </div>
+                        <!--  </form> -->
+                    </div>
+                    <div class="col-md-9">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+
+                                    <tr>
+                                        <!-- <th class="text-center">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" />
+                                                </div>
+                                            </th> -->
+                                        <!-- <th>Number</th> -->
+                                        <th class="col-lg-4 col-sm-2 col-4 col-status">Name</th>
+                                        <th class="col-lg-4 col-sm-2 col-4 col-status">Description</th>
+                                        <th class="col-lg-2 col-sm-2 col-4 col-status">Status</th>
+                                        <th class="col-lg-2 col-sm-2 col-4 col-status">Action</th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%categorydata.forEach(function(category) { %>
+
+
+
+                                        <tr>
+                                            <!-- <td class="text-center">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" />
+                                                </div>
+                                            </td> -->
+                                            <!--      <td>1</td> -->
+                                            <td class="col-lg-4 col-sm-2 col-4 col-status"><b>
+                                                    <%=category.name%>
+                                                </b>
+                                            </td>
+
+                                            <td class="col-lg-4 col-sm-2 col-4 col-status">
+                                                <%=category.description%>
+                                            </td>
+                                            <td>
+                                                <div class="col-lg-2 col-sm-2 col-4 col-status">
+                                                    <button id="statusButton"
+                                                        class="badge rounded-pill <% if (category.block === 'List') { %>alert-success<% } else { %>alert-danger<% } %>"
+                                                        data-id="<%=category._id%>" data-status="<%=category.block%>"
+                                                        onclick="toggleStatus(this)">
+                                                        <% if (category.block==='List' ) { %>
+                                                            List
+                                                            <% } else { %>
+                                                                Unlist
+                                                                <% } %>
+                                                    </button>
+
+
+                                                </div>
+                                            </td>
+
+                                            <td class="text-end">
+                                                <div class="col-lg-1 col-sm-2 col-4 col-status">
+                                                    <form action="/admin/deletecategory" method="post">
+                                                        <button value="<%-category._id%>" name="id"
+                                                            class="btn btn-sm font-sm btn-light rounded"
+                                                            type="submit"><i
+                                                                class="material-icons md-delete_forever"></i> </button>
+
+                                                    </form>
+
+                                                </div> <!-- dropdown //end -->
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- .col// -->
+                </div> <!-- .row // -->
+            </div> <!-- card body .// -->
+        </div> <!-- card .// -->
+    </section> <!-- content-main end// -->
+
+
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+
+    <script>
+        const button = document.getElementById('statusButton');
+        button.addEventListener('click', toggleStatus);
+
+        function toggleStatus(button) {
+            const documentId = button.getAttribute('data-id');
+            console.log(documentId);
+
+            const currentStatus = button.getAttribute('data-status');
+            console.log(currentStatus);
+
+            // Toggle the status
+            const newStatus = currentStatus === 'List' ? 'Unlist' : 'List';
+            $.ajax({
+                url: `/admin/categories/${documentId}/status`,  
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({ status: newStatus }),
+                success: function () {
+                    // Update the button text and data-status attribute
+                    $(button).text(newStatus);
+                    $(button).attr('data-status', newStatus);
+                    if (newStatus === 'List') {
+                        $(button).removeClass('badge rounded-pill alert-danger').addClass('badge rounded-pill alert-success');
+                    } else {
+                        $(button).removeClass('badge rounded-pill alert-success-success').addClass('badge rounded-pill alert-danger');
+                    }
+ 
+                },
+                error: function (error) {
+                    console.log(error); // Handle error
+                }
+            });
+
+        }
+
+
+        $("#addcategory").on("click", function () {
+            console.log("button clicked");
+            var name = $("#product_name").val().trim()
+            console.log(name);
+
+            const description = $("#dis").val().trim()
+                const data = {
+                    "name": name,
+                    "description": description
+                }
+            $.ajax({
+                url: "/admin/addcategory",
+                method: "post",
+                data: data,
+                success: function (response) {
+                    if (response.messsage == "category already added") {
+                        Swal.fire({
+
+                            title: "Info",
+                            text: response.messsage,
+                            icon: "info",
+                            confirmButtonText: "OK"
+                        })
+                    }
+                    else {
+                        Swal.fire({
+
+                            title: "success",
+                            text: response.messsage,
+                            icon: "success",
+                            confirmButtonText: "OK"
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload()
+                         }
+                         })
+                        
+                        
+                        
+                        }
+
+                        }
+                })
+
+
+
+
+        })
+
+
+
+
+
+    </script>
+
+    <%-include('../partials/adminfooter')-%>

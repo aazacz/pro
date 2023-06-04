@@ -1,0 +1,127 @@
+<%-include("../partials/adminheader")-%>
+    <section class="content-main">
+
+        <form action="/admin/updateproduct" method="post" enctype="multipart/form-data">
+
+            <div class="row">
+                <div class="col-9">
+                    <div class="content-header">
+                        <h2 class="content-title">Update Product</h2>
+                        <div>
+                                <button class="btn btn-md rounded font-sm hover-up" type="submit">Publish</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Update</h4>
+                        </div>
+                        <div class="card-body">
+                            
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Product Name</label>
+                                    <input type="text" value="<%=product.name%>" name="name"  class="form-control"
+                                        id="product_name">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Brand</label>
+                                    <input type="text" name="brand" value="<%=product.brand%>" placeholder="<%=product.brand%>" class="form-control"
+                                        id="product_name">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Product Description</label>
+                                    <input type="text" value="<%=product.description%>"  name="description" placeholder="<%=product.description%>" class="form-control"
+                                        id="product_name">
+
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Regular price</label>
+                                            <div class="row gx-2">
+                                                <input placeholder="<%=product.price%>" value="<%=product.price%>" name="price" type="text" class="form-control">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+
+                                            <label class="form-label">Quantity</label>
+                                            <input type="text" value="<%=product.quantity%>" name="quantity" placeholder="<%=product.quantity%>"
+                                                class="form-control" id="product_name">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+
+                                            <label class="form-label">Tax rate</label>
+                                            <input type="text" value="<%=product.tax%>" name="tax" placeholder="<%=product.tax%>" class="form-control"
+                                                id="product_name">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+
+                                            <label class="form-label">size</label>
+                                            <input type="text" value="<%=product.size%>" name="size" placeholder="<%=product.size%>" class="form-control"
+                                                id="product_name">
+                                        </div>
+                                    </div>
+                                    
+
+
+                                </div>
+                            
+
+
+                        </div>
+                    </div> 
+
+                </div>
+                <div class="col-lg-3">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Media</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="input-upload">
+                                <img src="upload/<%=product.image[0]%>" alt="">
+                                <input class="form-control" value="<%=product.image[0]%>" name="image" type="file" multiple>
+                            </div>
+                        </div>
+                    </div> <!-- card end// -->
+
+
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Category</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row gx-2">
+                                <div class="col-sm-6 mb-3">
+                                    <label class="form-label">Category</label>
+                                    <select class="form-select" name="category_id">
+                                       
+                                        <% category.forEach(function(category) { 
+                                            %><option 
+                                            value="<%=category._id%>">  <%=category.name%> 
+                                                            
+                                            </option> <%   }) %>
+                                      </select>
+
+
+                                </div>
+                                    
+                            </div> <!-- row// -->
+                        </div>
+                    </div> <!-- card end// -->
+                    
+                    <input type="hidden" value="<%=product._id%>" name="id">
+                     </div>
+            </div>
+        </form>
+    </section> <!-- content-main end// -->
+    <%-include("../partials/adminfooter")-%>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Address Form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>New Address Form</h1>
+        <form id="addressForm">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" name="name" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="houseno">House No:</label>
+                <input type="text" class="form-control" name="houseno" id="houseno" required>
+            </div>
+            <div class="form-group">
+                <label for="street">Street:</label>
+                <input type="text" class="form-control" name="street" id="street" required>
+            </div>
+            <div class="form-group">
+                <label for="state">State:</label>
+                <input type="text" class="form-control" name="state" id="state" required>
+            </div>
+            <div class="form-group">
+                <label for="pincode">Pincode:</label>
+                <input type="text" class="form-control" name="pincode" id="pincode" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone:</label>
+                <input type="text" class="form-control" name="phone" id="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="alternatenumber">Alternate Number:</label>
+                <input type="text" class="form-control" name="alternatenumber" id="alternatenumber">
+            </div>
+            <div class="form-group">
+                <label for="customerid">Customer ID:</label>
+                <input type="text" class="form-control" name="customerid" id="customerid">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#addressForm').submit(function(event) {
+                event.preventDefault(); // Prevent the default form submission
+                
+                // Get form values
+                var formData = {
+                    name: $('#name').val(),
+                    houseno: $('#houseno').val(),
+                    street: $('#street').val(),
+                    state: $('#state').val(),
+                    pincode: parseInt($('#pincode').val()),
+                    phone: parseInt($('#phone').val()),
+                    alternatenumber: parseInt($('#alternatenumber').val()),
+                    customerid: $('#customerid').val()
+                };
+                
+                // Send form data to the server using AJAX
+                $.ajax({
+                    type: 'POST',
+                    url: '/address', // Replace with your server-side endpoint URL
+                    data: formData,
+                    success: function(response) {
+                        // Handle the success response here
+                        console.log('Address inserted successfully');
+                        console.log(response);
+                    },
+                    error: function(error) {
+                        // Handle the error response here
+                        console.log('Error inserting address');
+                        console.log(error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

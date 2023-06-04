@@ -1,0 +1,37 @@
+<%-include("../partials/adminheader")-%>
+    <section class="content-main">
+
+        <form action="/admin/updatecustomer" method="post">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="content-header">
+                        <h2 class="content-title">Update Customer</h2>
+                        
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Update</h4>
+                        </div>
+                        <div class="card-body">
+                        
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Customer Name</label>
+                                    <input type="text" value="<%=customer.name%>" name="name"  class="form-control"
+                                        id="product_name">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Email</label>
+                                    <input type="text" name="email" value="<%=customer.email%>"class="form-control" id="product_name">
+                                    <input type="hidden" name="id" value="<%=customer._id%>"class="form-control" id="product_name">
+                                </div>
+                                <div class="mb-4">
+                                    <button class="btn btn-md rounded font-sm hover-up" type="submit">Update</button>
+                            </div>
+                                
+            </div>
+        </form>
+    </section> <!-- content-main end// -->
+    <%-include("../partials/adminfooter")-%>

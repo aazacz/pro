@@ -1,0 +1,293 @@
+<%-include('../Partials/userheader')-%>
+
+	<main class="main">
+		<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+			<div class="container">
+				<h1 class="page-title">Checkout<span>Shop</span></h1>
+			</div><!-- End .container -->
+		</div><!-- End .page-header -->
+		<nav aria-label="breadcrumb" class="breadcrumb-nav">
+			<div class="container">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+					<li class="breadcrumb-item"><a href="#">Shop</a></li>
+					<li class="breadcrumb-item active" aria-current="page">Checkout</li>
+				</ol>
+			</div><!-- End .container -->
+		</nav><!-- End .breadcrumb-nav -->
+
+		<div class="page-content">
+			<div class="checkout">
+				<div class="container">
+					<div class="checkout-discount">
+						<form action="#">
+							<input type="text" class="form-control" required id="checkout-discount-input">
+							<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here
+									to enter your code</span></label>
+						</form>
+					</div><!-- End .checkout-discount -->
+					<form action="#">
+						<div class="row">
+
+							<div class="col-lg-9">
+
+
+
+
+								<a id="tab-newaddress-link" data-toggle="tab" href="#tab-newaddress" role="tab"
+									aria-controls="tab-address" aria-selected="false">Add New Adresses</a>
+
+
+
+
+								<p>The following addresses will be used on the checkout page by default.</p>
+
+								<div class="row">
+
+									<% for (var i=0; i <user[0].address.length; i++ ) { %>
+										<div class="col-lg-4">
+											<div class="card card-dashboard">
+												<div class="card-body">
+													<h3 class="card-title">Billing Address (<%=i+1%>)</h3>
+													<!-- End .card-title -->
+
+													<p>
+														<%=user[0].address[i].name%><br>
+															<%=user[0].address[i].houseno%><br>
+																<%=user[0].address[i].state%><br>
+																	<%=user[0].address[i].street%><br>
+																		<%=user[0].address[i].pincode%><br>
+																			<%=user[0].address[i].phone%>
+																				<%=user[0].address[i].alternatenumber%>
+																					<%=user[0].address[i].email%><br>
+
+																						<a href="#">Edit <i
+																								class="icon-edit"></i></a>
+													</p>
+													<div class="form-check">
+														<input class="form-check-input" value="<%=user[0].address[i]._id%>" type="radio" name="flexRadioDefault" id="flexRadioDefault1" >
+																											  </div>
+												</div><!-- End .card-body -->
+											</div><!-- End .card-dashboard -->
+										</div><!-- End .col-lg-6 -->
+										<% } %>
+								</div>
+
+							</div>
+							
+						<aside class="col-lg-3">
+							<div class="summary">
+								<h3 class="summary-title">Your Order</h3>
+								<!-- End .summary-title -->
+
+								<table class="table table-summary" style="width: 100%;">
+									<thead>
+										<tr>
+											<th style="width: 40%;" colspan="2">Product</th>
+											<th style="width: 20%;"></th>
+											<th style="width: 40%;">Total</th>
+										</tr>
+									</thead>
+									<tbody>
+									
+										<% for (var i = 0; i < cart[0].product.length; i++) { %>
+										<tr>
+											<td colspan="2"><a href="#"><%=cart[0].product[i].name%></a></td>
+											<td style="text-align: center;"><a href="#">x &nbsp;<%= cart[0].product[i].purchased %></a></td>
+											<td>$<%= cart[0].product[i].purchased * cart[0].product[i].price %></td>
+										</tr>
+										<% } %>
+
+										<% let grandPrice = 0%>
+												  <% for (var i = 0; i < cart[0].product.length; i++) { %>
+												  
+												  <% grandPrice = grandPrice + (cart[0].product[i].purchased)*
+												  (cart[0].product[i].price)%>
+													  
+													<% } %>
+										<tr class="summary-subtotal">
+											<td colspan="2">Subtotal:</td>
+											<td></td>
+											<td id="grandPrice" >&#8377;<%=grandPrice%></td>
+										</tr>
+										<tr>
+											<td colspan="2">Shipping:</td>
+											<td></td>
+											<td>Free shipping</td>
+										</tr>
+										<tr class="summary-total">
+											<td colspan="3">Total:</td>
+											<td><h4>&#8377;<%=grandPrice%>.00</h4> </td>
+										</tr>
+									</tbody>
+								</table>
+								
+								<div class="accordion-summary" id="accordion-payment">
+									<div class="card">
+										<div class="card-header" id="heading-1">
+											<h2 class="card-title">
+												<a role="button" data-toggle="collapse" href="#collapse-1"
+													aria-expanded="true" aria-controls="collapse-1">
+													Direct bank transfer
+												</a>
+											</h2>
+										</div><!-- End .card-header -->
+										<div id="collapse-1" class="collapse show" aria-labelledby="heading-1"
+											data-parent="#accordion-payment">
+											<div class="card-body">
+												Make your payment directly into our bank
+												account. Please use your Order ID as the payment
+												reference. Your order will not be shipped until
+												the funds have cleared in our account.
+											</div><!-- End .card-body -->
+										</div><!-- End .collapse -->
+									</div><!-- End .card -->
+
+									<div class="card">
+										<div class="card-header" id="heading-2">
+											<h2 class="card-title">
+												<a class="collapsed" role="button" data-toggle="collapse"
+													href="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
+													Check payments
+												</a>
+											</h2>
+										</div><!-- End .card-header -->
+										<div id="collapse-2" class="collapse" aria-labelledby="heading-2"
+											data-parent="#accordion-payment">
+											<div class="card-body">
+												Ipsum dolor sit amet, consectetuer adipiscing
+												elit. Donec odio. Quisque volutpat mattis eros.
+												Nullam malesuada erat ut turpis.
+											</div><!-- End .card-body -->
+										</div><!-- End .collapse -->
+									</div><!-- End .card -->
+
+									<div class="card">
+										<div class="card-header" id="heading-3">
+											<h2 class="card-title">
+												<a class="collapsed" role="button" data-toggle="collapse"
+													href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+													Cash on delivery
+												</a>
+											</h2>
+										</div><!-- End .card-header -->
+										<div id="collapse-3" class="collapse" aria-labelledby="heading-3"
+											data-parent="#accordion-payment">
+											<div class="card-body">Quisque volutpat mattis eros.
+												Lorem ipsum dolor sit amet, consectetuer
+												adipiscing elit. Donec odio. Quisque volutpat
+												mattis eros.
+											</div><!-- End .card-body -->
+										</div><!-- End .collapse -->
+									</div><!-- End .card -->
+
+									<div class="card">
+										<div class="card-header" id="heading-4">
+											<h2 class="card-title">
+												<a class="collapsed" role="button" data-toggle="collapse"
+													href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
+													PayPal <small class="float-right paypal-link">What is
+														PayPal?</small>
+												</a>
+											</h2>
+										</div><!-- End .card-header -->
+										<div id="collapse-4" class="collapse" aria-labelledby="heading-4"
+											data-parent="#accordion-payment">
+											<div class="card-body">
+												Nullam malesuada erat ut turpis. Suspendisse
+												urna nibh, viverra non, semper suscipit, posuere
+												a, pede. Donec nec justo eget felis facilisis
+												fermentum.
+											</div><!-- End .card-body -->
+										</div><!-- End .collapse -->
+									</div><!-- End .card -->
+
+									<div class="card">
+										<div class="card-header" id="heading-5">
+											<h2 class="card-title">
+												<a class="collapsed" role="button" data-toggle="collapse"
+													href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
+													Credit Card (Stripe)
+													<img src="assets/images/payments-summary.png" alt="payments cards">
+												</a>
+											</h2>
+										</div><!-- End .card-header -->
+										<div id="collapse-5" class="collapse" aria-labelledby="heading-5"
+											data-parent="#accordion-payment">
+											<div class="card-body"> Donec nec justo eget felis
+												facilisis fermentum.Lorem ipsum dolor sit amet,
+												consectetuer adipiscing elit. Donec odio.
+												Quisque volutpat mattis eros. Lorem ipsum dolor
+												sit ame.
+											</div><!-- End .card-body -->
+										</div><!-- End .collapse -->
+									</div><!-- End .card -->
+								</div><!-- End .accordion -->
+
+								<button id="placeOrder" data-id="<%= cart[0]._id%>" type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+									<span class="btn-text">Place Order</span>
+									<span class="btn-hover-text">Proceed to Checkout</span>
+								</button>
+							</div><!-- End .summary -->
+				</div><!-- End .summary -->
+				</aside><!-- End .col-lg-3 -->
+						</div>
+
+
+
+				<!-- End .row -->
+				</form>
+			</div><!-- End .container -->
+		</div><!-- End .checkout -->
+		</div><!-- End .page-content -->
+	</main><!-- End .main -->
+	<script src="https://code.jquery.com/jquery-3.7.0.min.js"
+	integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+
+
+	<script src="
+	https://cdn.jsdelivr.net/npm/sweetalert2@11.7.9/dist/sweetalert2.all.min.js
+	"></script>
+
+<script>
+
+$('#placeOrder').on("click", function(){
+
+    let cartId = $('#placeOrder').attr('data-id');
+    console.log(cartId);
+
+    let address = $('.form-check-input:checked').val();
+    console.log(address);
+
+	let grandPrice = $('#grandPrice').text();
+    console.log(grandPrice);
+
+	let paymentmethod = $('.accordion-summary .card-header .card-title a[aria-expanded="true"]').text().trim()
+	console.log(paymentmethod);
+
+	const data={
+	cartId:cartId,
+	address:address,
+	grandPrice:grandPrice,
+	paymentmethod:paymentmethod
+	}
+
+$.ajax({
+	url:`/checkout`,
+	type:'POST',
+	data:data,
+	success:function(response){
+		if(response.message=="ordered successfully"){
+			window.location.href='/success'
+		}
+
+}})
+})
+
+
+
+</script>
+
+
+
+	<%-include('../Partials/userfooter')-%>

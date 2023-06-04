@@ -1,0 +1,40 @@
+<%-include('../Partials/userheader')-%>
+
+
+ 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+
+  <div class="container">
+    <h1 class="mt-5">Payment Confirmation</h1>
+
+    <div class="alert alert-success mt-4">
+      Thank you for your payment! Your transaction has been successfully processed.
+    </div>
+
+    <h2 class="mt-4">Order Details</h2>
+    <p><strong>Order ID:</strong> <%=user[0]._id%></p>
+    <p><strong>Payment Method:</strong>Cash On Delivery</p>
+    <!-- <p><strong>Amount Paid:</strong>$100.00</p> -->
+
+    <h2 class="mt-4">Shipping Information</h2>
+    <p><strong>Shipping Address:</strong></p>
+    <p><%=user[0].address[0].name%></p>
+    <p><%=user[0].address[0].street%>,<%=user[0].address[0].state%> </p>
+    <p><%=user[0].address[0].State%>, <%=user[0].address[0].pincode%></p>
+
+    <!-- <h2 class="mt-4">Contact Information</h2>
+    <p><strong>Email:</strong> johndoe@example.com</p>
+    <p><strong>Phone:</strong> (123) 456-7890</p>
+
+    <p>For any inquiries or issues, please contact our customer support.</p> -->
+
+   
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+ 
+
+        <%-include('../Partials/userfooter')-%>
