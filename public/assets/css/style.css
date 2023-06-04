@@ -19911,4 +19911,19 @@ button:focus {
     height: 40px
 }
 
+/* Increase font size */
+.toast {
+  font-size: 12px;
+}
+
+/* Increase width and height */
+.toast.toast-info,
+.toast.toast-success,
+.toast.toast-warning,
+.toast.toast-error {
+  width: 400px;
+  height: 80px;
+}
+
+
 /*# sourceMappingURL=style.css.map */

@@ -422,11 +422,7 @@
 				console.log("session Printing");
     			console.log(session);
   
-    // let buttonId = buttons.getAttribute('data-id');
-    // console.log(buttonId);
- 
-
-    const data = {
+     const data = {
       _id: idFrombutton,
       userid: session
     };
@@ -437,9 +433,7 @@
       data: data,
       success: function(response) {
 		
-		console.log(response.message);
-
-        toastr.options = {
+		  toastr.options = {
           "closeButton": false,
           "debug": false,
           "newestOnTop": false,
@@ -474,10 +468,9 @@ $('.addtowishlist').on('click',function(){
  				const session = '<%=session %>';
  				
 				console.log("session Printing : "+session);
-				console.log("product id is : " +idFrombutton);
-    			
-  
-    const data = {
+				console.log("product id is : "   +idFrombutton);
+    
+				const data = {
       _id: idFrombutton,
       userid: session
     };
@@ -488,34 +481,36 @@ $('.addtowishlist').on('click',function(){
       data: data,
       success: function(response) {
 		
-		  toastr.options = {
-          "closeButton": false,
-          "debug": false,
-          "newestOnTop": false,
-          "progressBar": false,
-          "positionClass": "toast-top-right",
-          "preventDuplicates": false,
-          "showDuration": "200",
-          "hideDuration": "500",
-          "timeOut": "1000",
-          "extendedTimeOut": "1000",
-          "showEasing": "swing",
-          "hideEasing": "linear",
-          "showMethod": "fadeIn",
-          "hideMethod": "fadeOut"
-        };
+		toastr.options = {
+  "closeButton": false,
+  "debug": false,
+  "newestOnTop": true,
+  "progressBar": false,
+  "positionClass": "toast-top-right",
+  "preventDuplicates": false,
+  "onclick": null,
+  "showDuration": "500",
+  "hideDuration": "800",
+  "timeOut": "1000",
+  "extendedTimeOut": "1000",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "fadeIn",
+  "hideMethod": "fadeOut"
+}
 
-        if (response.message == "Added To Wishlist") {
-			toastr["success"]("Product Added to the cart", "Added");
+        if (response.message === 'Added To Wishlist') {
+			toastr["success"]("Product Added to the wishlist", "Added");
            } else {
-			toastr["info"]("Product Already Added to your cart", "Don't worry");
+			toastr["info"]("Product Already Added to your wishlist", "Don't worry");
         }
-      }
+      },
+	  error: function(xhr, status, error) {
+            toastr["error"]("An error occurred while adding to the wishlist", "Error");
+        }
     });
   
 })
-
-
 
 
 
