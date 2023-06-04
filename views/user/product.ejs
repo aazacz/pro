@@ -113,8 +113,11 @@
                                         </div><!-- End .product-details-quantity -->
                                     </div><!-- End .details-filter-row -->
 
+      
+
                                     <div class="product-details-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                                        <button type="button" class="addtocart btn-product btn-cart" data-id="<%=product._id%>" > Add to cart </button>
+                                                                  
 
                                         <div class="details-action-wrapper">
                                             <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
@@ -262,5 +265,78 @@
                 </div><!-- End .container -->
             </div><!-- End .page-content -->
         </main><!-- End .main -->
+        <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 
+		
+		<!--Sweet Alert-->		
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+		
+
+		
+		<!-- toastr -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+		
+		<script>
+		$(document).ready(function() {
+
+			$('.addtocart').on('click',function(){
+				var idFrombutton = $(this).data('id');
+				console.log(idFrombutton)
+							
+ 				const session = '<%=session %>';
+ 				console.log(session);
+				console.log("session Printing");
+    			console.log(session);
+  
+    // let buttonId = buttons.getAttribute('data-id');
+    // console.log(buttonId);
+ 
+
+    const data = {
+      _id: idFrombutton,
+      userid: session
+    };
+
+    $.ajax({
+      url: `/Category`,
+      method: "post",
+      data: data,
+      success: function(response) {
+		
+		console.log(response.message);
+
+        toastr.options = {
+          "closeButton": false,
+          "debug": false,
+          "newestOnTop": false,
+          "progressBar": false,
+          "positionClass": "toast-top-right",
+          "preventDuplicates": false,
+          "showDuration": "200",
+          "hideDuration": "500",
+          "timeOut": "1000",
+          "extendedTimeOut": "1000",
+          "showEasing": "swing",
+          "hideEasing": "linear",
+          "showMethod": "fadeIn",
+          "hideMethod": "fadeOut"
+        };
+
+        if (response.message == "product already added") {
+          toastr["info"]("Product Already Added to your cart", "Don't worry");
+        } else {
+          toastr["success"]("Product Added to the cart", "Added");
+        }
+      }
+    });
+  
+})
+});
+
+			</script>
         <%-include('../Partials/userfooter')-%>

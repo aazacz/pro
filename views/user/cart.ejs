@@ -182,135 +182,135 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 
-<script>
-$('.plus').on('click',function(){
-	console.log('plus button clicked')
+	<script>
+	$('.plus').on('click',function(){
+		console.log('plus button clicked')
 
-	let $quantityInput = $(this).siblings('.qty');
-	
-  	let value = $quantityInput.val();
-  	let id = $quantityInput.attr('data-id');
-	
- 	console.log("clicked button id is" +id)
- 	console.log("value is" +value)
-	const incQuantity = 1
-
-	if (value==0) {
-		value =  parseInt(value) + 1;
+		let $quantityInput = $(this).siblings('.qty');
+		
+		let value = $quantityInput.val();
+		let id = $quantityInput.attr('data-id');
+		
+		console.log("clicked button id is" +id)
+		console.log("value is" +value)
 		const incQuantity = 1
-		console.log("value after increment: " + value)
+
+		if (value==0) {
+			value =  parseInt(value) + 1;
+			const incQuantity = 1
+			console.log("value after increment: " + value)
+		}
+
+		console.log(value);
+		
+			const data={ 
+				incQuantity:incQuantity,
+				id:id  }
+
+		$.ajax({
+		url:`/cart`,
+		method:"PUT",
+		data:data,
+		success:function(response){
+		
+		console.log(response)
+		if (response.message=="incremented") {
+			window.location.reload();
 	}
-
-    console.log(value);
-	
-		const data={ 
-			incQuantity:incQuantity,
-			id:id  }
-
-	$.ajax({
-	url:`/cart`,
-	method:"PUT",
-	data:data,
-	success:function(response){
-	
-	console.log(response)
-	if (response.message=="incremented") {
-		window.location.reload();
-   }
-}
-  
-})
-});
-
-
-
-
-$('.minus').on('click',function(){
-	console.log('minus button clicked')
-	let $quantityInput = $(this).siblings('.qty');
-  	let value = $quantityInput.val();
-  	let id = $quantityInput.attr('data-id');
-	console.log(id)
-	const decQuantity = 1
-    console.log(value);
-
-	const data={
-	value:value,
-	decQuantity:decQuantity,
-	id:id
-}
-
-	$.ajax({
-	url:`/cartd`,
-	method:"PUT",
-	data:data,
-	success:function(response){
-	console.log(response)
-	if (response.message=="decremented") {
-		window.location.reload();
-   	}	
 	}
-  
+	
 	})
 	});
 
 
-$(".removebtn").on("click",function(){
-	console.log('delete button clicked')
- 	let cartid = $(this).attr('data-cartid');
- 	let id = $(this).attr('data-id');
-	let $quantityInput = $(this).closest('tr').find('.qty'); // Select the specific quantity input field
 
-	let value = $quantityInput.val();
 
-	// let id = deletebtn.attr('data-id');
-	console.log("The product id is: "+id)
-	console.log("the cart id is: "+cartid);
-	data={
-		id:id,
-		purchased:value
+	$('.minus').on('click',function(){
+		console.log('minus button clicked')
+		let $quantityInput = $(this).siblings('.qty');
+		let value = $quantityInput.val();
+		let id = $quantityInput.attr('data-id');
+		console.log(id)
+		const decQuantity = 1
+		console.log(value);
+
+		const data={
+		value:value,
+		decQuantity:decQuantity,
+		id:id
 	}
 
-
-$.ajax({
-	url:`/cartdel`,
-	method:"PUT",
-	data:{
-		id:id,
-		
-		cartid:cartid
-	},
-	success:function(response){
-		
-		toastr.options = {
-  "closeButton": false,
-  "debug": false,
-  "newestOnTop": true,
-  "progressBar": false,
-  "positionClass": "toast-top-right",
-  "preventDuplicates": false,
-  "onclick": null,
-  "showDuration": "200",
-  "hideDuration": "500",
-  "timeOut": "1000",
-  "extendedTimeOut": "1000",
-  "showEasing": "swing",
-  "hideEasing": "linear",
-  "showMethod": "fadeIn",
-  "hideMethod": "fadeOut"
-}
-
-		if(response.message=="deleted"){
-			toastr["info"]("Product Removed Successfully", "Success")
-			     location.reload();
-
+		$.ajax({
+		url:`/cartd`,
+		method:"PUT",
+		data:data,
+		success:function(response){
+		console.log(response)
+		if (response.message=="decremented") {
+			window.location.reload();
+		}	
 		}
+	
+		})
+		});
+
+
+	$(".removebtn").on("click",function(){
+		console.log('delete button clicked')
+		let cartid = $(this).attr('data-cartid');
+		let id = $(this).attr('data-id');
+		let $quantityInput = $(this).closest('tr').find('.qty'); // Select the specific quantity input field
+
+		let value = $quantityInput.val();
+
+		// let id = deletebtn.attr('data-id');
+		console.log("The product id is: "+id)
+		console.log("the cart id is: "+cartid);
+		data={
+			id:id,
+			purchased:value
+		}
+
+
+	$.ajax({
+		url:`/cartdel`,
+		method:"PUT",
+		data:{
+			id:id,
+			
+			cartid:cartid
+		},
+		success:function(response){
+			
+			toastr.options = {
+	"closeButton": false,
+	"debug": false,
+	"newestOnTop": true,
+	"progressBar": false,
+	"positionClass": "toast-top-right",
+	"preventDuplicates": false,
+	"onclick": null,
+	"showDuration": "200",
+	"hideDuration": "500",
+	"timeOut": "1000",
+	"extendedTimeOut": "1000",
+	"showEasing": "swing",
+	"hideEasing": "linear",
+	"showMethod": "fadeIn",
+	"hideMethod": "fadeOut"
 	}
 
-	})
+			if(response.message=="deleted"){
+				toastr["info"]("Product Removed Successfully", "Success")
+					location.reload();
 
-	})
+			}
+		}
 
-</script>
+		})
 
-<%-include("../Partials/userfooter")-%>
+		})
+
+	</script>
+
+	<%-include("../Partials/userfooter")-%>

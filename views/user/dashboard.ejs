@@ -71,7 +71,7 @@
 
 
 								    <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
-								    	<p>Hello <span class="font-weight-normal text-dark">User</span> (not <span class="font-weight-normal text-dark">User</span>? <a href="#">Log out</a>) 
+								    	<p>Hello <span class="font-weight-bold text-dark"><%=user.name%></span>  
 								    	<br>
 								    	From your account dashboard you can view your <a href="#tab-orders" class="tab-trigger-link link-underline">recent orders</a>, manage your <a href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>, and <a href="#tab-account" class="tab-trigger-link">edit your password and account details</a>.</p>
 								    </div><!-- .End .tab-pane -->
@@ -86,10 +86,9 @@
 
 
 								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
-								    	
+								    	<%if(cart){%>
 										
-										<p>Cart is empty</p>
-								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+										
 										
 										<div class="cart">
 										<div class="container">
@@ -107,10 +106,10 @@
 												</thead>
 			
 												<tbody>
-													<%if(cart[0]){%>
+													
 														
 													
-													<% for (var i =0; i <cart[0].product.length;  i++ ) { %>
+													<% for (var i =0; i <cart.product.length;  i++ ) { %>
 													<tr>
 														<td class="product-col">
 															<div class="product">
@@ -118,53 +117,47 @@
 																	<a href="#">
 
 																		
-																		<img src="upload/<%=cart[0].product[i].product_id.image[0]%>" alt="Product image">
+																		<img src="upload/<%=cart.product[i].product_id.image[0]%>" alt="Product image">
 																	</a>
 																</figure>
 			
 																<h3 class="product-title">
-																	<a href="#"><%=cart[0].product[i].product_id.name%></a>
+																	<a href="#"><%=cart.product[i].product_id.name%></a>
 																</h3><!-- End .product-title -->
 															</div><!-- End .product -->
 														</td>
-														<td class="price-col">&#8377;<%=cart[0].product[i].price%></td>
+														<td class="price-col">&#8377;<%=cart.product[i].product_id.price%></td>
 														<td class="quantity-col">
 															<div class="cart-product-quantity">
-																<input type="number" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
+																<div class="row" style="border: 5px;border-color: black;">
+																	<button class="minus" style="border: 0;">-</button>
+																	<input type="button" data-id="<%= cart.product[i].product_id._id %>" class="qty" style="width: 40px; border: 0;" value="<%= cart.product[i].quantity %>">
+																	<button class="plus" style="border: 0;">+</button>
+																</div>
 															</div><!-- End .cart-product-quantity -->
 														</td>
-														<td class="total-col">$84.00</td>
-														<td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
+														<td class="total-col"><%=cart.product[i].product_id.price*cart.product[i].quantity %></td>
+
+														<td class="remove-col"><button data-cartid="<%= cart._id %>" data-id="<%= cart.product[i].product_id._id %>" class="removebtn btn-remove"><i class="icon-close"></i></button></td>
 													</tr>
 											
 												<% } %>
+												<div class="cart-bottom">
+												
+													<a href="/cart" class="btn btn-outline-dark-2"><span>CONTINUE TO CHECKOUT</span><i class="icon-refresh"></i></a>
+												</div><!-- End .cart-bottom -->
 												<%}else{%>
 
 
-													<div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-														<p>No order has been made yet.</p>
-														<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOPPING</span><i class="icon-long-arrow-right"></i></a>
-													</div><!-- .End .tab-pane -->
+												<p>Cart is empty</p>
+								    			<a href="/category" class="btn btn-outline-primary-2"><span>GO shopping</span><i class="icon-long-arrow-right"></i></a>
 
 													<%} %>
 
 												</tbody>
 											</table><!-- End .table table-wishlist -->
 			
-											<div class="cart-bottom">
-												<div class="cart-discount">
-													<form action="#">
-														<div class="input-group">
-															<input type="text" class="form-control" required placeholder="coupon code">
-															<div class="input-group-append">
-																<button class="btn btn-outline-primary-2" type="submit"><i class="icon-long-arrow-right"></i></button>
-															</div><!-- .End .input-group-append -->
-														</div><!-- End .input-group -->
-													</form>
-												</div><!-- End .cart-discount -->
-			
-												<a href="/cart" class="btn btn-outline-dark-2"><span>CONTINUE TO CHECKOUT</span><i class="icon-refresh"></i></a>
-											</div><!-- End .cart-bottom -->
+											
 										</div><!-- End .col-lg-9 -->
 									</div>
 									</div>
@@ -510,6 +503,9 @@
 		<script src="https://code.jquery.com/jquery-3.7.0.min.js"
         integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 
+		<!-- toastr -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 
 <script>
 
@@ -632,6 +628,134 @@ $('.AddAdressbtn').on('click',function(){
 
 
 })
+
+
+$('.plus').on('click',function(){
+		console.log('plus button clicked')
+
+		let $quantityInput = $(this).siblings('.qty');
+		
+		let value = $quantityInput.val();
+		let id = $quantityInput.attr('data-id');
+		
+		console.log("clicked button id is" +id)
+		console.log("value is" +value)
+		const incQuantity = 1
+
+		if (value==0) {
+			value =  parseInt(value) + 1;
+			const incQuantity = 1
+			console.log("value after increment: " + value)
+		}
+
+		console.log(value);
+		
+			const data={ 
+				incQuantity:incQuantity,
+				id:id  }
+
+		$.ajax({
+		url:`/cart`,
+		method:"PUT",
+		data:data,
+		success:function(response){
+		
+		console.log(response)
+		if (response.message=="incremented") {
+			window.location.reload();
+	}
+	}
+	
+	})
+	});
+
+
+
+
+	$('.minus').on('click',function(){
+		console.log('minus button clicked')
+		let $quantityInput = $(this).siblings('.qty');
+		let value = $quantityInput.val();
+		let id = $quantityInput.attr('data-id');
+		console.log(id)
+		const decQuantity = 1
+		console.log(value);
+
+		const data={
+		value:value,
+		decQuantity:decQuantity,
+		id:id
+	}
+
+		$.ajax({
+		url:`/cartd`,
+		method:"PUT",
+		data:data,
+		success:function(response){
+		console.log(response)
+		if (response.message=="decremented") {
+			window.location.reload();
+		}	
+		}
+	
+		})
+		});
+
+
+		$(".removebtn").on("click",function(){
+		console.log('delete button clicked')
+		let cartid = $(this).attr('data-cartid');
+		let id = $(this).attr('data-id');
+		let $quantityInput = $(this).closest('tr').find('.qty'); // Select the specific quantity input field
+
+		let value = $quantityInput.val();
+
+		// let id = deletebtn.attr('data-id');
+		console.log("The product id is: "+id)
+		console.log("the cart id is: "+cartid);
+		data={
+			id:id,
+			purchased:value
+		}
+
+
+	$.ajax({
+		url:`/cartdel`,
+		method:"PUT",
+		data:{
+			id:id,
+			cartid:cartid
+		},
+		success:function(response){
+			
+			toastr.options = {
+	"closeButton": false,
+	"debug": false,
+	"newestOnTop": true,
+	"progressBar": false,
+	"positionClass": "toast-top-right",
+	"preventDuplicates": false,
+	"onclick": null,
+	"showDuration": "200",
+	"hideDuration": "500",
+	"timeOut": "1000",
+	"extendedTimeOut": "1000",
+	"showEasing": "swing",
+	"hideEasing": "linear",
+	"showMethod": "fadeIn",
+	"hideMethod": "fadeOut"
+	}
+
+			if(response.message=="deleted"){
+				toastr["info"]("Product Removed Successfully", "Success")
+					location.reload();
+
+			}
+		}
+
+		})
+
+		})
 
 
 

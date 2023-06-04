@@ -124,7 +124,7 @@ exports.dashboard = async(req, res) => {
     console.log("session id in the dashboard page is: "+session);
     
     let cart= await cartdb.findOne({userId:req.session.userid}).populate('product.product_id').exec()
-    console.log(cart);
+    
     let user= await customerdetail.findOne({_id:req.session.userid}).populate('address').exec()
     const miniCart= await cartdb.findOne({userId:req.session.userid}).populate('product.product_id').exec()
     

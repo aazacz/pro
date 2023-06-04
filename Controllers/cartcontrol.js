@@ -16,7 +16,7 @@ exports.cart = async (req, res) => {
   const user = await customerdetail.findOne({ _id: req.session.userid }).populate('address').populate('cartId')
 
   const cart = await cartdb.find({userId:req.session.userid}).populate('product.product_id');
-  
+ 
        
   // console.log(cart[0].product.length)
   // console.log(cart[0].product[0])
