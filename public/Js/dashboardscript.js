@@ -15,11 +15,11 @@ $('.updatebtn').on('click',function(){
 	// let $submitValues  = $(this).closest('form').find('.form-control'); 
 	// let value = $submitValues.val();
 	
-/* 	let firstname = $("#firstname").val()
+ 	let firstname = $("#firstname").val()
 	let lastname = $("#lastname").val()
 	let name = $("#displayname").val()
-	let email = $("#email").val() */
-	setTimeout(function(){
+	let email = $("#email").val() 
+	
 		let addressname = $("#addressname").val()
 		let houseNo = $("#house").val()
 		let street = $("#street").val()
@@ -29,22 +29,6 @@ $('.updatebtn').on('click',function(){
 		let alternatePhone = $("#alternatePhone").val()
 		let addressid = $("#addressid").val()
 		
-		console.log(firstname)
-		console.log(lastname)
-		console.log(name)	
-		console.log(email)
-		console.log(addressname)
-		console.log(houseNo)
-		console.log(street)
-		console.log(state)
-		console.log(pincode)
-		console.log(alternatePhone)
-		console.log(addressid)
-    
-	},1000)
-	
-
-	
 	console.log(firstname)
 	console.log(lastname)
 	console.log(name)
