@@ -46,7 +46,7 @@ exports.addtocart = async (req, res) => {
         const cartId = await cartdb.find({ userId: req.session.userid });
         const productId = id
         const quantity = 1;
-
+//abhilash abinz 
         // addToCartHelper
         const addtocart= await cartHelper.addToCart(cartId, productId)
         
