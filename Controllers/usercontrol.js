@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt')
-const wishlistdb=require('../model/wishlistdb')
+const wishlistdb = require('../model/wishlistdb')
 const Otp = require('../model/otpdb')
 const otpGenerator = require('otp-generator')
 const nodemailer = require('nodemailer')
@@ -25,17 +25,17 @@ const passwordHash = async (password) => {
 
 
 //index page
-exports.index =async (req, res) => {
-let session=req.session.userid
+exports.index = async (req, res) => {
+    let session = req.session.userid
     if (session) {
-        console.log(""); const miniCart= await cartdb.findOne({userId:req.session.userid}).populate('product').exec()
-     
-        res.render('index', { session: session, miniCart:miniCart })
+        console.log(""); const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product').exec()
+
+        res.render('index', { session: session, miniCart: miniCart })
     }
     else {
         const session = null
-        const miniCart=false
-        res.render('index', { session: session, miniCart:miniCart})
+        const miniCart = false
+        res.render('index', { session: session, miniCart: miniCart })
     }
 
 }
@@ -47,7 +47,7 @@ exports.login = (req, res) => {
     const session = null
     const title = req.flash("title");
     let miniCart;
-    res.render('login', { title: title[0] || "", session: session,miniCart })
+    res.render('login', { title: title[0] || "", session: session, miniCart })
 }
 //POST login page
 exports.login_post = async (req, res) => {
@@ -66,7 +66,7 @@ exports.login_post = async (req, res) => {
 
             if (passwordmatch) {
 
-               req.session.userid = userlog._id
+                req.session.userid = userlog._id
                 console.log("session");
                 console.log(req.session.userid);
                 res.redirect('/')
@@ -118,43 +118,66 @@ exports.contact = (req, res) => {
     res.render('contact')
 }
 //dashboard page
-exports.dashboard = async(req, res) => {
+exports.dashboard = async (req, res) => {
 
-    const session=req.session.userid
-    console.log("session id in the dashboard page is: "+session);
-    
-    let cart= await cartdb.findOne({userId:req.session.userid}).populate('product.product_id').exec()
-    
-    let user= await customerdetail.findOne({_id:req.session.userid}).populate('address').exec()
-    const miniCart= await cartdb.findOne({userId:req.session.userid}).populate('product.product_id').exec()
-    
-      if (req.session.userid) {
+    try {
+
         const session = req.session.userid
-        res.render('dashboard', { session: session,cart:cart,user:user,miniCart:miniCart })
-                            }
-      else {
-        const session = null
-        res.render('dashboard', { session: session })
+        console.log("session id in the dashboard page is: " + session);
+
+        let cart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
+
+        let user = await customerdetail.findOne({ _id: req.session.userid }).populate('address').exec()
+
+        const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
+
+        const wishlist = await wishlistdb.findOne({ userId: req.session.userid }).populate('product').exec()
+
+     
+
+
+        if (req.session.userid) {
+            const session = req.session.userid
+            res.render('dashboard', {
+                session: session,
+                cart: cart,
+                user: user,
+                miniCart: miniCart,
+                wishlist: wishlist
+            })
+        }
+        else {
+            const session = null
+            res.render('dashboard', { session: session })
+        }
+
+    } catch (error) {
+        console.log(error);
     }
 
 }
 
 //post - dashboard userdetails update
-exports.userupdate=async (req,res)=>{
+exports.userupdate = async (req, res) => {
 
-        let firstname= letterCaseChanger.toTitleCase(req.body.firstname)
-		let lastname= letterCaseChanger.toTitleCase(req.body.lastname)
-		let name= letterCaseChanger.toTitleCase(req.body.name)
-		let email= letterCaseChanger.toTitleCase(req.body.email)
+    try {
 
-		let addressname=letterCaseChanger.toTitleCase(req.body.addressname)
-		let houseNo=letterCaseChanger.toTitleCase(req.body.houseNo)
-		let street=letterCaseChanger.toTitleCase(req.body.street)
-		let state=letterCaseChanger.toTitleCase(req.body.state)
-		let pincode=req.body.pincode
-		let alternatePhone=req.body.alternatePhone
-		let phone=req.body.phone
-		let userid=req.session.userid
+
+        let firstname = letterCaseChanger.toTitleCase(req.body.firstname)  //calling Helper function
+        let lastname = letterCaseChanger.toTitleCase(req.body.lastname)
+        let name = letterCaseChanger.toTitleCase(req.body.name)
+        let email = letterCaseChanger.toTitleCase(req.body.email)
+
+        let addressname = letterCaseChanger.toTitleCase(req.body.addressname)
+        let houseNo = letterCaseChanger.toTitleCase(req.body.houseNo)
+        let street = letterCaseChanger.toTitleCase(req.body.street)
+        let state = letterCaseChanger.toTitleCase(req.body.state)
+        let pincode = req.body.pincode
+        let alternatePhone = req.body.alternatePhone
+        let phone = req.body.phone
+        let userid = req.session.userid
+        let addressid=req.body.addressid
+
         console.log(userid)
         console.log(addressname)
         console.log(houseNo)
@@ -164,104 +187,113 @@ exports.userupdate=async (req,res)=>{
         console.log(alternatePhone)
         console.log(phone)
         console.log(userid)
+        console.log(addressid)
 
         //checking if the address already exists
-const addressExists = await addressdb.findOne({
-    name:addressname,
-    houseno:houseNo,
-    street:street,
-    state:state,
-    pincode:pincode,
-    phone:phone,
-    alternatenumber:alternatePhone,
-    customerid:userid})
-
-console.log(addressExists);
-
-
-if(addressExists){//checking if the same address exists
-return;
-
-}
-else{
-     const updateaddress = new addressdb({
-            name:addressname,
-            houseno:houseNo,
-            street:street,
-            state:state,
-            pincode:pincode,
-            phone:phone,
-            alternatenumber:alternatePhone,
-            customerid:userid
+        const addressExists = await addressdb.findOne({
+            _id:addressid,
+            name: addressname,
+            houseno: houseNo,
+            street: street,
+            state: state,
+            pincode: pincode,
+            phone: phone,
+            alternatenumber: alternatePhone,
+            customerid: userid,
+           
         })
 
-    const updateAddress= await updateaddress.save()
-    const addrerssId=new ObjectId(updateAddress._id);
-    console.log(addrerssId);
-    const addtoUserDb=await customerdetail.findByIdAndUpdate(userid,{$addToSet:{address:addrerssId}},{new:true})
-    res.send({messsage:"user details updated"})
-}
+        console.log(addressExists);
+
+
+        if (addressExists) {//checking if the same address exists
+            return;
+
+        }
+        else {
+          
+            //update the existing address
+            const updateAddress = await addressdb.findByIdAndUpdate(addressid, { $addToSet: {   name: addressname,
+                                                                                                houseno: houseNo,
+                                                                                                street: street,
+                                                                                                state: state,
+                                                                                                pincode: pincode,
+                                                                                                phone: phone,
+                                                                                                alternatenumber: alternatePhone,
+                                                                                                customerid: userid,
+                                                                                                addressid:addressid } }, 
+                                                                                { new: true })
+
+           
+            console.log(updateAddress);
+
+            res.send({ messsage: "user details updated" })
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
 }
 
 
 
 //post - add address 
-exports.addnewadress=async (req,res)=>{
+exports.addnewadress = async (req, res) => {
 
-		let addressname=toTitleCase(req.body.addressname)
-		let houseNo=toTitleCase(req.body.houseNo)
-		let street=toTitleCase(req.body.street)
-		let state=toTitleCase(req.body.state)
-		let pincode=req.body.pincode
-		let alternatePhone=req.body.alternatePhone
-		let phone=req.body.phone
-		let userid=req.session.userid
-        console.log(userid)
-        console.log(addressname)
-        console.log(houseNo)
-        console.log(street)
-        console.log(state)
-        console.log(pincode)
-        console.log(alternatePhone)
-        console.log(phone)
-       
-        //checking if the address already exists
-const addressExists = await addressdb.findOne({
-    name:addressname,
-    houseno:houseNo,
-    street:street,
-    state:state,
-    pincode:pincode,
-    phone:phone,
-    alternatenumber:alternatePhone,
-    customerid:userid})
+    let addressname =letterCaseChanger.toTitleCase(req.body.addressname) //called Helper function
+    let houseNo = letterCaseChanger.toTitleCase(req.body.houseNo)
+    let street = letterCaseChanger.toTitleCase(req.body.street)
+    let state = letterCaseChanger.toTitleCase(req.body.state)
+    let pincode = req.body.pincode
+    let alternatePhone = req.body.alternatePhone
+    let phone = req.body.phone
+    let userid = req.session.userid
+    console.log(userid)
+    console.log(addressname)
+    console.log(houseNo)
+    console.log(street)
+    console.log(state)
+    console.log(pincode)
+    console.log(alternatePhone)
+    console.log(phone)
 
-console.log(addressExists);
+    //checking if the address already exists
+    const addressExists = await addressdb.findOne({
+        name: addressname,
+        houseno: houseNo,
+        street: street,
+        state: state,
+        pincode: pincode,
+        phone: phone,
+        alternatenumber: alternatePhone,
+        customerid: userid
+    })
+
+    console.log(addressExists);
 
 
-if(addressExists){//checking if the same address exists
-    console.log("Address already exists");
-return;
+    if (addressExists) {//checking if the same address exists
+        console.log("Address already exists");
+        return;
 
-}
-else{
-     const updateaddress = new addressdb({
-            name:addressname,
-            houseno:houseNo,
-            street:street,
-            state:state,
-            pincode:pincode,
-            phone:phone,
-            alternatenumber:alternatePhone,
-            customerid:userid
+    }
+    else {
+        const updateaddress = new addressdb({
+            name: addressname,
+            houseno: houseNo,
+            street: street,
+            state: state,
+            pincode: pincode,
+            phone: phone,
+            alternatenumber: alternatePhone,
+            customerid: userid
         })
 
-    const updateAddress= await updateaddress.save()
-    const addrerssId=new ObjectId(updateAddress._id);
-    console.log(addrerssId);
-    const addtoUserDb=await customerdetail.findByIdAndUpdate(userid,{$addToSet:{address:addrerssId}},{new:true})
-    res.send({messsage:"address added"})
-}
+        const updateAddress = await updateaddress.save()
+        const addrerssId = new ObjectId(updateAddress._id);
+        console.log(addrerssId);
+        const addtoUserDb = await customerdetail.findByIdAndUpdate(userid, { $addToSet: { address: addrerssId } }, { new: true })
+        res.send({ messsage: "address added" })
+    }
 }
 
 
@@ -275,9 +307,9 @@ exports.product = async (req, res) => {
     console.log(session);
     // console.log(req.query.productid)
     const product = await productdb.findOne({ _id: req.query.productid })
-    
-    const miniCart= await cartdb.findOne({userId:req.session.userid}).populate('product.product_id').exec()
-    res.render('product', { product: product, session: session,miniCart:miniCart })
+
+    const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
+    res.render('product', { product: product, session: session, miniCart: miniCart })
 
 }
 
@@ -292,12 +324,12 @@ exports.category = async (req, res) => {
 
         // console.log(product);
         const title = req.flash("title");
-        
-        let user= await customerdetail.findOne({_id:req.session.userid}).populate('address').populate('cartId')
 
-        const miniCart= await cartdb.findOne({userId:req.session.userid}).populate('product.product_id').exec()
+        let user = await customerdetail.findOne({ _id: req.session.userid }).populate('address').populate('cartId')
 
-        res.render("category", {title: title[0] || "", product: product, session: session,user:user,miniCart:miniCart })
+        const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
+
+        res.render("category", { title: title[0] || "", product: product, session: session, user: user, miniCart: miniCart })
     } catch (error) {
         console.log(error.message)
     }
@@ -306,20 +338,22 @@ exports.category = async (req, res) => {
 
 //checkout page
 exports.checkout = async (req, res) => {
- 
+
     if (req.session.userid) {
-        const cart= await cartdb.find({}).populate('product');
-        const user=await customerdetail.find({_id:req.session.userid}).populate('address')
+        const cart = await cartdb.find({}).populate('product');
+
+        let user = await customerdetail.findOne({ _id: req.session.userid }).populate('address').exec()
+
         const session = req.session.userid
-        const miniCart= await cartdb.findOne({userId:req.session.userid}).populate('product.product_id').exec()
-        res.render('checkout', { session: session,user:user,cart:cart,miniCart:miniCart})
+        const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
+        res.render('checkout', { session: session, user: user, cart: cart, miniCart: miniCart })
     }
     else {
         const session = null
         res.render('checkout', { session: session })
     }
 
-   
+
 }
 
 
@@ -331,7 +365,7 @@ exports.signup = (req, res) => {
     const session = null
     const title = req.flash("title");
     let miniCart;
-    res.render('signup', { title: title[0] || "", session: session,miniCart:miniCart })
+    res.render('signup', { title: title[0] || "", session: session, miniCart: miniCart })
 }
 
 
@@ -355,45 +389,47 @@ exports.signup_post = async (req, res) => {
                 const passwordH = await passwordHash(req.body.password);
 
                 newCustomer = new customerdetail({
+                    firstname:" ",
+                    lastname:" ",
                     name: req.body.username,
                     email: req.body.email,
                     password: passwordH,
                     block: "active",
                     isAdmin: 0
-                   
+
                 });
-           
+
                 try {
                     console.log(newCustomer);
                     await newCustomer.validate(); // Validate the newCustomer document
                     const insertdata = await newCustomer.save();
-                   
+
 
                     //creating a new address DATABASE for the user   &&    Inserting the addressDB id in to the customer DB
                     const newaddress = new addressdb({
-                        name:insertdata.name,
-                        houseno:" ",
-                        street:" ",
-                        state:" ",
-                        pincode:" ",
-                        phone:" ",
-                        alternatenumber:" ",
-                        customerid:new ObjectId(insertdata._id)
+                        name: insertdata.name,
+                        houseno: " ",
+                        street: " ",
+                        state: " ",
+                        pincode: " ",
+                        phone: " ",
+                        alternatenumber: " ",
+                        customerid: new ObjectId(insertdata._id)
                     })
 
-                    const insertedAddress = await newaddress.save();  
-                    await customerdetail.findByIdAndUpdate(insertdata._id,{address:[new ObjectId(insertedAddress._id)]})
+                    const insertedAddress = await newaddress.save();
+                    await customerdetail.findByIdAndUpdate(insertdata._id, { address: [new ObjectId(insertedAddress._id)] })
 
 
                     //creating a new cart DATABASE for the user   &&   inserting the cartDB_id in to the customer DB
-                    const addtocart = new cartdb({ userId: insertdata._id,product:[]});
-                    const cart=await addtocart.save()
-                    await customerdetail.findByIdAndUpdate(insertdata._id,{cartId:[new ObjectId(cart._id)]})
-                    
+                    const addtocart = new cartdb({ userId: insertdata._id, product: [] });
+                    const cart = await addtocart.save()
+                    await customerdetail.findByIdAndUpdate(insertdata._id, { cartId: [new ObjectId(cart._id)] })
+
                     //creating a new wishlist Db for the user && inserting the cartDB_id in to the customer DB
-                    const newWishListDb=new wishlistdb({ userId: insertdata._id,product:[] })
-                    const newWishlist=await newWishListDb.save()
-                    await customerdetail.findByIdAndUpdate(insertdata._id,{wishlistId:[new ObjectId(newWishlist._id)]})
+                    const newWishListDb = new wishlistdb({ userId: insertdata._id, product: [] })
+                    const newWishlist = await newWishListDb.save()
+                    await customerdetail.findByIdAndUpdate(insertdata._id, { wishlistId: [new ObjectId(newWishlist._id)] })
 
 
                     if (insertdata) {
@@ -411,7 +447,7 @@ exports.signup_post = async (req, res) => {
             } else {
                 req.flash("title", "Password didn't match");
                 res.redirect('/signup')
-                
+
             }
 
         }
@@ -429,12 +465,12 @@ exports.otplogin = async (req, res) => {
     try {
         const session = null
         const title = req.flash("title");
-        const miniCart= await cartdb.findOne({userId:req.session.userid}).populate('product.product_id').exec()
-        res.render("otplogin", { title: title[0] || "", session: session,miniCart:miniCart })
+        const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
+        res.render("otplogin", { title: title[0] || "", session: session, miniCart: miniCart })
 
     } catch (error) {
         console.log(error.message)
-        
+
     }
 }
 
@@ -525,15 +561,15 @@ exports.otpverify = async (req, res) => {
 
 
 //GET success page
-exports.success=async (req,res)=>{
-try {
-    const session =req.session.userid
-    const user=await customerdetail.find({_id:req.session.userid}).populate('address')
-    res.render('success',{session:session,user:user})
+exports.success = async (req, res) => {
+    try {
+        const session = req.session.userid
+        const user = await customerdetail.find({ _id: req.session.userid }).populate('address')
+        res.render('success', { session: session, user: user })
 
-} catch (error) {
-    console.log(error.message);
-}
+    } catch (error) {
+        console.log(error.message);
+    }
 
 
 }

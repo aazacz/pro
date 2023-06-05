@@ -13,6 +13,8 @@ exports.cart = async (req, res) => {
   const session = req.session.userid
   console.log("session id in the cart page is:    "+session);
   
+
+  
   const user = await customerdetail.findOne({ _id: req.session.userid }).populate('address').populate('cartId')
 
   const cart = await cartdb.find({userId:req.session.userid}).populate('product.product_id');
