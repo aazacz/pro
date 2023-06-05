@@ -118,23 +118,23 @@
 										</thead>
 										<tbody>
 
-											<% for (var i=0; i < cart[0].product.length; i++) { %>
+											<% for (var i=0; i < cart.product.length; i++) { %>
 												<tr>
 													<td colspan="2"><a href="#">
-															<%=cart[0].product[i].name%>
+															<%=cart.product[i].product_id.name%>
 														</a></td>
 													<td style="text-align: center;"><a href="#">x &nbsp;<%=
-																cart[0].product[i].purchased %></a></td>
-													<td>$<%= cart[0].product[i].purchased * cart[0].product[i].price %>
+																cart.product[i].quantity %></a></td>
+													<td>$<%= cart.product[i].quantity * cart.product[i].product_id.price %>
 													</td>
 												</tr>
 												<% } %>
 
 													<% let grandPrice=0%>
-														<% for (var i=0; i < cart[0].product.length; i++) { %>
+														<% for (var i=0; i < cart.product.length; i++) { %>
 
-															<% grandPrice=grandPrice + (cart[0].product[i].purchased)*
-																(cart[0].product[i].price)%>
+															<% grandPrice=grandPrice + (cart.product[i].quantity)*
+																(cart.product[i].product_id.price)%>
 
 																<% } %>
 																	<tr class="summary-subtotal">
@@ -264,7 +264,7 @@
 										</div><!-- End .card -->
 									</div><!-- End .accordion -->
 
-									<button id="placeOrder" data-id="<%= cart[0]._id%>" type="submit"
+									<button id="placeOrder" data-id="<%= cart._id%>" type="submit"
 										class="btn btn-outline-primary-2 btn-order btn-block">
 										<span class="btn-text">Place Order</span>
 										<span class="btn-hover-text">Proceed to Checkout</span>
@@ -362,8 +362,11 @@
 			let address = $('.form-check-input:checked').val();
 			console.log(address);
 
-			let grandPrice = $('#grandPrice').text();
-			console.log(grandPrice);
+			let grandPriceText = $('#grandPrice').text(); 
+			let grandPrice = parseFloat(grandPriceText.replace(/[^\d.]/g, '')); 
+
+			console.log(grandPrice); 
+		
 
 			let paymentmethod = $('.accordion-summary .card-header .card-title a[aria-expanded="true"]').text().trim()
 			console.log(paymentmethod);
@@ -380,8 +383,11 @@
 				type: 'POST',
 				data: data,
 				success: function (response) {
+
 					if (response.message == "ordered successfully") {
-						window.location.href = '/success'
+						const orderid=response.addtouser
+						console.log(orderid)
+						window.location.href = '/success?orderid=orderid'
 					}
 
 				}

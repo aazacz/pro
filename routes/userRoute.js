@@ -78,8 +78,9 @@ user_route.post('/otpverify',userController.otpverify)
 
 
 
-user_route.post('/dashboard/userupdate',userController.userupdate)
+user_route.put('/dashboard/userupdate',userController.userupdate)
 user_route.post('/dashboard/addnewadress',userController.addnewadress)
+user_route.post('/editaddress',userController.editaddress)
 
 
 

@@ -162,32 +162,15 @@ exports.userupdate = async (req, res) => {
 
     try {
 
-
-        let firstname = letterCaseChanger.toTitleCase(req.body.firstname)  //calling Helper function
-        let lastname = letterCaseChanger.toTitleCase(req.body.lastname)
-        let name = letterCaseChanger.toTitleCase(req.body.name)
-        let email = letterCaseChanger.toTitleCase(req.body.email)
-
         let addressname = letterCaseChanger.toTitleCase(req.body.addressname)
         let houseNo = letterCaseChanger.toTitleCase(req.body.houseNo)
         let street = letterCaseChanger.toTitleCase(req.body.street)
         let state = letterCaseChanger.toTitleCase(req.body.state)
         let pincode = req.body.pincode
-        let alternatePhone = req.body.alternatePhone
+      
         let phone = req.body.phone
         let userid = req.session.userid
         let addressid=req.body.addressid
-
-        console.log(userid)
-        console.log(addressname)
-        console.log(houseNo)
-        console.log(street)
-        console.log(state)
-        console.log(pincode)
-        console.log(alternatePhone)
-        console.log(phone)
-        console.log(userid)
-        console.log(addressid)
 
         //checking if the address already exists
         const addressExists = await addressdb.findOne({
@@ -198,7 +181,6 @@ exports.userupdate = async (req, res) => {
             state: state,
             pincode: pincode,
             phone: phone,
-            alternatenumber: alternatePhone,
             customerid: userid,
            
         })
@@ -213,13 +195,13 @@ exports.userupdate = async (req, res) => {
         else {
           
             //update the existing address
-            const updateAddress = await addressdb.findByIdAndUpdate(addressid, { $addToSet: {   name: addressname,
+            const updateAddress = await addressdb.findByIdAndUpdate(addressid, { $set: {   name: addressname,
                                                                                                 houseno: houseNo,
                                                                                                 street: street,
                                                                                                 state: state,
                                                                                                 pincode: pincode,
                                                                                                 phone: phone,
-                                                                                                alternatenumber: alternatePhone,
+                                                                                               
                                                                                                 customerid: userid,
                                                                                                 addressid:addressid } }, 
                                                                                 { new: true })
@@ -227,7 +209,7 @@ exports.userupdate = async (req, res) => {
            
             console.log(updateAddress);
 
-            res.send({ messsage: "user details updated" })
+            res.send({ message: "user details updated" })
         }
     } catch (error) {
         console.log(error.message);
@@ -264,7 +246,7 @@ exports.addnewadress = async (req, res) => {
         state: state,
         pincode: pincode,
         phone: phone,
-        alternatenumber: alternatePhone,
+       
         customerid: userid
     })
 
@@ -284,7 +266,7 @@ exports.addnewadress = async (req, res) => {
             state: state,
             pincode: pincode,
             phone: phone,
-            alternatenumber: alternatePhone,
+           
             customerid: userid
         })
 
@@ -295,6 +277,45 @@ exports.addnewadress = async (req, res) => {
         res.send({ messsage: "address added" })
     }
 }
+
+exports.editaddress=async(req,res)=>{
+    try {
+        
+    
+    let addressname =letterCaseChanger.toTitleCase(req.body.name) //called Helper function
+    let houseNo = letterCaseChanger.toTitleCase(req.body.houseNo)
+    let street = letterCaseChanger.toTitleCase(req.body.street)
+    let state = letterCaseChanger.toTitleCase(req.body.state)
+    let pincode = req.body.pincode
+    
+    let phone = req.body.phone
+    let userid = req.session.userid
+    let addressid=req.body.addressid
+
+
+    const updateAddress = await addressdb.findByIdAndUpdate(addressid, { $set: {   name: addressname,
+                                                                                        houseno: houseNo,
+                                                                                        street: street,
+                                                                                        state: state,
+                                                                                        pincode: pincode,
+                                                                                        phone: phone,
+                                                                                        customerid: userid,
+                                                                                        addressid:addressid } }, 
+                                                                                { new: true,upsert:true })
+
+
+    console.log(updateAddress);
+    res.redirect('/dashboard')
+} catch (error) {
+   console.log(error.message);     
+}
+
+}
+
+
+
+
+
 
 
 
@@ -329,7 +350,17 @@ exports.category = async (req, res) => {
 
         const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
 
-        res.render("category", { title: title[0] || "", product: product, session: session, user: user, miniCart: miniCart })
+        if(miniCart){
+            res.render("category", { title: title[0] || "", product: product, session: session, user: user, miniCart: miniCart })
+        }
+        else{
+            const miniCart=undefined
+        res.render('404',{session: session,miniCart: miniCart})
+        }
+
+
+
+       
     } catch (error) {
         console.log(error.message)
     }
@@ -340,8 +371,9 @@ exports.category = async (req, res) => {
 exports.checkout = async (req, res) => {
 
     if (req.session.userid) {
-        const cart = await cartdb.find({}).populate('product');
-
+        const cart = await cartdb.findOne({userId: req.session.userid}).populate('product.product_id').exec()
+console.log(cart);
+console.log(cart.product.length);
         let user = await customerdetail.findOne({ _id: req.session.userid }).populate('address').exec()
 
         const session = req.session.userid
@@ -565,7 +597,11 @@ exports.success = async (req, res) => {
     try {
         const session = req.session.userid
         const user = await customerdetail.find({ _id: req.session.userid }).populate('address')
-        res.render('success', { session: session, user: user })
+
+
+
+        const miniCart=undefined
+        res.render('success', { session: session, user: user,miniCart: miniCart })
 
     } catch (error) {
         console.log(error.message);

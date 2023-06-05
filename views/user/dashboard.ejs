@@ -257,48 +257,52 @@
 															<%=user.address[i].phone%>
 															<%=user.address[i].alternatenumber%>
 															<%=user.address[i].email%><br>
-															<a class="nav-link" id="tab-add-link" data-toggle="tab" href="#tab-add" role="tab" aria-controls="tab-add" aria-selected="false">Add <i class="icon-edit"></i></a>
-														<a href="#">Edit <i class="icon-edit"></i></a></p>
+															<a class="nav-link" id="tab-add-link" style="padding-left: 0;" data-toggle="tab" href="#tab-add" role="tab" aria-controls="tab-add" aria-selected="false">Edit<i class="icon-edit"></i></a>
+														
 								    				</div><!-- End .card-body -->
 								    			</div><!-- End .card-dashboard -->
 								    		<!-- End .col-lg-6 -->
 											
 											<div class="tab-pane fade" id="tab-add" role="tabpanel" aria-labelledby="">
-                                                <form action="/addaddress" method="post">
+												
+                                                <form action="/editaddress" method="post">
                                                    
                                                     <div class="row">
                                                         
                                                         <div class="col-sm-6">
-                                                         <label>Adress Line 1 <span style="color: red;"> *</span></label>
-                                                        <input type="text" name="address1" class="form-control" required>
+                                                         <label>name <span style="color: red;"> *</span></label>
+                                                        <input type="text" name="name" class="form-control" required>
+                                                        <input type="text" name="addressid" value="<%=user.address[i]._id%>" class="form-control" required hidden>
                                                         </div><!-- End .col-sm-6 -->
         
                                                         <div class="col-sm-6">
-                                                            <label>Adress Line 2 <span style="color: red;"> *</span></label>
-                                                            <input type="text" name="address2" class="form-control" required>
+                                                            <label>houseno <span style="color: red;"> *</span></label>
+                                                            <input type="text" name="houseNo" class="form-control" required>
                                                         </div><!-- End .col-sm-6 -->
                                                     </div><!-- End .row -->
                                                     <div class="row">
                                                        
                                                         <div class="col-sm-6">
-                                                         <label>City <span style="color: red;"> *</span></label>
-                                                        <input type="text" name="city" class="form-control" required>
+                                                         <label>state <span style="color: red;"> *</span></label>
+                                                        <input type="text" name="state" class="form-control" required>
                                                         </div><!-- End .col-sm-6 -->
         
                                                         <div class="col-sm-6">
-                                                            <label>Country <span style="color: red;"> *</span></label>
-                                                            <input type="text" name="country" class="form-control" required>
+                                                            <label>street <span style="color: red;"> *</span></label>
+                                                            <input type="text" name="street" class="form-control" required>
                                                         </div><!-- End .col-sm-6 -->
+                                                        <div class="col-sm-6">
+                                                            <label>phone <span style="color: red;"> *</span></label>
+                                                            <input type="text" name="phone" class="form-control" required>
+                                                        </div><!-- End .col-sm-6 -->
+                                                        
                                                     </div><!-- End .row -->
                                                     <div class="row">
-                                                        <div class="col-sm-6">
-                                                         <label>Land Mark <span style="color: red;"> *</span></label>
-                                                        <input type="text" name="landmark" class="form-control" required>
-                                                        </div><!-- End .col-sm-6 -->
+                                                       
         
                                                         <div class="col-sm-6">
                                                             <label> Postal/Zipcode <span style="color: red;"> *</span></label>
-                                                            <input type="text" name="zipcode" class="form-control" required>
+                                                            <input type="text" name="pincode" class="form-control" required>
                                                         </div><!-- End .col-sm-6 -->
                                                     </div><!-- End .row -->
         
@@ -344,18 +348,10 @@
 								    <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
 								    	<form action="#" >
 			                				<div class="row">
-			                					<div class="col-sm-6">
-			                						<label>First Name *</label>
-		    	      								<input type="text"  value="<%=user.firstname%>" name="firstname" id="firstname" class="form-control" required>
-			                					</div><!-- End .col-sm-6 -->
-
-			                					<div class="col-sm-6">
-			                						<label>Last Name *</label>
-			                						<input type="text" value="<%=user.lastname%>" name="lastname" id="lastname" class="form-control" required>
-			                					</div><!-- End .col-sm-6 -->
+			                					
 			                				</div><!-- End .row -->
 
-		            						<label>Display Name *</label>
+		            						<label>Name</label>
 		            						<input type="text" value="<%=user.name%>" name="name" id="displayname" class="form-control" required readonly>
 		            						<small class="form-text">This will be how your name will be displayed in the account section and in reviews</small>
 

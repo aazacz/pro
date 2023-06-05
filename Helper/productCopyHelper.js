@@ -1,33 +1,60 @@
 const cartdb = require('../model/cartdb')
 const orderdb = require('../model/orderdb')
-
+const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Types;
 
 // Copy product IDs from cartdb to orderdb
-async function copyProductIds() {
+async function copyProductIds(session,cartid,addressid,grandtotal,paymentmethod){
   try {
-    const carts = await cartdb.find({}); // get all documents from cartdb
-    // console.log(carts);
+    const cartDocument = await cartdb.findOne({userId:new ObjectId(session)})
+    console.log("products in the cart is :   "+cartDocument._id);
+    const Cartid=cartDocument._id
 
+  
+     
+    const orderProductArray = [];
     
-    const productIds = carts.map(cart => cart.product); // Extracting product IDs from cart documents
-    // console.log(productIds)
+    cartDocument.product.forEach((cartProduct) => {
+      
+       const orderProduct = {                    // Create a new product object with the product_id and quantity
+         product_id: cartProduct.product_id,
+         quantity: cartProduct.quantity
+       };
+     
+      
+       orderProductArray.push(orderProduct);     // Push the orderProduct to the orderProductArray
+     });
+
+
+     const newOrder = new orderdb({
+                                  userId: cartDocument.userId,
+                                  product: orderProductArray,
+                                  grandtotal: grandtotal,
+                                  paymentmethod: paymentmethod
+                                   });
     
     
-    const orders = productIds.map(productid => ({ //inserting the productIDs in to the orderDb
-      product: productid,
-      quantity: 1 // Replace with the appropriate value
-    }));
+    const savedOrder = await newOrder.save();   // Save the new order document
     
-    // Insert order documents into orderdb
-    const orderdbId = await orderdb.insertMany(orders);
-    console.log(orderdbId);
-    console.log('Product IDs copied successfully.');
-    return orderdbId;
+    // removing the product from the cart Document 
+
+   /*  const updatedCart = await Cart.updateOne(
+      { _id: cartId },
+      { $set: { product: [] } }
+    );
+    
+    console.log("the updated cart is : "+updatedCart); */
+    
+  
+    console.log("The saved order is :   "+savedOrder._id);
+
+    return savedOrder;
 
   } catch (error) {
     console.error('Error copying product IDs:', error);
   }
+
 }
 
-// Call the copyProductIds function
+
 module.exports = {copyProductIds}

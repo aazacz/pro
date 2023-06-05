@@ -46,7 +46,7 @@ exports.addtocart = async (req, res) => {
         const cartId = await cartdb.find({ userId: req.session.userid });
         const productId = id
         const quantity = 1;
-//abhilash abinz 
+
         // addToCartHelper
         const addtocart= await cartHelper.addToCart(cartId, productId)
         
@@ -194,8 +194,8 @@ exports.checkout = async (req, res) => {
     const session = req.session.userid
     console.log("session is " + session);
 
-    const orderdbId = await productCopyHelper.copyProductIds();
-    const orderdb_Id = orderdbId[0]._id
+    const orderdbId = await productCopyHelper.copyProductIds(session,cartid,addressid,grandtotal,paymentmethod);
+    const orderdb_Id = orderdbId._id
     console.log("the orderdb id is  " + orderdb_Id)
 
     const addUserId = await orderdb.findByIdAndUpdate(orderdb_Id, { userId: req.session.userid })
@@ -206,7 +206,7 @@ exports.checkout = async (req, res) => {
 
     //  console.log(addtouser);
 
-    res.send({ message: "ordered successfully" })
+    res.send({ message: "ordered successfully",addtouser:addtouser })
 
 
 
