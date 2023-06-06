@@ -1,0 +1,248 @@
+<%-include('../Partials/adminheader')-%>
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Order List </h2>
+                    <p>Lorem ipsum dolor sit amet.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="card mb-4">
+                        <header class="card-header">
+                            <div class="row gx-3">
+                                <div class="col-lg-4 col-md-6 me-auto">
+                                    <input type="text" placeholder="Search..." class="form-control">
+                                </div>
+                                <div class="col-lg-2 col-md-3 col-6">
+                                    <select class="form-select">
+                                        <option>Status</option>
+                                        <option>Active</option>
+                                        <option>Disabled</option>
+                                        <option>Show all</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-2 col-md-3 col-6">
+                                    <select class="form-select">
+                                        <option>Show 20</option>
+                                        <option>Show 30</option>
+                                        <option>Show 40</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </header> <!-- card-header end// -->
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Customer name</th>
+                                            <th>Price</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                            <th class="text-end"> Action </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                     
+
+
+                                        <% if (order) { %>
+
+
+
+
+                                          
+
+                                            <% for (let i = 0; i < order.length; i++) { %>
+                                                
+
+                                                    <tr>
+                                                  <td>452</td>
+                                                  
+                                                        <td><b><%= order[i].userId.name %></b></td>
+                                                       
+                                                       
+                                                    <td><%= order[i].grandtotal %></td>
+                                                  <td><span class="badge rounded-pill alert-success"><%= order[i].status %></span></td>
+                                                  <td><%= new Date(order[i].purchased).toLocaleDateString() %></td>
+                                                  <td class="text-end">
+                                                    <a href="#" class="btn btn-md rounded font-sm">Detail</a>
+                                                    <div class="dropdown">
+                                                      <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm">
+                                                        <i class="material-icons md-more_horiz"></i>
+                                                      </a>
+                                                      <div class="dropdown-menu">
+                                                        
+                                                          <a class="dropdown-item approve-btn" data-orderid="<%= order[i]._id %>">Approve</a>
+                                                          <a class="dropdown-item cancel-btn" data-orderid="<%= order[i]._id %>">Cancel</a>
+                                                    
+                                                       
+                                                      </div>
+                                                    </div> <!-- dropdown //end -->
+                                                  </td>
+                                                </tr>
+                                            
+                                            <% } %>
+                                          
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            <%} else { %>
+                                                <tr>
+                                                    <td>0</td>
+                                                    <td><b>No orders Yet !!</b></td>
+                                                    <td>₹ 0.00</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td class="text-end">
+                                                        <a href="#" class="btn btn-md rounded font-sm">Detail</a>
+                                                        <div class="dropdown">
+                                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                                            <div class="dropdown-menu">
+                                                                <a class="dropdown-item" href="#">View detail</a>
+                                                                <a class="dropdown-item" href="#">Edit info</a>
+                                                                <a class="dropdown-item text-danger" href="#">Delete</a>
+                                                            </div>
+                                                        </div> <!-- dropdown //end -->
+                                                    </td>
+                                                </tr>
+                                            <% } %>
+                                        <tr>
+                                            <td>452</td>
+                                            <td><b>Devon Lane</b></td>
+                                            <td>$948.55</td>
+                                            <td><span class="badge rounded-pill alert-success">Received</span></td>
+                                            <td>07.05.2020</td>
+                                            <td class="text-end">
+                                                <a href="#" class="btn btn-md rounded font-sm">Detail</a>
+                                                <div class="dropdown">
+                                                    <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item" href="#">View detail</a>
+                                                        <a class="dropdown-item" href="#">Edit info</a>
+                                                        <a class="dropdown-item text-danger" href="#">Delete</a>
+                                                    </div>
+                                                </div> <!-- dropdown //end -->
+                                            </td>
+                                        </tr>
+                                      
+                                    </tbody>
+                                </table>
+                            </div> <!-- table-responsive //end -->
+                        </div> <!-- card-body end// -->
+                    </div> <!-- card end// -->
+                </div>
+                <div class="col-md-3">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="mb-3">Filter by</h5>
+                            <form>
+                                <div class="mb-4">
+                                    <label for="order_id" class="form-label">Order ID</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="order_id">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="order_customer" class="form-label">Customer</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="order_customer">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Order Status</label>
+                                    <select class="form-select">
+                                        <option>Published</option>
+                                        <option>Draft</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="order_total" class="form-label">Total</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="order_total">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="order_created_date" class="form-label">Date Added</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="order_created_date">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="order_modified_date" class="form-label">Date Modified</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="order_modified_date">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="order_customer_1" class="form-label">Customer</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="order_customer_1">
+                                </div>
+                            </form>
+                        </div>
+                    </div> <!-- card end// -->
+                </div>
+            </div>
+            <div class="pagination-area mt-15 mb-50">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-start">
+                        <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                        <li class="page-item"><a class="page-link" href="#">02</a></li>
+                        <li class="page-item"><a class="page-link" href="#">03</a></li>
+                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                        <li class="page-item"><a class="page-link" href="#">16</a></li>
+                        <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </section> <!-- content-main end// -->
+        <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+
+        <script>
+            $(document).ready(function() {
+              $('.approve-btn').click(function() {
+                const orderId = $(this).data('orderid');
+                console.log(orderId);
+                updateOrderStatus(orderId, 'Approved');
+              });
+          
+              $('.cancel-btn').click(function() {
+                const orderId = $(this).data('orderid');
+                console.log(orderId);
+                updateOrderStatus(orderId, 'Cancelled');
+              });
+          
+    function updateOrderStatus(orderId, status) {
+                $.ajax({
+                  url: '/admin/updateOrderStatus',
+                  method: 'POST',
+                  data: {
+                    orderId: orderId,
+                    status: status
+                  },
+                  success: function(response) {
+                   
+                    console.log(response)
+
+                 if (response.success) {
+                    // Update UI based on the changed order status
+                    const updatedStatus = response.updatedStatus;
+                    const orderRow = $(`tr[data-orderid="${orderId}"]`);
+                    orderRow.find('.order-status').text(updatedStatus);
+
+                    // Show appropriate badge color based on the status
+                    const badgeClass = (updatedStatus === 'Approved') ? 'alert-success' : 'alert-danger';
+                    orderRow.find('.badge').removeClass().addClass(`badge rounded-pill ${badgeClass}`);
+                    } else {
+                    console.log(response.message);
+                    }
+                    },
+                    error: function(xhr, status, error) {
+                    console.log(error);
+      }
+                });
+              }
+            });
+          </script>
+
+
+
+
+
+        <%-include('../Partials/adminfooter')-%>

@@ -2,8 +2,9 @@ const mongoose = require('mongoose')
 
 const orderSchema = mongoose.Schema({
     userId: {
-        type: String,
-        required: true
+       type: mongoose.Schema.Types.ObjectId,
+        ref: "customerdetail",
+        required: false
     },
     product: [{
         product_id:{
@@ -35,6 +36,11 @@ const orderSchema = mongoose.Schema({
     purchased:{
         type: Date,
         default: Date.now,
+    
+    },
+    status:{
+        type: String,
+        default: "Pending",
     
     }
     

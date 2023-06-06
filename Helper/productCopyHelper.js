@@ -28,7 +28,7 @@ async function copyProductIds(session,cartid,addressid,grandtotal,paymentmethod)
 
 
      const newOrder = new orderdb({
-                                  userId: cartDocument.userId,
+                                  userId: new ObjectId(session),
                                   product: orderProductArray,
                                   grandtotal: grandtotal,
                                   paymentmethod: paymentmethod,

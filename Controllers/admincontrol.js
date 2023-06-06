@@ -3,7 +3,7 @@ const customerdetail = require("../model/userdetailsdb")
 const bcrypt = require('bcrypt')
 const categorydb = require("../model/categorydb")
 const productdb = require('../model/productsdb')
-
+const orderdb = require('../model/orderdb')
 
 
 //                            <--------------------------ADMIN LOGIN AND VALIDATIONS------------------------------->
@@ -369,9 +369,57 @@ exports.categoriesList_Unlist = async (req, res) => {
 
 
 
-exports.adminpage_orders = (req, res) => {
-    res.render('adminpage_orders')
+exports.order = async (req, res) => {
+    try {
+    const order= await orderdb.find({}).populate("product.product_id").populate('userId')
+    // console.log(order)
+if(order){
+    res.render('orders',{order:order})
+}else{
+    res.render('orders')
 }
+    
+} catch (error) {
+    console.log();
+}
+
+   
+}
+
+
+exports.updateOrderStatus=async(req,res)=>{
+
+
+    let orderId = req.body.orderId;
+    let status  = req.body.status;
+    console.log(orderId,status)
+
+    try {
+    const updateOrderStatus=await orderdb.findByIdAndUpdate(orderId,{$set:{status:status}}).exec()
+    console.log(updateOrderStatus)
+    
+    if(updateOrderStatus){
+        res.status(200).json({ success: true, message: "Status Updated Successfully" });
+    }
+    else{
+        res.status(500).json({ success: false, message: "An error occurred" });
+
+    }
+} catch (error) {
+    console.log(error.message);
+}
+   
+
+
+
+
+
+}
+
+
+
+
+
 
 exports.adminpage_sellers_list = (req, res) => {
     res.render('adminpage_sellers_list')
