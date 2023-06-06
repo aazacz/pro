@@ -8,6 +8,7 @@ const productdb = require('../model/productsdb')
 const cartdb = require('../model/cartdb')
 const customerdetail = require('../model/userdetailsdb')
 const addressdb = require('../model/addressdb')
+const orderdb = require('../model/orderdb')
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Types;
 const letterCaseChanger = require('../Helper/letterCaseChangerHelper')
@@ -367,26 +368,7 @@ exports.category = async (req, res) => {
 
 }
 
-//checkout page
-exports.checkout = async (req, res) => {
 
-    if (req.session.userid) {
-        const cart = await cartdb.findOne({userId: req.session.userid}).populate('product.product_id').exec()
-console.log(cart);
-console.log(cart.product.length);
-        let user = await customerdetail.findOne({ _id: req.session.userid }).populate('address').exec()
-
-        const session = req.session.userid
-        const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
-        res.render('checkout', { session: session, user: user, cart: cart, miniCart: miniCart })
-    }
-    else {
-        const session = null
-        res.render('checkout', { session: session })
-    }
-
-
-}
 
 
 
@@ -591,17 +573,53 @@ exports.otpverify = async (req, res) => {
     }
 }
 
+//checkout page
+exports.checkout = async (req, res) => {
+
+    if (req.session.userid) {
+        const cart = await cartdb.findOne({userId: req.session.userid}).populate('product.product_id').exec()
+        // console.log(cart);
+        // console.log(cart.product.length);
+        
+        let user = await customerdetail.findOne({ _id: req.session.userid }).populate('address').exec()
+
+        const session = req.session.userid
+        const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
+       
+        res.render('checkout', { session: session, user: user, cart: cart, miniCart: miniCart })
+    }
+    else {
+        const session = null
+        res.render('checkout', { session: session })
+    }
+
+
+}
+
+
 
 //GET success page
 exports.success = async (req, res) => {
     try {
+        debugger
         const session = req.session.userid
+        console.log("!");
+        
+        const orderid=req.query.orderid
+        console.log("orderid from the query is");
+        console.log(orderid);
+        
+        console.log("2");
+
+        const order= await orderdb.findOne({_id:orderid}).populate("product.product_id").populate('address').exec()
+        console.log("populated order is"+order)
+        console.log("3");
         const user = await customerdetail.find({ _id: req.session.userid }).populate('address')
 
 
 
         const miniCart=undefined
-        res.render('success', { session: session, user: user,miniCart: miniCart })
+        res.render('success', { session: session, user: user,miniCart: miniCart,order:order })
 
     } catch (error) {
         console.log(error.message);

@@ -26,6 +26,16 @@ const orderSchema = mongoose.Schema({
     paymentmethod:{
         type:String,
         required:true
+    },
+    address:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "address",
+        required: false
+    },
+    purchased:{
+        type: Date,
+        default: Date.now,
+    
     }
     
     });

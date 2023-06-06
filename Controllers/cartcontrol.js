@@ -201,15 +201,12 @@ exports.checkout = async (req, res) => {
     const addUserId = await orderdb.findByIdAndUpdate(orderdb_Id, { userId: req.session.userid })
     console.log("new userid added to orderdb");
 
-    const addtouser = await customerdetail.findByIdAndUpdate(req.session.userid, { myorderId: orderdb_Id }, { new: true });
+    const addtouser = await customerdetail.findByIdAndUpdate(req.session.userid, { myorderId: orderdb_Id },{ new: true });
     console.log("new orderId added to customerDB");
 
-    //  console.log(addtouser);
+    console.log("oreder is:  "+orderdb_Id);
 
-    res.send({ message: "ordered successfully",addtouser:addtouser })
-
-
-
+    res.send({ message: "ordered successfully",orderdb_Id:orderdb_Id })
 
   } catch (error) {
     console.log(error.messsage);

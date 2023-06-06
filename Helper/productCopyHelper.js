@@ -6,6 +6,7 @@ const { ObjectId } = mongoose.Types;
 // Copy product IDs from cartdb to orderdb
 async function copyProductIds(session,cartid,addressid,grandtotal,paymentmethod){
   try {
+    const address=new ObjectId(addressid)
     const cartDocument = await cartdb.findOne({userId:new ObjectId(session)})
     console.log("products in the cart is :   "+cartDocument._id);
     const Cartid=cartDocument._id
@@ -30,7 +31,9 @@ async function copyProductIds(session,cartid,addressid,grandtotal,paymentmethod)
                                   userId: cartDocument.userId,
                                   product: orderProductArray,
                                   grandtotal: grandtotal,
-                                  paymentmethod: paymentmethod
+                                  paymentmethod: paymentmethod,
+                                  address:address,
+                                  
                                    });
     
     
