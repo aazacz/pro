@@ -338,16 +338,20 @@ exports.product = async (req, res) => {
 //category page
 exports.category = async (req, res) => {
     try {
+        const pageNum=req.query.page
+        const perpage = 2
+        let doCount;
 
 
-
-        const {page=1,limit=10}=req.query
 
         const session = req.session.userid
         console.log("checking session exists before loading category page");
         console.log(session);
 
-        const product = await productdb.find({}).limit(limit *1).skip((page-1)*limit)
+        const product = await productdb.find({}).countDocuments().then(documents=>{
+            doCount=documents
+            return productdb.find({}).skip(((pageNum-1)*perpage)).limit(perpage)
+        })
 
         // console.log(product);
         const title = req.flash("title");
@@ -357,11 +361,20 @@ exports.category = async (req, res) => {
         const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
 
         if(miniCart){
-            res.render("category", { title: title[0] || "", product: product, session: session, user: user, miniCart: miniCart })
+
+            res.render("category", { title: title[0] || "",
+                                    currentPage:pageNum,
+                                    totalDocument:doCount, 
+                                    pages:Math.ceil(doCount/perpage),
+                                    product: product, 
+                                    session: session, 
+                                    user: user,
+                                    miniCart: miniCart })
+
         }
         else{
             const miniCart=undefined
-        res.render('404',{session: session,miniCart: miniCart})
+            res.render('404',{session: session,miniCart: miniCart})
         }
 
 

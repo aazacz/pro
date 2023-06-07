@@ -67,7 +67,22 @@
                                                        
                                                        
                                                     <td><%= order[i].grandtotal %></td>
-                                                  <td><span class="badge rounded-pill alert-success"><%= order[i].status %></span></td>
+                                                    <td>
+                                                        <span class="badge rounded-pill 
+                                                          <% if (order[i].status === 'Pending') { %>
+                                                            alert-warning
+                                                          <% } else if (order[i].status === 'Approved') { %>
+                                                            alert-success
+                                                          <% } else { %>
+                                                            alert-danger
+                                                          <% } %>"
+                                                        >
+                                                          <%= order[i].status %>
+                                                        </span>
+                                                      </td>
+                                                      
+
+
                                                   <td><%= new Date(order[i].purchased).toLocaleDateString() %></td>
                                                   <td class="text-end">
                                                     <a href="/admin/orderdetails?id=<%=order[i]._id%>" class="btn btn-md rounded font-sm">Detail</a>
@@ -236,7 +251,9 @@
                     // Show appropriate badge color based on the status
                     const badgeClass = (updatedStatus === 'Approved') ? 'alert-success' : 'alert-danger';
                     orderRow.find('.badge').removeClass().addClass(`badge rounded-pill ${badgeClass}`);
-                    } else {
+                    location.reload()
+                    } 
+                    else {
                     console.log(response.message);
                     }
                     },
