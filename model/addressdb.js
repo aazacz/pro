@@ -26,7 +26,7 @@ const addressSchema = mongoose.Schema({
                 type: Number,
                 required: true
             },
-                customerid: {
+            customerid: {
                 type: String,
                 required: false
             }

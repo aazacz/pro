@@ -392,6 +392,16 @@
                 	</div><!-- End .row -->
                 </div><!-- End .container -->
             </div><!-- End .page-content -->
+
+			<div class="d-flex justify-content-center">
+				<nav aria-label=" ">
+					<ul class="pagination ">
+					   <%  for(let j=1; j <= totalpage; j++){ %> 
+						<li class="page-item active"><a class="page-link" href="?page=<%= j %>"><%= j %> </a></li>
+						<% } %>
+					</ul>
+				</nav>
+			</div>
         </main><!-- End .main -->
 		<!-- jQuery CDN -->
 		<script src="https://code.jquery.com/jquery-3.7.0.min.js"

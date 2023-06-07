@@ -338,11 +338,16 @@ exports.product = async (req, res) => {
 //category page
 exports.category = async (req, res) => {
     try {
+
+
+
+        const {page=1,limit=10}=req.query
+
         const session = req.session.userid
         console.log("checking session exists before loading category page");
         console.log(session);
 
-        const product = await productdb.find({})
+        const product = await productdb.find({}).limit(limit *1).skip((page-1)*limit)
 
         // console.log(product);
         const title = req.flash("title");
@@ -558,15 +563,12 @@ exports.otpverify = async (req, res) => {
                 res.redirect('/otplogin')
             }
 
-
         } else {
             req.flash("title", "OTP expired");
 
             console.log("otp expired");
             res.redirect('/otplogin')
         }
-
-
 
     } catch (error) {
         console.log(error.message);
@@ -578,9 +580,7 @@ exports.checkout = async (req, res) => {
 
     if (req.session.userid) {
         const cart = await cartdb.findOne({userId: req.session.userid}).populate('product.product_id').exec()
-        // console.log(cart);
-        // console.log(cart.product.length);
-        
+          
         let user = await customerdetail.findOne({ _id: req.session.userid }).populate('address').exec()
 
         const session = req.session.userid
@@ -601,26 +601,25 @@ exports.checkout = async (req, res) => {
 //GET success page
 exports.success = async (req, res) => {
     try {
-        debugger
+    
         const session = req.session.userid
-        console.log("!");
+      
         
         const orderid=req.query.orderid
-        console.log("orderid from the query is");
-        console.log(orderid);
+        console.log("orderid from the query is "+orderid);
         
-        console.log("2");
+        const updatepayment= await orderdb.findByIdAndUpdate(orderid,{$set:{payment:"Paid"}}).exec()
+        console.log("amount paid: "+updatepayment)
 
         const order= await orderdb.findOne({_id:orderid}).populate("product.product_id").populate('address').exec()
         console.log("populated order is"+order)
-        console.log("3");
+
+
         const user = await customerdetail.find({ _id: req.session.userid }).populate('address')
-
-
 
         const miniCart=undefined
         res.render('success', { session: session, user: user,miniCart: miniCart,order:order })
-
+     
     } catch (error) {
         console.log(error.message);
     }

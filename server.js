@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 mongoose.connect("mongodb://0.0.0.0:27017/kenvilldb")
         .then(() =>console.log("Database Connected"))
         .catch(() => console.log("Database Disconnected"))
+require("dotenv").config();       
 
 const PORT = process.env.PORT || 4000
 

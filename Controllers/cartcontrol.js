@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Types;
 const productCopyHelper = require("../Helper/productCopyHelper")
 const cartHelper = require("../Helper/cartHelper")
+const Razorpay = require("razorpay")
+
 
 //cart page loading
 exports.cart = async (req, res) => {
@@ -185,10 +187,12 @@ exports.cartdel = async (req, res) => {
 //POST-checkout
 exports.checkout = async (req, res) => {
   try {
+    console.log("cash on dedlivery")
     console.log("post checkout")
     let cartid = req.body.cartId;
     let addressid = req.body.address;
     let grandtotal = req.body.grandPrice;
+console.log(grandtotal)
     let paymentmethod = req.body.paymentmethod;
 
     const session = req.session.userid
@@ -198,8 +202,9 @@ exports.checkout = async (req, res) => {
     const orderdb_Id = orderdbId._id
     console.log("the orderdb id is  " + orderdb_Id)
 
-    const addUserId = await orderdb.findByIdAndUpdate(orderdb_Id, { userId: req.session.userid })
+    const addUserId = await orderdb.findByIdAndUpdate(orderdb_Id, {$set:{ userId: req.session.userid,payment:"Paid" }})
     console.log("new userid added to orderdb");
+    console.log("user paid the Amount");
 
     const addtouser = await customerdetail.findByIdAndUpdate(req.session.userid, { myorderId: orderdb_Id },{ new: true });
     console.log("new orderId added to customerDB");

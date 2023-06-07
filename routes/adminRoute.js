@@ -93,6 +93,7 @@ admin_route.put('/categories/:id/status', adminControl.categoriesList_Unlist)
 //ORDER TAB
 admin_route.get('/order',adminControl.order)
 admin_route.post('/updateOrderStatus',adminControl.updateOrderStatus)
+admin_route.get('/orderdetails',adminControl.orderdetails)
 
 
 admin_route.get('/adminpage_sellers_list', adminControl.adminpage_sellers_list)

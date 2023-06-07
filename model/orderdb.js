@@ -42,7 +42,12 @@ const orderSchema = mongoose.Schema({
         type: String,
         default: "Pending",
     
-    }
+    },
+    payment:{
+        type: String,
+        default: "Unpaid",
+    
+    },
     
     });
 

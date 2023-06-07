@@ -3,12 +3,15 @@ const user_route = express();
 const userController = require('../Controllers/usercontrol');
 const cartController = require('../Controllers/cartcontrol');
 const wishlistController = require('../Controllers/wishlistcontrol');
+const paymentController = require('../Controllers/paymentcontrol');
+const cors=require('cors')
+
 const session = require('express-session');
 const nocache = require('nocache');
 const flash = require('connect-flash');
 const validate=require('../Authentication/userAuthentication')
 const MongoStore = require('connect-mongo');
-
+user_route.use(cors())
  
 user_route.use(
   session({
@@ -68,9 +71,6 @@ user_route.put('/addtowishlist',wishlistController.addtowishlist) //add to wishl
 
 user_route.get('/product',userController.product)
 
-user_route.get('/checkout',userController.checkout)
-user_route.post('/checkout',cartController.checkout)
-user_route.get('/success',userController.success)
 
 //      <-----------OTP----------->
 user_route.route('/otplogin').get(userController.otplogin).post(userController.otplogin_verify)    
@@ -84,6 +84,11 @@ user_route.post('/editaddress',userController.editaddress)
 
 
 
+//      <-----------CHECKOUT AND PAYMENT----------->
+user_route.get('/checkout',userController.checkout)
+user_route.post('/checkout',cartController.checkout)            //Cash On Delivery
+user_route.post('/order',paymentController.order)   //Razorpay
+user_route.get('/success',userController.success)
 
 
 

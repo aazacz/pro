@@ -408,7 +408,25 @@ exports.updateOrderStatus=async(req,res)=>{
 } catch (error) {
     console.log(error.message);
 }
-   
+}
+
+exports.orderdetails=async(req,res)=>{
+
+const orderid=req.query.id
+console.log(orderid);
+try {
+    const order= await orderdb.find({_id:orderid}).populate("product.product_id").populate('userId').populate('address')
+    console.log(order)
+if(order){
+    res.render('orderdetails',{order:order})
+}else{
+    res.render('orderdetails')
+}
+    
+} catch (error) {
+    console.log();
+}
+
 
 
 

@@ -2713,18 +2713,29 @@ blockquote.text-white cite span {
         animation-name: fixedHeader;
         animation-duration: .4s;
         background-color: #fff;
-        box-shadow: 0 3px 6px rgba(51, 51, 51, 0.05)
+        box-shadow: 0 3px 6px rgba(51, 51, 51, 0.05);
+        
     }
 
     .sticky-header.fixed .logo {
         margin-top: 0;
-        margin-bottom: 0
+        margin-bottom: 0;
+        color: sienna;
     }
 
     .sticky-header.fixed.header-middle .menu>li>a {
         padding-top: 2rem;
-        padding-bottom: 2rem
+        padding-bottom: 2rem;
+        color: sienna;
     }
+    .sticky-header.dropdown>a>i{
+    
+        color: sienna;
+    }
+
+
+
+
 }
 
 .mobile-menu-container {
@@ -4186,6 +4197,10 @@ p {
     color: #fff
 }
 
+.header-8.sticky-header .header-top .top-menu>li>a{
+    color: #000000
+}
+
 .header-8 .header-menu {
     margin-top: 0
 }
@@ -4363,7 +4378,8 @@ p {
 
     .header-9 .cart-dropdown,
     .header-9 .compare-dropdown {
-        padding-left: 1.4rem
+        padding-left: 1.4rem;
+        
     }
 
     .header-9 .wishlist-link {
