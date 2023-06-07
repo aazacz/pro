@@ -302,20 +302,22 @@ exports.categories = async (req, res) => {
 //POST - Adding a category in db
 exports.addcategory = async (req, res) => {
     try {
-        const newName = req.body.name
+        
+        const newName = req.body.name.toLowerCase()
         const description = req.body.description
         console.log(newName);
        
         const nameInDb = await categorydb.findOne({ name: newName })
+       
 
-        if (nameInDb && nameInDb.name == newName) {
+        if (nameInDb!=null && nameInDb.name.toLowerCase() === newName) {
             console.log("category already added")
             res.send({ messsage: "category already added" })
 
         } else {
             console.log("category added")
             const newCategory = new categorydb({
-                name: req.body.name,
+                name: req.body.name.toLowerCase(),
                 description: description,
                 block: "List"
             })
