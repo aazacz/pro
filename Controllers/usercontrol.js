@@ -123,13 +123,15 @@ exports.dashboard = async (req, res) => {
 
     try {
 
-        const session = req.session.userid
+        let session = req.session.userid
         console.log("session id in the dashboard page is: " + session);
 
         let cart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
 
-        let user = await customerdetail.findOne({ _id: req.session.userid }).populate('address').exec()
+    let user = await customerdetail.findOne({ _id: new ObjectId(req.session.userid) }).populate('address').exec()
+    console.log(user);
 
+        
         const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
 
         const wishlist = await wishlistdb.findOne({ userId: req.session.userid }).populate('product').exec()
@@ -317,12 +319,6 @@ exports.editaddress=async(req,res)=>{
 
 
 
-
-
-
-
-
-
 //product open page
 exports.product = async (req, res) => {
     const session = req.session.userid
@@ -492,7 +488,7 @@ exports.signup_post = async (req, res) => {
 };
 
 
-//otp login
+//otp login ---1st step
 exports.otplogin = async (req, res) => {
     try {
         const session = null
@@ -505,6 +501,165 @@ exports.otplogin = async (req, res) => {
 
     }
 }
+
+
+//otp signup  ----1st step
+exports.otpsignup = async (req, res) => {
+    try {
+        const session = null
+        const title = req.flash("title");
+        const miniCart = null
+        res.render("otpsignup", { title: title[0] || "", session: session, miniCart: miniCart })
+
+    } catch (error) {
+        console.log(error.message)
+
+    }
+}
+
+
+
+
+
+
+//POST otp signup   =-----  2nd step
+exports.otpsignup_verify = async (req, res) => {
+    try {
+        // const userData = await customerdetail.findOne({ email: req.body.email });
+
+
+        // if (userData) {
+            // if (userData.block == "active") {
+
+                const OTP = otpGenerator.generate(4, {
+                    digits: true,
+                    alphabets: false,
+                    upperCaseAlphabets: false,
+                    lowerCaseAlphabets: false,
+                    specialChars: false,
+                });
+                const transporter = nodemailer.createTransport({
+                    service: "gmail",
+                    auth: {
+                        user: "abhilashabinz@gmail.com",
+                        pass: "otjhcsnvnhknygrh",
+                    },
+                });
+
+
+                var mailOptions = {
+                    from: "abhilashabinz@gmail.com",
+                    to: req.body.email,
+                    subject: "OTP VERIFICATION",
+                    text: "PLEASE ENTER THE OTP FOR LOGIN " + OTP,
+                };
+                transporter.sendMail(mailOptions, function (error, info) { });
+                console.log(OTP);
+
+                const otp = new Otp({ email: req.body.email, otp: OTP });
+                const salt = await bcrypt.genSalt(10);
+                otp.otp = await bcrypt.hash(otp.otp, salt);
+                const result = await otp.save();
+               
+
+                const session = null
+                const minicart = null
+                res.render("otpsignupverify", { data: result, session: session,miniCart:minicart });
+           
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+
+// POST otp signup verify ---3rd step
+exports.signup_verify = async (req, res) => {
+    try {
+        
+        console.log(req.body.otp)
+        const userdata = await Otp.findOne({ email: req.body.email })
+        console.log(userdata)
+        if (userdata) {
+            const otpmatch = await bcrypt.compare(req.body.otp, userdata.otp)
+            console.log(otpmatch);
+            if (otpmatch) {
+
+                newCustomer = new customerdetail({
+                     name: "User",
+                    email: req.body.email,
+                    block: "active",
+                    isAdmin: 0
+
+                });
+
+                try {
+                    console.log(newCustomer);
+                    await newCustomer.validate(); // Validate the newCustomer document
+                    const insertdata = await newCustomer.save();
+
+
+                    //creating a new address DATABASE for the user   &&    Inserting the addressDB id in to the customer DB
+                    const newaddress = new addressdb({
+                        name: insertdata.name,
+                        houseno: " ",
+                        street: " ",
+                        state: " ",
+                        pincode: " ",
+                        phone: " ",
+                        alternatenumber: " ",
+                        customerid: new ObjectId(insertdata._id)
+                    })
+
+                    const insertedAddress = await newaddress.save();
+                    await customerdetail.findByIdAndUpdate(insertdata._id, { address: [new ObjectId(insertedAddress._id)] })
+
+
+                    //creating a new cart DATABASE for the user   &&   inserting the cartDB_id in to the customer DB
+                    const addtocart = new cartdb({ userId: insertdata._id, product: [] });
+                    const cart = await addtocart.save()
+                    await customerdetail.findByIdAndUpdate(insertdata._id, { cartId: [new ObjectId(cart._id)] })
+
+                    //creating a new wishlist Db for the user && inserting the cartDB_id in to the customer DB
+                    const newWishListDb = new wishlistdb({ userId: insertdata._id, product: [] })
+                    const newWishlist = await newWishListDb.save()
+                    await customerdetail.findByIdAndUpdate(insertdata._id, { wishlistId: [new ObjectId(newWishlist._id)] })
+
+
+
+                req.session.userid = insertdata._id
+                const session=req.session.userid;
+                const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
+
+                res.render('index',{miniCart:miniCart,session:session})
+                }
+                catch(error){
+                    console.log(error.message);
+                }
+            } else {
+                req.flash("title", "OTP is not matched");
+                console.log("otp wrong");
+                res.redirect('/otplogin')
+            }
+
+        } else {
+            req.flash("title", "OTP expired");
+
+            console.log("otp expired");
+            res.redirect('/otplogin')
+        }
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+
+
+
+
 
 //POST otp login
 exports.otplogin_verify = async (req, res) => {
@@ -541,8 +696,11 @@ exports.otplogin_verify = async (req, res) => {
                 const salt = await bcrypt.genSalt(10);
                 otp.otp = await bcrypt.hash(otp.otp, salt);
                 const result = await otp.save();
+               
+
                 const session = null
-                res.render("otpverify", { data: result, session: session });
+                const minicart = null
+                res.render("otpverify", { data: result, session: session,miniCart:minicart });
             } else {
                 req.flash("title", "User is Blocked");
                 res.redirect("/otplogin");
@@ -569,7 +727,10 @@ exports.otpverify = async (req, res) => {
             console.log(otpmatch);
             if (otpmatch) {
                 req.session.userid = userdata._id
-                res.redirect('/dashboard')
+                const session=req.session.userid;
+                const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
+
+                res.redirect('/',{miniCart:miniCart,session:session})
             } else {
                 req.flash("title", "OTP is not matched");
                 console.log("otp wrong");
@@ -621,17 +782,25 @@ exports.success = async (req, res) => {
         const orderid=req.query.orderid
         console.log("orderid from the query is "+orderid);
         
-        const updatepayment= await orderdb.findByIdAndUpdate(orderid,{$set:{payment:"Paid"}}).exec()
-        console.log("amount paid: "+updatepayment)
+       
+            const updatepayment= await orderdb.findByIdAndUpdate(orderid,{$set:{payment:"Paid"}}).exec()
+            console.log("amount paid: "+updatepayment)
+    
+            const order= await orderdb.findOne({_id:orderid}).populate("product.product_id").populate('address').exec()
+            console.log("populated order is"+order)
+            if(order){
+    
+            const user = await customerdetail.find({ _id: req.session.userid }).populate('address')
+    
+            const miniCart=undefined
+            res.render('success', { session: session, user: user,miniCart: miniCart,order:order })
+        }else{
+            
+            const miniCart=undefined
+            res.render('404',{miniCart:miniCart})
+        }
 
-        const order= await orderdb.findOne({_id:orderid}).populate("product.product_id").populate('address').exec()
-        console.log("populated order is"+order)
-
-
-        const user = await customerdetail.find({ _id: req.session.userid }).populate('address')
-
-        const miniCart=undefined
-        res.render('success', { session: session, user: user,miniCart: miniCart,order:order })
+       
      
     } catch (error) {
         console.log(error.message);

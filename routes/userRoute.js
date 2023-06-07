@@ -9,7 +9,7 @@ const cors=require('cors')
 const session = require('express-session');
 const nocache = require('nocache');
 const flash = require('connect-flash');
-const validate=require('../Authentication/userAuthentication')
+const validate=require('../Middleware/userAuthentication')
 const MongoStore = require('connect-mongo');
 user_route.use(cors())
  
@@ -73,8 +73,14 @@ user_route.get('/product',userController.product)
 
 
 //      <-----------OTP----------->
-user_route.route('/otplogin').get(userController.otplogin).post(userController.otplogin_verify)    
+user_route.route('/otplogin').get(userController.otplogin)
+                             .post(userController.otplogin_verify)    
 user_route.post('/otpverify',userController.otpverify)
+
+
+user_route.get('/otpsignup',userController.otpsignup)
+user_route.post('/otpsignup',userController.otpsignup_verify)
+user_route.post('/otpsignupverify',userController.signup_verify)
 
 
 
@@ -86,7 +92,7 @@ user_route.post('/editaddress',userController.editaddress)
 
 //      <-----------CHECKOUT AND PAYMENT----------->
 user_route.get('/checkout',userController.checkout)
-user_route.post('/checkout',cartController.checkout)            //Cash On Delivery
+user_route.post('/checkout',cartController.checkout)  //Cash On Delivery
 user_route.post('/order',paymentController.order)   //Razorpay
 user_route.get('/success',userController.success)
 
