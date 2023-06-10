@@ -6,13 +6,13 @@ const nocache = require('nocache');
 const cors = require('cors')
 const userRoute = require("./routes/userRoute")
 const adminRoute = require("./routes/adminRoute")
-const PORT = process.env.PORT || 4000
 const MongoStore = require('connect-mongo');
 const cookieparser=require('cookie-parser')
 const bodyparser = require('body-parser')
+require('dotenv').config()                 //env
+const { PORT } = process.env;
 
 app.use(cors())                            //cors
-require('dotenv').config()                 //env
 connectToMongoDB()                         //mongodb server
 
 app.set('view engine', 'ejs')              //view engine
@@ -46,10 +46,7 @@ app.use((req, res, next) => {
     next();
 });
 
-
-
 app.use('/', userRoute)
 app.use('/admin', adminRoute)
-
 
 app.listen(PORT, () => console.log('Server is running on http://localhost:4000'))
