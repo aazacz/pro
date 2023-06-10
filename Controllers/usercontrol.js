@@ -791,7 +791,10 @@ exports.success = async (req, res) => {
             if(order){
     
             const user = await customerdetail.find({ _id: req.session.userid }).populate('address')
-    
+
+            // //empty the cart
+            // const cartEmpty = await cartdb.findByIdAndUpdate(cartid, { $unset: { product: 1 }, $set: { product: [] } });
+
             const miniCart=undefined
             res.render('success', { session: session, user: user,miniCart: miniCart,order:order })
         }else{

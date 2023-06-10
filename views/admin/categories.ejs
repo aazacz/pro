@@ -90,13 +90,13 @@
 
                                             <td class="text-end">
                                                 <div class="col-lg-1 col-sm-2 col-4 col-status">
-                                                    <form action="/admin/deletecategory" method="post">
-                                                        <button value="<%-category._id%>" name="id"
+                                                   
+                                                        <button value="<%-category._id%>" name="id" id="categoryDelete"
                                                             class="btn btn-sm font-sm btn-light rounded"
                                                             type="submit"><i
                                                                 class="material-icons md-delete_forever"></i> </button>
 
-                                                    </form>
+                                               
 
                                                 </div> <!-- dropdown //end -->
                                             </td>
@@ -125,7 +125,9 @@
 
 
     <script>
-        const button = document.getElementById('statusButton');
+
+        $(document).ready(function(){
+          const button = document.getElementById('statusButton');
         button.addEventListener('click', toggleStatus);
 
         function toggleStatus(button) {
@@ -205,10 +207,27 @@
                         }
                 })
 
-
-
-
         })
+
+
+
+
+    $('#categoryDelete')
+
+
+
+
+
+
+
+
+
+
+
+
+
+    })
+
 
 
 

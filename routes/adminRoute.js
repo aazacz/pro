@@ -1,60 +1,11 @@
 const express = require('express')
 const admin_route = express()
 const adminControl = require('../Controllers/admincontrol.js')
-const multer=require('multer')
 const flash=require('connect-flash')
-const path=require("path")
 const validate=require('../Middleware/adminAuthentication')
-const nocache = require('nocache');
-const session = require('express-session');
-const cookieparser=require('cookie-parser')
-const bodyparser = require('body-parser')
-
-
-
-
-admin_route.use(nocache());
-
+const {upload}=require('../Helper/imageUploader.js')
 admin_route.use(flash());
-admin_route.use(express.json());
-admin_route.use(express.urlencoded({extended:true}))
 
-admin_route.use(bodyparser.json());
-admin_route.use(bodyparser.urlencoded({extended:true}))
-
-admin_route.use(cookieparser());
-
-admin_route.use(session({
-    secret: 'secret',
-    resave: false,
-    saveUninitialized:true    
-    }));
-    
-admin_route.use((req, res, next) => {
-        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-        next();
-      });
-
-
-
-
-admin_route.set('view engine', 'ejs')
-admin_route.set('views','./views/admin')
-
-admin_route.use(express.static("public")) 
-admin_route.use(express.static("../public/upload"))
-
-
-const storage=multer.diskStorage({
-    destination:(req,res,cb)=>{
-    cb(null,path.join(__dirname, '../public/upload'))
-},
-filename:(req,file,cb)=>{
-    console.log(file)
-    cb(null,Date.now() + path.extname(file.originalname))
-}
-})
-const upload = multer({ storage:storage });
 
 //LOGIN& LOGOUT
 admin_route.get('/',validate.isLogout,adminControl.login)

@@ -1,17 +1,15 @@
 const express=require("express")
 const app=express()
-const Razorpay = require('razorpay'); 
-const customerdetail = require('../model/userdetailsdb')
 
-// const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
 const orderdb = require('../model/orderdb')
+const customerdetail = require('../model/userdetailsdb')
+const productCopyHelper = require("../Helper/productCopyHelper")
+
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Types;
-const productCopyHelper = require("../Helper/productCopyHelper")
-const cors=require('cors')
-app.use(cors())
 
-
+const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
+const Razorpay = require('razorpay'); 
 
 
 exports.order = async(req,res)=>{
@@ -21,7 +19,7 @@ exports.order = async(req,res)=>{
         let cartid = req.body.cartId;
         let addressid = req.body.address;
         let grandtotal = req.body.grandPrice;
-    console.log(grandtotal)
+        console.log(grandtotal)
         let paymentmethod = req.body.paymentmethod;
 
 
@@ -42,22 +40,19 @@ exports.order = async(req,res)=>{
     
         console.log("oreder is:  "+orderdb_Id);
 
-        const razorpay = new Razorpay({
-            key_id: 'rzp_test_c9kyL8vciS4dlx',
-            key_secret: 'ZFAMnrYKNJZeo1SrjKKS6Ahw'
-            
-         });
-        console.log("2");
-      
-let  order  
+        const razorpay = new Razorpay({ key_id: RAZORPAY_ID_KEY, key_secret: RAZORPAY_SECRET_KEY });
+       
+        let  order;
         try {
+
             order = await razorpay.orders.create({
                 amount: amount,
                 currency: 'INR',
                 receipt: 'ReceiptNo'
             });
+
             console.log('Order created:', order);
-            res.status(201).json({ success: true, order, amount ,orderdb_Id});
+            res.status(201).json({ success: true, order, amount ,orderdb_Id,cartid});
         } catch (error) {
             console.log('Error creating order:', error);
         }
