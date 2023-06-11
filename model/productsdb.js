@@ -51,6 +51,11 @@ const productschema = mongoose.Schema({
        isselected:{
         type: Number,
         default:0
+    },
+    isDeleted:{
+      type:Number,
+      required:false,
+      default:0
     }
     
     });
