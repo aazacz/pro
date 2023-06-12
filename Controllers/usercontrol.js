@@ -136,9 +136,10 @@ exports.dashboard = async (req, res) => {
 
         const wishlist = await wishlistdb.findOne({ userId: req.session.userid }).populate('product').exec()
 
-     
+        const orderlist = await orderdb.find({userId: req.session.userid})
+        console.log("orderlist is"+orderlist);
 
-
+       
         if (req.session.userid) {
             const session = req.session.userid
             res.render('dashboard', {
@@ -146,7 +147,8 @@ exports.dashboard = async (req, res) => {
                 cart: cart,
                 user: user,
                 miniCart: miniCart,
-                wishlist: wishlist
+                wishlist: wishlist,
+                orderlist:orderlist
             })
         }
         else {
@@ -780,8 +782,12 @@ exports.success = async (req, res) => {
         
         const cartid  = req.query.cartid
         const orderid = req.query.orderid
+        const productIds = req.query.productIds
         console.log("orderid from the query is "+orderid);
         console.log("cartid from the query is "+cartid);
+        console.log("productIds from the query is "+productIds);
+
+        
         
        
             const updatepayment= await orderdb.findByIdAndUpdate(orderid,{$set:{payment:"Paid"}}).exec()

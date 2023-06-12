@@ -37,8 +37,6 @@
                                             
                                     }
                                 })
-
-
 				}
 
 				else {
@@ -58,8 +56,9 @@
                                             console.log(orderid)
 											const cartid=response.cartid
 											console.log(cartid)
-											window.location.href = '/success?orderid=' + orderid + '&cartid=' + cartid
-                                        }
+											const productIds=response.productIds
+											window.location.href = '/success?orderid=' + orderid + '&cartid=' + cartid + '&productIds' + productIds
+                                        } 
                                     }
                                 })
 				}
@@ -79,7 +78,7 @@
 					console.log(orderid)
 					const cartid=Response.cartid
 					console.log(cartid)
-					
+					const productIds=Response.productIds
 					var options = {
 						"key": "rzp_test_c9kyL8vciS4dlx",
 						"amount": "<%=Response.amount%>",
@@ -87,7 +86,7 @@
 						"name": "Kenvill",
 						"order_id": Response.order.id,
 						"handler":function(response){
-                        window.location.href = '/success?orderid=' + orderid + '&cartid=' + cartid },
+							window.location.href = '/success?orderid=' + orderid + '&cartid=' + cartid + '&productIds' + productIds },
 						"theme": { "color": "#3399cc" }
 					              };
 

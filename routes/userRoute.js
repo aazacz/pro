@@ -34,6 +34,7 @@ user_route.put('/cartdel',cartController.cartdel)
 user_route.get('/category',userController.category)
 user_route.put('/addtocart',cartController.addtocart) //add to cart
 user_route.put('/addtowishlist',wishlistController.addtowishlist) //add to wishlist
+user_route.put('/wishlistdel',wishlistController.deleteFromWishlist) //add to wishlist
 
 user_route.get('/product',userController.product)
 
@@ -41,6 +42,10 @@ user_route.get('/product',userController.product)
 user_route.route('/otplogin').get(userController.otplogin)
                              .post(userController.otplogin_verify)    
 user_route.post('/otpverify',userController.otpverify)
+
+
+
+
 
 user_route.get('/otpsignup',userController.otpsignup)
 user_route.post('/otpsignup',userController.otpsignup_verify)

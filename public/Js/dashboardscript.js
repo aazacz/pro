@@ -297,6 +297,63 @@ $('.plus').on('click',function(){
 
 
 
+		//removing from the whishlist
+		$(".wishlistRemoveBtn").on("click",function(){
+			console.log('delete button clicked')
+			let wishlisttid = $(this).attr('data-wishlistid');
+			let id = $(this).attr('data-id');
+			let $quantityInput = $(this).closest('tr').find('.qty'); // Select the specific quantity input field
+	
+			let value = $quantityInput.val();
+			
+			console.log("The product id is: "+id)
+			console.log("the cart id is: "+wishlisttid);
+			
+			data={
+				id:id,
+				purchased:value
+			}
+	
+	
+		$.ajax({
+			url:`/wishlistdel`,
+			method:"PUT",
+			data:{
+				id:id,
+				wishlisttid:wishlisttid
+			},
+			success:function(response){
+				
+				toastr.options = {
+		"closeButton": false,
+		"debug": false,
+		"newestOnTop": true,
+		"progressBar": false,
+		"positionClass": "toast-top-right",
+		"preventDuplicates": false,
+		"onclick": null,
+		"showDuration": "200",
+		"hideDuration": "500",
+		"timeOut": "1000",
+		"extendedTimeOut": "1000",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+		}
+	
+				if(response.message=="deleted"){
+					toastr["info"]("Product Removed Successfully", "Success")
+						location.reload();
+	
+				}
+			}
+	
+			})
+	
+			})
+
+
 
 
 

@@ -78,11 +78,72 @@
 
 
 
-								    <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-								    	<p>No order has been made yet.</p>
-								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-								    </div><!-- .End .tab-pane -->
-
+									<div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+										<% if (orderlist) { %>
+										  <div class="cart">
+											<div class="container">
+											  <div class="row">
+												<div class="col-lg-9">
+												  <table class="table table-cart table-mobile">
+													<thead>
+													  <tr>
+														<th>Product</th>
+														<th>Price</th>
+														<th>Quantity</th>
+														<th>Total</th>
+														<th>Purchased</th>
+														<th>Date</th>
+														<th></th>
+													  </tr>
+													</thead>
+													<tbody>
+													  <% for (const order of orderlist) { %>
+														<% for (const product of order.orderProducts) { %>
+														  <tr>
+															<td class="product-col">
+															  <div class="product">
+																<figure class="product-media">
+																  <a href="#">
+																	<img src="upload/<%= product.image[0] %>" alt="Product image">
+																  </a>
+																</figure>
+																<h3 class="product-title">
+																  <a href="#"><%= product.name %></a>
+																</h3><!-- End .product-title -->
+															  </div><!-- End .product -->
+															</td>
+															<td class="price-col">&#8377;<%= product.price %></td>
+															
+															<td class="quantity-col">
+															  <div class="cart-product-quantity">
+																<div class="row" style="border: 5px;border-color: black;">
+																 
+																  <input type="button" style="width: 40px; border: 0;" value="<%= product.quantity %>">
+																  
+																</div>
+															  </div><!-- End .cart-product-quantity -->
+															</td>
+															<td class="total-col"><%= product.price * product.quantity %></td>
+															<td class="price-col" style="font-size: 12px;"><%= order.paymentmethod %></td>
+															<td class="price-col" style="font-size: 12px;"><%= new Date(order.purchased).toLocaleDateString()%></td>
+														  </tr>
+														<% } %>
+													  <% } %>
+													</tbody>
+												  </table><!-- End .table table-wishlist -->
+												</div><!-- End .col-lg-9 -->
+											  </div>
+											</div>
+										  </div>
+										<% } else { %>
+										  <p>Cart is empty</p>
+										  <a href="/category" class="btn btn-outline-primary-2">
+											<span>GO shopping</span>
+											<i class="icon-long-arrow-right"></i>
+										  </a>
+										<% } %>
+									  </div><!-- .End .tab-pane -->
+									  
 
 
 								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
@@ -160,7 +221,7 @@
 									</div>
 									</div>
 									</div>
-								    </div><!-- .End .tab-pane -->
+								    </div><!--End of cart .tab-pane -->
 								   
 									<!-- my wishlist -->
 									
@@ -205,7 +266,7 @@
 																<input type="button"  class="quantity" style="width: 40px; border: 0;" value="1">															</div><!-- End .cart-product-quantity -->
 														</td>
 														<td class="total-col">&#8377; <%=wishlist.product[i].price%></td>
-														<td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
+														<td class="remove-col"><button data-wishlistid="<%= wishlist._id %>" data-id="<%= wishlist.product[i]._id %>" class="wishlistRemoveBtn btn-remove"><i class="icon-close"></i></button></td>
 													</tr>
 													<% } %>
 													<%}else{%>

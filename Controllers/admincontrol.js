@@ -392,7 +392,7 @@ exports.categoriesList_Unlist = async (req, res) => {
 
 exports.order = async (req, res) => {
     try {
-    const order= await orderdb.find({}).populate("product.product_id").populate('userId')
+    const order= await orderdb.find({}).populate('userId')
     // console.log(order)
 if(order){
     res.render('orders',{order:order})
@@ -436,7 +436,7 @@ exports.orderdetails=async(req,res)=>{
 const orderid=req.query.id
 console.log(orderid);
 try {
-    const order= await orderdb.find({_id:orderid}).populate("product.product_id").populate('userId').populate('address')
+    const order= await orderdb.find({_id:orderid}).populate('userId').populate('address')
     console.log(order)
 if(order){
     res.render('orderdetails',{order:order})

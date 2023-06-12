@@ -19,8 +19,22 @@ return addtowishlist
 }
 
 
+async function productDelete(wishlistid, productId){
+
+    console.log("Wishlist helper called");
+   const find = await wishlistdb.findOne({_id: wishlistid , "product._id":productId })
+    console.log("the product inthe cart is: " +find)
+  
+    const productdel =await wishlistdb.findOneAndUpdate({_id:wishlistid, product: productId },{ $pull: { product: productId}}, { new: true }).exec()
+  
+    return productdel
+    }
+
+
+
 
 
 module.exports={
-    addToWishlist
+    addToWishlist,
+    productDelete
 }

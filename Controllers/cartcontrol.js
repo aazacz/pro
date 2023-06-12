@@ -217,17 +217,22 @@ exports.checkout = async (req, res) => {
     const session = req.session.userid
     console.log("session is " + session);
 
-    const orderdbId = await productCopyHelper.copyProductIds(session, cartid, addressid, grandtotal, paymentmethod);
-    const orderdb_Id = orderdbId._id
-    console.log("the orderdb id is  " + orderdb_Id)
+ 
+  const {orderdbId,productids} = await productCopyHelper.copyProductIds(session, cartid, addressid, grandtotal, paymentmethod);
+  const orderdb_Id = orderdbId._id
+  console.log("the orderdb id is  " + orderdb_Id)
+  const productIds = productids
+  console.log(productIds);
+
+    
 
     const addUserId = await orderdb.findByIdAndUpdate(orderdb_Id, { $set: { userId: req.session.userid, payment: "Paid" } })
     console.log("new userid added to orderdb   &   user paid the Amount");
   
     const addtouser = await customerdetail.findByIdAndUpdate(req.session.userid, { myorderId: orderdb_Id }, { new: true });
-    console.log("new orderId added to customerDB");
+    console.log("new orderId added to customerDB")
 
-    res.send({ message: "ordered successfully", orderdb_Id: orderdb_Id,cartid:cartid })
+    res.send({ message: "ordered successfully", orderdb_Id: orderdb_Id,cartid:cartid,productIds:productIds })
 
   } catch (error) {
     console.log(error.messsage);

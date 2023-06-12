@@ -75,3 +75,26 @@ exports.addtowishlist = async (req, res) => {
 
 
 }
+
+
+
+exports.deleteFromWishlist=async (req,res)=>{
+   try {
+        const productId = new ObjectId(req.body.id);
+    const wishlistid = req.body.cartid
+    console.log("the product Id is: " + productId + "\n wishlist ID is :" + wishlistid)
+
+ // calling wishlist Helper
+ const productdel = await wishlistHelper.productDelete(wishlistid, productId)
+
+ if (productdel) {
+    res.send({ message: "deleted" })
+  }
+  else {
+    res.send({ message: "not deleted" })
+  }
+
+} catch (error) {
+    console.log(error.message);
+}
+}

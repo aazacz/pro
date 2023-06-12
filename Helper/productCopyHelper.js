@@ -25,6 +25,17 @@ async function copyProductIds(session,cartid,addressid,grandtotal,paymentmethod)
       }
     });
 console.log(products);
+
+const productids = cartDocument.product.map(item => {
+  return {     _id: item.product_id._id,
+          quantity: item.quantity,}
+                                                    });
+
+
+
+console.log("productids are : ");
+console.log(productids);
+
   
 
     console.log("11111111111111111111111111111111111111111111111111111111111111111");
@@ -44,7 +55,10 @@ console.log(products);
     const savedOrder = await newOrder.save();   
     
     console.log("The saved order is :   "+savedOrder._id);
-    return savedOrder;
+    return {
+      orderdbId: savedOrder,
+      productids: productids
+    }
 
   } catch (error) {
     console.error('Error copying product IDs:', error);
