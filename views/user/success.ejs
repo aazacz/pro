@@ -23,19 +23,19 @@
           </thead>
 
           <tbody>
-            <% for (var i =0; i < order.product.length; i++ ) { %>	
+            <% for (var i =0; i < order.orderProducts.length; i++ ) { %>	
             
             <tr>
               <td class="product-col">
                 <div class="product">
                   <figure class="product-media">
                     <a href="#">
-                      <img src="upload/<%=order.product[i].product_id.image[0]%>" alt="Product image">
+                      <img src="upload/<%=order.orderProducts[i].image[0]%>" alt="Product image">
                     </a>
                   </figure>
 
                   <h3 class="product-title">
-                    <a href="#"><%=order.product[i].product_id.name%></a>
+                    <a href="#"><%=order.orderProducts[i].name%></a>
                   </h3><!-- End .product-title -->
                 </div><!-- End .product -->
               </td>
@@ -94,9 +94,7 @@
     <p><%=order.address.street%>,<%=order.address.state%> </p>
     <p><%=order.address.state%>, <%=order.address.pincode%></p>
 
-
-
-   
+ 
   </div>
 
   <!-- Bootstrap JS -->

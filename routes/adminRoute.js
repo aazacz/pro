@@ -6,8 +6,11 @@ const validate=require('../Middleware/adminAuthentication')
 const {upload}=require('../Helper/imageUploader.js')
 admin_route.use(flash());
 
+admin_route.use(express.static("public"))
+admin_route.use(express.static("../public/upload"))
 
-//LOGIN& LOGOUT
+
+//LOG_IN & LOG_OUT
 admin_route.get('/',validate.isLogout,adminControl.login)
 admin_route.get('/dashboard',validate.isLogin,adminControl.dashboard)
 admin_route.post('/logout',validate.isLogin,adminControl.logout)

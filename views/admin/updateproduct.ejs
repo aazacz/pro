@@ -54,14 +54,7 @@
                                                 class="form-control" id="product_name">
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <div class="mb-4">
-
-                                            <label class="form-label">Tax rate</label>
-                                            <input type="text" value="<%=product.tax%>" name="tax" placeholder="<%=product.tax%>" class="form-control"
-                                                id="product_name">
-                                        </div>
-                                    </div>
+                    
                                     <div class="col-lg-4">
                                         <div class="mb-4">
 
@@ -89,7 +82,7 @@
                         <div class="card-body">
                             <div class="input-upload">
                                 <img src="upload/<%=product.image[0]%>" alt="">
-                                <input class="form-control" value="<%=product.image[0]%>" name="image" type="file" multiple>
+                                <input class="form-control"  name="image" id="uploadimage" type="file" multiple>
                             </div>
                         </div>
                     </div> <!-- card end// -->
@@ -124,4 +117,30 @@
             </div>
         </form>
     </section> <!-- content-main end// -->
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.getElementById('uploadimage').addEventListener('click', function() {
+
+    Swal.fire({
+  position: 'top-end',
+  icon: 'info',
+  title: 'Upload the 4 Photos',
+  text: 'Upload exactly 4 Images .',
+  showConfirmButton: false,
+  timer: 2000
+})
+})
+
+
+
+
+</script>
+        
+        
+        </script>
     <%-include("../partials/adminfooter")-%>
+
+
+
+

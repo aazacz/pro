@@ -187,21 +187,14 @@
 		
 		let value = $quantityInput.val();
 		let id = $quantityInput.attr('data-id');
-		
+		let currentQuantity=value
+	
 		console.log("clicked button id is" +id)
-		console.log("value is" +value)
-		const incQuantity = 1
-
-		if (value==0) {
-			value =  parseInt(value) + 1;
-			const incQuantity = 1
-			console.log("value after increment: " + value)
-		}
-
-		console.log(value);
 		
+		console.log("value is" +value)
+	
 			const data={ 
-				incQuantity:incQuantity,
+				currentQuantity:currentQuantity,
 				id:id  }
 
 		$.ajax({
@@ -213,7 +206,12 @@
 		console.log(response)
 		if (response.message=="incremented") {
 			window.location.reload();
-	}
+		}
+		else{
+
+			$quantityInput.css({width: "40px",fontSize: "10px"});
+			$quantityInput.val("out Of \n Stock");
+		}
 	}
 	
 	})

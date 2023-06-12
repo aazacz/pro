@@ -777,23 +777,26 @@ exports.success = async (req, res) => {
     try {
     
         const session = req.session.userid
-      
         
-        const orderid=req.query.orderid
+        const cartid  = req.query.cartid
+        const orderid = req.query.orderid
         console.log("orderid from the query is "+orderid);
+        console.log("cartid from the query is "+cartid);
         
        
             const updatepayment= await orderdb.findByIdAndUpdate(orderid,{$set:{payment:"Paid"}}).exec()
-            console.log("amount paid: "+updatepayment)
+            // console.log("amount paid: "+updatepayment)
     
-            const order= await orderdb.findOne({_id:orderid}).populate("product.product_id").populate('address').exec()
+            const order= await orderdb.findOne({_id:orderid}).populate('address').exec()
             console.log("populated order is"+order)
+           
+
             if(order){
     
             const user = await customerdetail.find({ _id: req.session.userid }).populate('address')
 
-            // //empty the cart
-            // const cartEmpty = await cartdb.findByIdAndUpdate(cartid, { $unset: { product: 1 }, $set: { product: [] } });
+            //empty the cart
+             const cartEmpty = await cartdb.findByIdAndUpdate(cartid, {$set: { product: [] } });
 
             const miniCart=undefined
             res.render('success', { session: session, user: user,miniCart: miniCart,order:order })

@@ -13,17 +13,17 @@ const Razorpay = require("razorpay")
 //cart page loading
 exports.cart = async (req, res) => {
   const session = req.session.userid
-  console.log("session id in the cart page is:    "+session);
-  
+  console.log("session id in the cart page is:    " + session);
 
-  
+
+
   const user = await customerdetail.findOne({ _id: req.session.userid }).populate('address').populate('cartId')
 
-  const cart = await cartdb.find({userId:req.session.userid}).populate('product.product_id');
- 
-  const miniCart= await cartdb.findOne({userId:req.session.userid}).populate('product.product_id').exec()
+  const cart = await cartdb.find({ userId: req.session.userid }).populate('product.product_id');
 
-  res.render('cart', { session: session, cart: cart, user: user,miniCart:miniCart })
+  const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
+
+  res.render('cart', { session: session, cart: cart, user: user, miniCart: miniCart })
 }
 
 
@@ -50,15 +50,15 @@ exports.addtocart = async (req, res) => {
         const quantity = 1;
 
         // addToCartHelper
-        const addtocart= await cartHelper.addToCart(cartId, productId)
-        
+        const addtocart = await cartHelper.addToCart(cartId, productId)
+
         if (addtocart) {
-            console.log('Product added to the cart:', addtocart);
-            res.send({ message: 'Product added' });
+          console.log('Product added to the cart:', addtocart);
+          res.send({ message: 'Product added' });
         } else {
-            console.log('Error adding product to the cart');
-            res.send({ message: 'Error adding product to the cart' });
-              }
+          console.log('Error adding product to the cart');
+          res.send({ message: 'Error adding product to the cart' });
+        }
 
         console.log("if condition worked");
         return;
@@ -111,22 +111,41 @@ exports.addtocart = async (req, res) => {
 exports.increaseQuantity = async (req, res) => {
   try {
     const productId = req.body.id;
-    const incQuantity = req.body.incQuantity;
+    const incQuantity =parseInt(req.body.currentQuantity)+1 ;
+    // const qtyincart=incQuantity+1
     const userId = req.session.userid;
+  
+    //find the cart quantity
+
+    const product = await productdb.findOne({ _id: req.body.id })
+    console.log(product.quantity);
+  
+    if (incQuantity <= product.quantity) {
+
+      let cart = await cartdb.findOne({ userId: userId }); //finding the cart 
+      const cartid = cart._id
+      let qtyToIncrease=1
+      const quantityset = await cartdb.findOneAndUpdate({ _id: cartid, 'product.product_id': productId },
+                                                        { $inc: { 'product.$.quantity': qtyToIncrease } }, { new: true }).exec()
+      
+      console.log(":if condition");
+      res.send({ message: "incremented" })
+    }
+    else {
+    console.log("else condition");
+    res.send({ message: "out of quantity" })
+    }
+
+    
+
+
+
+
+  
     console.log("productid is: " + productId + " Qty to increase is: " + incQuantity + "  user Id is: " + userId);
 
-    const quantityset=await cartHelper.increaseQty(productId, incQuantity, userId)
-    
-    if (quantityset) {
-      // Cart updated successfully
-      console.log(quantityset);
-      res.send({ message: "incremented" })
-    } else {
-      
-      console.log("Cart not found");
-     
-    }
-    
+    // const quantityset=await cartHelper.increaseQty(productId, incQuantity, userId)
+
   } catch (error) {
     console.log(error.message);
   }
@@ -136,22 +155,22 @@ exports.increaseQuantity = async (req, res) => {
 //decreaseQuantity of cart
 exports.decreaseQuantity = async (req, res) => {
   try {
-    const value=req.body.value
+    const value = req.body.value
     const productId = req.body.id;
     const decQuantity = req.body.decQuantity;
     const userId = req.session.userid
+    console.log(value);
     console.log("productid is: " + productId + " Qty to decrease is: " + decQuantity + "  user Id is: " + userId);
 
-    if(value<2){
+    if (value == 1) {
       res.send({ message: "decremented" })
     }
-    else{
-
+    else {
       //calling Cart helper 
       await cartHelper.decreaseQty(productId, decQuantity, userId)
       res.send({ message: "decremented" })
     }
-    
+
 
   } catch (error) {
     console.log(error.message);
@@ -166,16 +185,16 @@ exports.cartdel = async (req, res) => {
   try {
     const productId = new ObjectId(req.body.id);
     const cartid = req.body.cartid
-    console.log("the product Id is: "+ productId+ "\n cart ID is :"+ cartid)
+    console.log("the product Id is: " + productId + "\n cart ID is :" + cartid)
 
-  // calling Cart Helper
-  const productdel=await cartHelper.productDelete(cartid,productId)
-  
-  if(productdel){
-  res.send({ message: "deleted" })
+    // calling Cart Helper
+    const productdel = await cartHelper.productDelete(cartid, productId)
+
+    if (productdel) {
+      res.send({ message: "deleted" })
     }
-  else{
-  res.send({ message: "not deleted" })
+    else {
+      res.send({ message: "not deleted" })
     }
 
   } catch (error) {
@@ -187,31 +206,28 @@ exports.cartdel = async (req, res) => {
 //POST-checkout
 exports.checkout = async (req, res) => {
   try {
-    console.log("cash on dedlivery")
+    console.log("cash on delivery")
     console.log("post checkout")
     let cartid = req.body.cartId;
     let addressid = req.body.address;
     let grandtotal = req.body.grandPrice;
-console.log(grandtotal)
+    console.log(grandtotal)
     let paymentmethod = req.body.paymentmethod;
 
     const session = req.session.userid
     console.log("session is " + session);
 
-    const orderdbId = await productCopyHelper.copyProductIds(session,cartid,addressid,grandtotal,paymentmethod);
+    const orderdbId = await productCopyHelper.copyProductIds(session, cartid, addressid, grandtotal, paymentmethod);
     const orderdb_Id = orderdbId._id
     console.log("the orderdb id is  " + orderdb_Id)
 
-    const addUserId = await orderdb.findByIdAndUpdate(orderdb_Id, {$set:{ userId: req.session.userid,payment:"Paid" }})
-    console.log("new userid added to orderdb");
-    console.log("user paid the Amount");
-
-    const addtouser = await customerdetail.findByIdAndUpdate(req.session.userid, { myorderId: orderdb_Id },{ new: true });
+    const addUserId = await orderdb.findByIdAndUpdate(orderdb_Id, { $set: { userId: req.session.userid, payment: "Paid" } })
+    console.log("new userid added to orderdb   &   user paid the Amount");
+  
+    const addtouser = await customerdetail.findByIdAndUpdate(req.session.userid, { myorderId: orderdb_Id }, { new: true });
     console.log("new orderId added to customerDB");
 
-    console.log("oreder is:  "+orderdb_Id);
-
-    res.send({ message: "ordered successfully",orderdb_Id:orderdb_Id })
+    res.send({ message: "ordered successfully", orderdb_Id: orderdb_Id,cartid:cartid })
 
   } catch (error) {
     console.log(error.messsage);

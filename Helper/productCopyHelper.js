@@ -7,51 +7,43 @@ const { ObjectId } = mongoose.Types;
 async function copyProductIds(session,cartid,addressid,grandtotal,paymentmethod){
   try {
     const address=new ObjectId(addressid)
-    const cartDocument = await cartdb.findOne({userId:new ObjectId(session)})
+    const paymentMethod=paymentmethod
+    console.log(paymentMethod);
+    const cartDocument = await cartdb.findOne({userId:new ObjectId(session)}).populate('product.product_id')
+    console.log(cartDocument);
     console.log("products in the cart is :   "+cartDocument._id);
-    const Cartid=cartDocument._id
-
-  
-     
-    const orderProductArray = [];
     
-    cartDocument.product.forEach((cartProduct) => {
-      
-       const orderProduct = {                    // Create a new product object with the product_id and quantity
-         product_id: cartProduct.product_id,
-         quantity: cartProduct.quantity
-       };
-     
-      
-       orderProductArray.push(orderProduct);     // Push the orderProduct to the orderProductArray
-     });
+    
+    console.log("Products in the cart:");
 
+    const products = cartDocument.product.map(item => {
+      return {
+        name: item.product_id.name,
+        price: item.product_id.price,
+        quantity: item.quantity,
+        image: item.product_id.image
+      }
+    });
+console.log(products);
+  
 
-     const newOrder = new orderdb({
+    console.log("11111111111111111111111111111111111111111111111111111111111111111");
+    const Cartid = cartDocument._id
+
+    const orderProductArray = [];
+
+    const newOrder = new orderdb({
                                   userId: new ObjectId(session),
-                                  product: orderProductArray,
-                                  grandtotal: grandtotal,
-                                  paymentmethod: paymentmethod,
-                                  address:address,
-                                  
-                                  
+                                  orderProducts: products,
+                                  grandtotal: grandtotal, // Implement a function to calculate the grand total
+                                  paymentmethod: paymentMethod,
+                                  address: address
                                    });
     
+    // Save the new order document
+    const savedOrder = await newOrder.save();   
     
-    const savedOrder = await newOrder.save();   // Save the new order document
-    
-    // removing the product from the cart Document 
-
-   /*  const updatedCart = await Cart.updateOne(
-      { _id: cartId },
-      { $set: { product: [] } }
-    );
-    
-    console.log("the updated cart is : "+updatedCart); */
-    
-  
     console.log("The saved order is :   "+savedOrder._id);
-
     return savedOrder;
 
   } catch (error) {

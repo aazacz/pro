@@ -155,9 +155,9 @@ exports.customerList_Unlist = async (req, res) => {
 //GET- Product List
 exports.productslist = async (req, res) => {
     try {
-        const category = await productdb.find({}).populate("category_id")
-        console.log(category);
-        res.render('productslist', { category: category })
+        const productlist = await productdb.find({}).populate("category_id")
+        console.log(productlist);
+        res.render('productslist', { productlist: productlist })
 
     } catch (error) {
         console.log(error.message);
@@ -180,10 +180,9 @@ exports.addproduct = async (req, res) => {
 //For Deleting the product
 exports.deleteproduct = async (req, res) => {
     try {
-
-        console.log(req.params.productid)
+       
         const deleteid = req.body.id
-        const userid = await productdb.deleteOne({ _id: deleteid })
+        const userid = await productdb.findByIdAndUpdate({ _id: deleteid },{$set:{isDeleted:1}})
         res.redirect('/admin/productslist')
 
     } catch (error) {
@@ -210,12 +209,13 @@ exports.addproducttodb = async (req, res) => {
             category_id: req.body.category_id,
             description: req.body.description,
             image: arrImages,
-            tax: req.body.tax,
+            
             quantity: req.body.quantity,
             isCreated: new Date()
         })
-        console.log(product);
+        // console.log(product);
         const insertproduct = await product.save();
+        console.log("product added is ");
         console.log(insertproduct);
         if (insertproduct) {
             res.status(200).redirect('/admin/productslist')
@@ -244,34 +244,53 @@ exports.updateproduct = async (req, res) => {
 };
 
 
-//post-updating product &                                   <--------UPDATING IN TO Database 
+//post-updating product &                  <--------UPDATING IN TO Database-------->
 exports.updateproduct_todb = async (req, res) => {
     try {
 
         console.log(req.body.id, req.body.name, req.body.brand, req.body.price);
         const arrImages = [];
-        if (req.files) {
+        let product
+        console.log(req.files.length);
+
+        if (req.files.length>0) {
             for (let i = 0; i < req.files.length; i++) {
+                console.log(req.files[i].filename);
                 arrImages.push(req.files[i].filename);
+            }
+           console.log("if condition");
+           product  = {
+                name: req.body.name,
+                brand: req.body.brand,
+                price: req.body.price,
+                size: req.body.size,
+                category_id: req.body.category_id,
+                description: req.body.description,
+                image: arrImages,
+                tax: req.body.tax,
+                quantity: req.body.quantity,
+                isCreated: new Date()
+            }
+        }
+        else{
+           console.log("else condition");
+
+            product = {
+                name: req.body.name,
+                brand: req.body.brand,
+                price: req.body.price,
+                size: req.body.size,
+                category_id: req.body.category_id,
+                description: req.body.description,
+                tax: req.body.tax,
+                quantity: req.body.quantity,
+                isCreated: new Date()
             }
         }
 
-        const product = {
-            name: req.body.name,
-            brand: req.body.brand,
-            price: req.body.price,
-            size: req.body.size,
-            category_id: req.body.category_id,
-            description: req.body.description,
-            image: arrImages,
-            tax: req.body.tax,
-            quantity: req.body.quantity,
-            isCreated: new Date()
-        }
-
         const data = await productdb.updateOne({ _id: req.body.id }, { $set: product })
-
-        console.log(data);
+        const updateddata = await productdb.findOne({_id: req.body.id})
+        console.log(updateddata);
 
 
         if (data) {

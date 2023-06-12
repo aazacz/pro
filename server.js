@@ -12,17 +12,17 @@ const bodyparser            = require('body-parser')
 
 require('dotenv').config()                 //env  
 const PORT                  = process.env.PORT
-
 app.use(cors())                            //cors
 connectToMongoDB()                         //mongodb server
+
+
 
 app.set('view engine', 'ejs')              //view engine
 userRoute.set('views', './views/user')     //views folder
 adminRoute.set('views','./views/admin')
 
 app.use(cookieparser());
-app.use(express.static("public"))           //public folder
-app.use(express.static("../public/upload"))
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))

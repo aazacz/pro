@@ -6,19 +6,30 @@ const orderSchema = mongoose.Schema({
         ref: "customerdetail",
         required: false
     },
-    product: [{
-        product_id:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "product",
-        required: false
+    orderProducts: [{
+       
+    name:{
+        type:String,
+        required:false,
     },
     quantity:{
         type:Number,
         required:false,
         default:1
     },
+    price:{
+        type:Number,
+        required:false,
+        default:1
     
-      }],
+      },
+      image: {
+        type: Array,
+        required: true,
+        
+     }
+    } ],
+
       grandtotal:{
         type:Number,
         required:true,

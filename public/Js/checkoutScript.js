@@ -1,6 +1,5 @@
 
-const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
-<script>
+
 		$(document).ready(function () {
 			$('#placeOrder').on('click', function () {
 				// e.preventDefault();
@@ -57,7 +56,9 @@ const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
                                         if (response.message == "ordered successfully") {
                                             const orderid = response.orderdb_Id
                                             console.log(orderid)
-                                            window.location.href = '/success?orderid=' + orderid
+											const cartid=response.cartid
+											console.log(cartid)
+											window.location.href = '/success?orderid=' + orderid + '&cartid=' + cartid
                                         }
                                     }
                                 })
@@ -80,7 +81,7 @@ const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
 					console.log(cartid)
 					
 					var options = {
-						"key": RAZORPAY_ID_KEY,
+						"key": "rzp_test_c9kyL8vciS4dlx",
 						"amount": "<%=Response.amount%>",
 						"currency": "INR",
 						"name": "Kenvill",
@@ -97,4 +98,3 @@ const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
 
 			})
 		});
-	</script>

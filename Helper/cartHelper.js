@@ -19,22 +19,8 @@ async function addToCart(cartId, productId) {
 }
 
 
-
-async function increaseQty(productId, incQuantity, userId) {
-   let cart = await cartdb.findOne({ userId: userId });
-   const cartid = cart._id
-   console.log(cartid);
-   console.log("productid is: " + productId + " Qty to increase is: " + incQuantity + "  user Id is: " + userId);
-
-   const quantityset=await cartdb.findOneAndUpdate({_id:cartid, 'product.product_id': productId },
-                                 { $inc: { 'product.$.quantity': incQuantity } },{ new:true }).exec()
-  console.log(quantityset);
-   return quantityset;
-
-}
-
-
 async function decreaseQty(productId, decQuantity, userId) {
+
    let cart = await cartdb.findOne({ userId: userId });
    const cartid = cart._id
    console.log(cartid);
@@ -64,7 +50,6 @@ async function productDelete(cartid,productId){
 
 module.exports = {
   addToCart,
-  increaseQty,
   decreaseQty,
   productDelete
 

@@ -23,8 +23,9 @@ const productschema = mongoose.Schema({
          required:true, 
     },
     tax: {
-        type: String,
-        required: true
+        type: Number,
+        required: false,
+        default:18
       },
     quantity: {
         type: Number,
@@ -39,7 +40,7 @@ const productschema = mongoose.Schema({
         type: Date,
         required: true
       },
-    image:{
+    image: {
         type: Array,
         required: true,
         validate:[arraylimit,"maximun 3 product image"]
@@ -52,7 +53,7 @@ const productschema = mongoose.Schema({
         type: Number,
         default:0
     },
-    isDeleted:{
+    isDeleted: {
       type:Number,
       required:false,
       default:0
