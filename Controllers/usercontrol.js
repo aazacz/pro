@@ -35,7 +35,7 @@ exports.index = async (req, res) => {
     }
     else {
         const session = null
-        const miniCart = false
+        const miniCart = null
         res.render('index', { session: session, miniCart: miniCart })
     }
 
@@ -153,7 +153,8 @@ exports.dashboard = async (req, res) => {
         }
         else {
             const session = null
-            res.render('dashboard', { session: session })
+            const miniCart = null
+            res.render('dashboard', { session: session,miniCart:miniCart })
         }
 
     } catch (error) {
@@ -323,14 +324,29 @@ exports.editaddress=async(req,res)=>{
 
 //product open page
 exports.product = async (req, res) => {
+   
+   try {
+    
+   
     const session = req.session.userid
     console.log(session);
     // console.log(req.query.productid)
-    const product = await productdb.findOne({ _id: req.query.productid })
-
-    const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
-    res.render('product', { product: product, session: session, miniCart: miniCart })
-
+    if(session){
+        const product = await productdb.findOne({ _id: req.query.productid })
+        
+        const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
+        res.render('product', { product: product, session: session, miniCart: miniCart,category:category })
+    }
+    else{
+        const product = await productdb.findOne({ _id: req.query.productid })
+        const category = await categorydb.find({})
+        const miniCart = null
+        res.render('product', { product: product, session: session, miniCart: miniCart,category:category })
+    }
+   
+} catch (error) {
+    console.log(error.message);
+}
 }
 
 //category page
@@ -340,7 +356,8 @@ exports.category = async (req, res) => {
         const perpage = 2
         let doCount;
 
-
+        const selectedCategories = req.body.categories || [];
+        
 
         const session = req.session.userid
         console.log("checking session exists before loading category page");
@@ -354,10 +371,13 @@ exports.category = async (req, res) => {
         // console.log(product);
         const title = req.flash("title");
 
+
         let user = await customerdetail.findOne({ _id: req.session.userid }).populate('address').populate('cartId')
 
-        const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
-
+        const miniCart = await cartdb.findOne({_id: req.session.userid}).populate('product.product_id').exec()
+       
+        const category = await categorydb.find({})
+        
         if(miniCart){
 
             res.render("category", { title: title[0] || "",
@@ -367,7 +387,85 @@ exports.category = async (req, res) => {
                                     product: product, 
                                     session: session, 
                                     user: user,
-                                    miniCart: miniCart })
+                                    miniCart: miniCart,
+                                    category:category })
+
+        }
+        else{
+            
+
+            const product = await productdb
+              .find({})
+              .countDocuments()
+              .then((documents) => {
+                doCount = documents;
+                return productdb
+                  .find({})
+                  .skip((pageNum - 1) * perpage)
+                  .limit(perpage);
+              });
+            
+            const session=null
+            const miniCart=undefined
+            res.render('category',{session: session,
+                                   miniCart: miniCart,
+                                   product: product,
+                                   currentPage:pageNum,
+                                   totalDocument:doCount, 
+                                   pages:Math.ceil(doCount/perpage),
+                                   category:category })
+        }
+
+
+
+       
+    } catch (error) {
+        console.log(error.message)
+    }
+
+}
+
+
+
+//filter products
+/* exports.filterProducts = async (req, res) => {
+    try {
+        const pageNum=req.query.page
+        const perpage = 2
+        let doCount;
+
+        const selectedCategories = req.body.categories || [];
+     
+
+        const session = req.session.userid
+        console.log("checking session exists before loading category page");
+        console.log(session);
+
+        const product = await productdb.find({}).countDocuments().then(documents=>{
+            doCount=documents
+            return productdb.find({category: { $in: selectedCategories }}).skip(((pageNum-1)*perpage)).limit(perpage)
+        })
+
+        // console.log(product);
+        const title = req.flash("title");
+
+
+        let user = await customerdetail.findOne({ _id: req.session.userid }).populate('address').populate('cartId')
+
+        const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
+        const category = await categorydb.find({})
+        console.log(category);
+        if(miniCart){
+
+            res.render("category", { title: title[0] || "",
+                                    currentPage:pageNum,
+                                    totalDocument:doCount, 
+                                    pages:Math.ceil(doCount/perpage),
+                                    product: product, 
+                                    session: session, 
+                                    user: user,
+                                    miniCart: miniCart,
+                                    category:category })
 
         }
         else{
@@ -383,7 +481,7 @@ exports.category = async (req, res) => {
     }
 
 }
-
+ */
 
 
 

@@ -18,19 +18,22 @@ admin_route.route('/login').get(validate.isLogout,adminControl.login)
                            .post(adminControl.login_verify)
 
 //PRODUCT TAB
-admin_route.get('/productslist', adminControl.productslist)
+admin_route.get('/productslist',validate.isLogin, adminControl.productslist)
 admin_route.route('/addproduct').get(adminControl.addproduct)
                                 .post(upload.array('image'), adminControl.addproducttodb)
                                 
-admin_route.route('/updateproduct').get(adminControl.updateproduct)
+admin_route.route('/updateproduct').get(validate.isLogin,adminControl.updateproduct)
                                    .post(upload.array('image'),adminControl.updateproduct_todb)
 admin_route.post('/deleteproduct',adminControl.deleteproduct)
 
 
-//CUSTOMER TAB
-admin_route.get('/customerlist', adminControl.customerlist)
+admin_route.get('/chartData', adminControl.fetchChartData)
+     
 
-admin_route.route('/updatecustomer').get(adminControl.updatecustomer)
+//CUSTOMER TAB
+admin_route.get('/customerlist',validate.isLogin, adminControl.customerlist)
+
+admin_route.route('/updatecustomer').get(validate.isLogin,adminControl.updatecustomer)
                                     .post(adminControl.updatecustomer_todb)
 admin_route.post('/deleteuser',adminControl.deleteuser)                                    
 
@@ -38,20 +41,20 @@ admin_route.put('/customerlist/:id/status', adminControl.customerList_Unlist)
 
 
 //CATEGORIES TAB
-admin_route.get('/categories',adminControl.categories)
+admin_route.get('/categories',validate.isLogin,adminControl.categories)
 admin_route.post('/addcategory',adminControl.addcategory)
 admin_route.post('/deletecategory',adminControl.deletecategory)
 admin_route.put('/categories/:id/status', adminControl.categoriesList_Unlist)
 
 
 //ORDER TAB
-admin_route.get('/order',adminControl.order)
+admin_route.get('/order',validate.isLogin,adminControl.order)
 admin_route.post('/updateOrderStatus',adminControl.updateOrderStatus)
-admin_route.get('/orderdetails',adminControl.orderdetails)
+admin_route.get('/orderdetails',validate.isLogin,adminControl.orderdetails)
 
 
-admin_route.get('/adminpage_sellers_list', adminControl.adminpage_sellers_list)
-admin_route.get('/adminpage_form_productadd', adminControl.adminpage_form_productadd)
+admin_route.get('/adminpage_sellers_list',validate.isLogin, adminControl.adminpage_sellers_list)
+admin_route.get('/adminpage_form_productadd',validate.isLogin, adminControl.adminpage_form_productadd)
 
 
 module.exports = admin_route

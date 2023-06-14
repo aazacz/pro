@@ -52,7 +52,8 @@ exports.login_verify = async (req, res) => {
 }
 
 //dashboard
-exports.dashboard = (req, res) => {
+exports.dashboard =async (req, res) => {
+    
     res.render('dashboard')
 }
 
@@ -155,7 +156,7 @@ exports.customerList_Unlist = async (req, res) => {
 //GET- Product List
 exports.productslist = async (req, res) => {
     try {
-        const productlist = await productdb.find({}).populate("category_id")
+        const productlist = await productdb.find({})
         console.log(productlist);
         res.render('productslist', { productlist: productlist })
 
@@ -194,22 +195,23 @@ exports.deleteproduct = async (req, res) => {
 //POST -Adding product                                       <--------ADDINGG IN TO Database                                             
 exports.addproducttodb = async (req, res) => {
     try {
+        console.log("1");
         const arrImages = [];
         if (req.files) {
             for (let i = 0; i < req.files.length; i++) {
                 arrImages.push(req.files[i].filename);
             }
         }
+        console.log("2");
         console.log(req.body.name, req.body.brand, req.body.price);
         const product = new productdb({
             name: req.body.name,
             brand: req.body.brand,
             price: req.body.price,
             size: req.body.size,
-            category_id: req.body.category_id,
+            category: req.body.categoryName,
             description: req.body.description,
             image: arrImages,
-            
             quantity: req.body.quantity,
             isCreated: new Date()
         })
@@ -235,7 +237,7 @@ exports.addproducttodb = async (req, res) => {
 exports.updateproduct = async (req, res) => {
     try {
         const id = req.query.productid
-        const product_data = await productdb.findById({ _id: id }).populate("category_id");
+        const product_data = await productdb.findById({ _id: id });
         const category = await categorydb.find({})
         res.render("updateproduct", { product: product_data, category: category });
     } catch (error) {
@@ -264,7 +266,7 @@ exports.updateproduct_todb = async (req, res) => {
                 brand: req.body.brand,
                 price: req.body.price,
                 size: req.body.size,
-                category_id: req.body.category_id,
+                category: req.body.categoryName,
                 description: req.body.description,
                 image: arrImages,
                 tax: req.body.tax,
@@ -280,7 +282,7 @@ exports.updateproduct_todb = async (req, res) => {
                 brand: req.body.brand,
                 price: req.body.price,
                 size: req.body.size,
-                category_id: req.body.category_id,
+                category: req.body.categoryName,
                 description: req.body.description,
                 tax: req.body.tax,
                 quantity: req.body.quantity,
@@ -448,13 +450,66 @@ if(order){
     console.log();
 }
 
-
-
-
-
-
 }
 
+
+exports.fetchChartData = async (req,res)=> {
+
+    try {
+        const salesData = await orderdb.aggregate([
+            { $match: { status: 'Delivered' } },  {
+              $group: {
+                _id: {
+                  $dateToString: {
+                    format: '%Y-%m-%d',
+                    date: { $toDate: '$purchased' }
+                  }
+                },
+                totalRevenue: { $sum: '$grandtotal' }
+              }
+            },
+            {
+              $sort: { _id: 1 }
+            },
+            {
+              $project: {
+                _id: 0, // Exclude the _id field from the output
+                date: '$_id', // Rename _id to date
+                totalRevenue: 1 // Include the totalRevenue field
+              }
+            },
+            {
+              $limit: 4
+            }
+          ]);
+    
+          console.log(salesData);
+    
+          const data = [];
+          const date = [];
+        for (const totalRevenue of salesData) {
+            data.push(totalRevenue.totalRevenue);
+          }
+        
+            for (const item of salesData) {
+            date.push(item.date);
+          }
+        
+          
+        console.log("DATA iS");
+        console.log(data);
+          
+        console.log("DATE iS");
+        console.log(date);
+    
+
+        res.status(200).send({ data:data, date:date })
+  
+    } catch (error) {
+        console.log(error.message);
+    }
+    
+  };
 
 
 

@@ -73,12 +73,11 @@
                                                             alert-warning
                                                           <% } else if (order[i].status === 'Approved') { %>
                                                             alert-success
+                                                          <% } else if (order[i].status === 'Delivered') { %>
+                                                            alert-success
                                                           <% } else { %>
                                                             alert-danger
-                                                          <% } %>"
-                                                        >
-                                                          <%= order[i].status %>
-                                                        </span>
+                                                          <% } %>" >   <%= order[i].status %>      </span>
                                                       </td>
                                                       
 
@@ -95,6 +94,7 @@
                                                        
                                                           <a class="dropdown-item approve-btn" data-orderid="<%= order[i]._id %>">Approve</a>
                                                           <a class="dropdown-item cancel-btn" data-orderid="<%= order[i]._id %>">Cancel</a>
+                                                          <a class="dropdown-item deliver-btn" data-orderid="<%= order[i]._id %>">Delivered</a>
                                                       
                                                        
                                                       </div>
@@ -229,6 +229,11 @@
                 console.log(orderId);
                 updateOrderStatus(orderId, 'Cancelled');
               });
+              $('.deliver-btn').click(function() {
+                const orderId = $(this).data('orderid');
+                console.log(orderId);
+                updateOrderStatus(orderId, 'Delivered');
+              });
           
     function updateOrderStatus(orderId, status) {
                 $.ajax({
@@ -249,7 +254,8 @@
                     orderRow.find('.order-status').text(updatedStatus);
 
                     // Show appropriate badge color based on the status
-                    const badgeClass = (updatedStatus === 'Approved') ? 'alert-success' : 'alert-danger';
+                    const badgeClass = (updatedStatus === 'Approved' || updatedStatus === 'Delivered') ? 'alert-success' : 'alert-danger';
+                    
                     orderRow.find('.badge').removeClass().addClass(`badge rounded-pill ${badgeClass}`);
                     location.reload()
                     } 
@@ -266,6 +272,7 @@
           </script>
 
 
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 
 
 

@@ -50,4 +50,4 @@ app.use((req, res, next) => {
 app.use('/', userRoute)
 app.use('/admin', adminRoute)
 
-app.listen(PORT, () => console.log('Server is running on http://localhost:5000'))
+app.listen(PORT, () => console.log('Server is running on http://localhost:6001'))

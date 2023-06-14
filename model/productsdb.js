@@ -17,10 +17,9 @@ const productschema = mongoose.Schema({
         type: Number,
         required: true
     },
-    category_id:{
-        type: mongoose.Schema.Types.ObjectId,
-         ref: 'category',
-         required:true, 
+    category:{
+        type: String,
+        required:true, 
     },
     tax: {
         type: Number,

@@ -25,13 +25,14 @@ user_route.get('/contact',userController.contact)
 user_route.get('/dashboard',validate.isLogin,userController.dashboard)
 
 //      <-----------CART----------->
-user_route.get('/cart',cartController.cart)
+user_route.get('/cart',validate.isLogin,cartController.cart)
 user_route.put('/cart',cartController.increaseQuantity)
 user_route.put('/cartd',cartController.decreaseQuantity)
 user_route.put('/cartdel',cartController.cartdel)
 
 //      <-----------CATEGORY PAGE----------->
 user_route.get('/category',userController.category)
+// user_route.post('/filterProducts',userController.filterProducts)
 user_route.put('/addtocart',cartController.addtocart) //add to cart
 user_route.put('/addtowishlist',wishlistController.addtowishlist) //add to wishlist
 user_route.put('/wishlistdel',wishlistController.deleteFromWishlist) //add to wishlist
@@ -39,7 +40,7 @@ user_route.put('/wishlistdel',wishlistController.deleteFromWishlist) //add to wi
 user_route.get('/product',userController.product)
 
 //      <-----------OTP----------->
-user_route.route('/otplogin').get(userController.otplogin)
+user_route.route('/otplogin').get(validate.isLogin,userController.otplogin)
                              .post(userController.otplogin_verify)    
 user_route.post('/otpverify',userController.otpverify)
 
@@ -47,7 +48,7 @@ user_route.post('/otpverify',userController.otpverify)
 
 
 
-user_route.get('/otpsignup',userController.otpsignup)
+user_route.get('/otpsignup',validate.isLogin,userController.otpsignup)
 user_route.post('/otpsignup',userController.otpsignup_verify)
 user_route.post('/otpsignupverify',userController.signup_verify)
 
@@ -57,7 +58,7 @@ user_route.post('/editaddress',userController.editaddress)
 
 
 //      <-----------CHECKOUT AND PAYMENT----------->
-user_route.get('/checkout',userController.checkout)
+user_route.get('/checkout',validate.isLogin,userController.checkout)
 user_route.post('/checkout',cartController.checkout)  //Cash On Delivery
 user_route.post('/order',paymentController.order)   //Razorpay
 user_route.get('/success',userController.success)

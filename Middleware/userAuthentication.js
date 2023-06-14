@@ -16,6 +16,27 @@ const isLogin = async (req, res, next) => {
 
 
 
+const Logout = async (req, res, next) => {
+    try {
+        if ( req.session.userid) {
+            const session=req.session.userid
+            // console.log(session);
+            if (session) {
+             console.log(" session exists: "+session);
+            
+             const miniCart= await cartdb.findOne({userId:req.session.userid}).populate('product.product_id').exec()
+             console.log(miniCart)
+             res.render('index', { session: session,miniCart:miniCart })
+            }
+        } else {
+            next()
+        }
+        
+    }
+    catch (error) {
+        console.log(error.message);
+    }
+}
 const isLogout = async (req, res, next) => {
     try {
         if ( req.session.userid) {
@@ -38,4 +59,4 @@ const isLogout = async (req, res, next) => {
     }
 }
 
-module.exports = { isLogin, isLogout }
+module.exports = { isLogin, isLogout,Logout }
