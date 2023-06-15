@@ -1,12 +1,10 @@
 
-$(document).ready(function() {
-                                    /*CHANGING THE ARIA SELECTED */
+
     $('.otherButton').click(function() {
-      // Set aria-selected to false and remove the 'active' class
       $('#addAddress').attr('aria-selected', 'false');
       $('#addAddress').removeClass('active');
     });
-  });
+  
 
 
 
@@ -314,6 +312,7 @@ $('.plus').on('click',function(){
 				purchased:value
 			}
 	
+			
 	
 		$.ajax({
 			url:`/wishlistdel`,
@@ -354,8 +353,95 @@ $('.plus').on('click',function(){
 			})
 
 
+			
+
+		
+		
+		$('.myTable').DataTable();
 
 
+
+
+		$(".cancelbtn").on("click",function(){
+			console.log('return button clicked')
+			let cartid = $(this).attr('data-orderid');
+			let id = $(this).attr('data-id');
+			// let $quantityInput = $(this).closest('tr').find('.qty'); // Select the specific quantity input field
+	
+			// let value = $quantityInput.val();
+			
+			console.log("The order id is: "+cartid)
+			console.log("The product id is: "+id)
+			// console.log("the cart id is: "+cartid);
+			
+			Swal.fire({
+				title: 'Are you Sure Want to Return The Product?',
+				text: "You won't be able to revert this!",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Return Product'
+			  }).then((result) => {
+				if (result.isConfirmed) {
+					data={
+						id:id,
+						
+					}
+			
+			
+				$.ajax({
+					url:`/returnorder`,
+					method:"PUT",
+					data:{
+						id:id,
+						 },
+					success:function(response){
+						
+				toastr.options = {
+				"closeButton": false,
+				"debug": false,
+				"newestOnTop": true,
+				"progressBar": false,
+				"positionClass": "toast-top-right",
+				"preventDuplicates": false,
+				"onclick": null,
+				"showDuration": "1000",
+				"hideDuration": "500",
+				"timeOut": "1000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+				}
+
+
+					
+				
+						if(response.message=="returned"){
+							
+							toastr["info"]("Returning Processing", "Success")
+		
+								location.reload();
+			
+						}
+					}
+			
+					})
+				}
+			  })
+
+
+
+
+
+
+		
+	
+			})
+	
+	
 
 
 

@@ -23,17 +23,15 @@
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Product Title</label>
                                     <input type="text" name="name" placeholder="Type here" class="form-control"
-                                        id="product_name">
+                                        id="product_name" required>
                                 </div>
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Brand</label>
-                                    <input type="text" name="brand" placeholder="Type here" class="form-control"
-                                        id="product_name">
+                                    <input type="text" name="brand" placeholder="Type here" class="form-control" id="product_name"required>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Product Description</label>
-                                    <textarea  type="text" name="description" placeholder="Type here" class="form-control"
-                                        id="product_name"></textarea>
+                                    <textarea  type="text" name="description" placeholder="Type here" class="form-control"  id="product_name"></textarea>
 
 
                                 </div>
@@ -42,7 +40,7 @@
                                         <div class="mb-4">
                                             <label class="form-label">Regular price</label>
                                             <div class="row gx-2">
-                                                <input placeholder="Rs" name="price" type="text" class="form-control">
+                                                <input placeholder="Rs" name="price" type="text" class="form-control" required>
                                             </div>
 
                                         </div>
@@ -51,8 +49,7 @@
                                         <div class="mb-4">
 
                                             <label class="form-label">Quantity</label>
-                                            <input type="text" name="quantity" placeholder="Quantity"
-                                                class="form-control" id="product_name">
+                                            <input type="text" name="quantity" placeholder="Quantity" class="form-control" id="product_name" required>
                                         </div>
                                     </div>
                                   
@@ -60,7 +57,7 @@
                                         <div class="mb-4">
 
                                             <label class="form-label">size</label>
-                                            <input type="text" name="size" placeholder="" class="form-control"
+                                            <input type="text" name="size" required placeholder="" class="form-control"
                                                 id="product_name">
                                             
                                             
@@ -85,7 +82,7 @@
                         <div class="card-body">
                             <div class="input-upload">
                                 <img src="assets/imgs/theme/upload.svg" alt="">
-                                <input class="form-control" name="image" type="file" multiple>
+                                <input class="form-control" name="image" type="file" required multiple>
                             </div>
                         </div>
                     </div> <!-- card end// -->

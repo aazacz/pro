@@ -76,74 +76,64 @@
 								    	From your account dashboard you can view your <a href="#tab-orders" class="tab-trigger-link link-underline">recent orders</a>, manage your <a href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>, and <a href="#tab-account" class="tab-trigger-link">edit your password and account details</a>.</p>
 								    </div><!-- .End .tab-pane -->
 
-
+<!-- -------------------------------------Order Tab-------------------------------------------------------- -->
 
 									<div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+										
 										<% if (orderlist) { %>
-										  <div class="cart">
-											<div class="container">
-											  <div class="row">
-												<div class="col-lg-9">
-												  <table class="table table-cart table-mobile">
-													<thead>
-													  <tr>
+										<div class="table-responsive">
+											<table class="table table-hover myTable">
+												<thead>
+													<tr>
 														<th>Product</th>
+														<th>Name</th>
 														<th>Price</th>
 														<th>Quantity</th>
 														<th>Total</th>
-														<th>Purchased</th>
+														<th>Mode Of Payment</th>
 														<th>Date</th>
-														<th></th>
-													  </tr>
-													</thead>
-													<tbody>
-													  <% for (const order of orderlist) { %>
+														<th>Action</th>
+													</tr>
+												</thead>
+												 <tbody>              
+													
+													<% for (const order of orderlist) { %>
 														<% for (const product of order.orderProducts) { %>
-														  <tr>
-															<td class="product-col">
-															  <div class="product">
-																<figure class="product-media">
-																  <a href="#">
-																	<img src="upload/<%= product.image[0] %>" alt="Product image">
-																  </a>
-																</figure>
-																<h3 class="product-title">
-																  <a href="#"><%= product.name %></a>
-																</h3><!-- End .product-title -->
-															  </div><!-- End .product -->
-															</td>
-															<td class="price-col">&#8377;<%= product.price %></td>
-															
-															<td class="quantity-col">
-															  <div class="cart-product-quantity">
-																<div class="row" style="border: 5px;border-color: black;">
-																 
-																  <input type="button" style="width: 40px; border: 0;" value="<%= product.quantity %>">
-																  
-																</div>
-															  </div><!-- End .cart-product-quantity -->
-															</td>
-															<td class="total-col"><%= product.price * product.quantity %></td>
-															<td class="price-col" style="font-size: 12px;"><%= order.paymentmethod %></td>
-															<td class="price-col" style="font-size: 12px;"><%= new Date(order.purchased).toLocaleDateString()%></td>
-														  </tr>
+													<tr>
+														<td> <img src="upload/<%= product.image[0] %>" class="img-sm img-thumbnail" alt="Item"></td>
+														<td> <h6 class="mb-0"> <%= product.name %></h6> </td>
+														<td> <span > ₹ <%= product.price %></span></td>
+														<td><span class=><%= product.quantity %></span></td>
+														<td><span class=>₹<%= order.grandtotal * product.quantity %></span></td>
+														<td><span><%= order.paymentmethod %></span></td>
+														<td><span><%= new Date(order.purchased).toLocaleDateString()%></span></td>
+														<!-- <td><button class="cancelbtn"  type="submit">Cancel/Return</button></td> -->
+														<% if (order.status=="req for Return") { %>
+														<td hidden class="remove-col"><button hidden data-orderid="<%= order._id %>" data-id="<%= order._id %>" class="cancelbtn btn-remove">Cancel/Return</button></td>
+														<% }
+														else if(order.status=="Cancelled"){%>
+															<td style="text-align: center;" class="remove-col"><button style="background-color: blue; color: beige;" >Returned</button></td>
+
+															<%}
+														else{ %>
+															<td style="text-align: center; font-size: 9px;"  class="remove-col"><button style="background-color: rgb(255, 0, 0); color: beige;"  data-orderid="<%= order._id %>" data-id="<%= order._id %>" class="cancelbtn ">Cancel/Return</button></td>
+
+														<%}%>
+
+
+
+														</tr>
 														<% } %>
-													  <% } %>
-													</tbody>
-												  </table><!-- End .table table-wishlist -->
-												</div><!-- End .col-lg-9 -->
-											  </div>
-											</div>
-										  </div>
+														<% } %>
+												</tbody>
+												
+											</table>
+								
+										</div>
 										<% } else { %>
-										  <p>Cart is empty</p>
-										  <a href="/category" class="btn btn-outline-primary-2">
-											<span>GO shopping</span>
-											<i class="icon-long-arrow-right"></i>
-										  </a>
-										<% } %>
+											<p>No Orders yet</p>
+											<% } %>
 									  </div><!-- .End .tab-pane -->
-									  
 
 
 								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
@@ -419,14 +409,7 @@
 		                					<label>Email address *</label>
 		        							<input type="email" value="<%=user.email%>" name="email" id="email" class="form-control" required readonly>
 
-		            						<!-- <label>Current password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control" readonly>
-
-		            						<label>New password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control" readonly>
-
-		            						<label>Confirm new password</label>
-		            						<input type="password" class="form-control mb-2"> -->
+		            					
 		            						
 											<div class="row">
 											
@@ -555,6 +538,14 @@
 
 		<script src="https://code.jquery.com/jquery-3.7.0.min.js"
         integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.all.min.js "></script>
+
+
+		<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+		
+		<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+		
 
 		<!-- toastr -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

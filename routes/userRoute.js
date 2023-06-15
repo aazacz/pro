@@ -8,6 +8,7 @@ const flash = require('connect-flash');
 const validate=require('../Middleware/userAuthentication')
    
 user_route.use(flash());
+
 user_route.use(express.static("public"))
 
 user_route.get('/',validate.isLogout,userController.index)
@@ -31,13 +32,16 @@ user_route.put('/cartd',cartController.decreaseQuantity)
 user_route.put('/cartdel',cartController.cartdel)
 
 //      <-----------CATEGORY PAGE----------->
-user_route.get('/category',userController.category)
+user_route.get('/category',validate.isLogin,userController.category)
 // user_route.post('/filterProducts',userController.filterProducts)
 user_route.put('/addtocart',cartController.addtocart) //add to cart
 user_route.put('/addtowishlist',wishlistController.addtowishlist) //add to wishlist
 user_route.put('/wishlistdel',wishlistController.deleteFromWishlist) //add to wishlist
 
 user_route.get('/product',userController.product)
+user_route.post('/search',userController.search)
+
+user_route.put('/returnorder',cartController.returnorder)
 
 //      <-----------OTP----------->
 user_route.route('/otplogin').get(validate.isLogin,userController.otplogin)

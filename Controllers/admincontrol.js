@@ -53,8 +53,15 @@ exports.login_verify = async (req, res) => {
 
 //dashboard
 exports.dashboard =async (req, res) => {
+    const order= await orderdb.find({}).populate('userId')
+        // console.log(order)
+if(order){
+    res.render('dashboard',{order:order})
+}else{
+    const order=null
+    res.render('dashboard',{order:order})
+}
     
-    res.render('dashboard')
 }
 
 //Admin Logout
@@ -457,31 +464,12 @@ exports.fetchChartData = async (req,res)=> {
 
     try {
         const salesData = await orderdb.aggregate([
-            { $match: { status: 'Delivered' } },  {
-              $group: {
-                _id: {
-                  $dateToString: {
-                    format: '%Y-%m-%d',
-                    date: { $toDate: '$purchased' }
-                  }
-                },
-                totalRevenue: { $sum: '$grandtotal' }
-              }
-            },
-            {
-              $sort: { _id: 1 }
-            },
-            {
-              $project: {
-                _id: 0, // Exclude the _id field from the output
-                date: '$_id', // Rename _id to date
-                totalRevenue: 1 // Include the totalRevenue field
-              }
-            },
-            {
-              $limit: 4
-            }
-          ]);
+            { $match: { status: 'Delivered' } },  { $group: { _id: { $dateToString: { format: '%Y-%m-%d',date: { $toDate: '$purchased' } }},totalRevenue: { $sum: '$grandtotal' } }},
+            {$sort: { _id: -1 }},{$project: { _id: 0, date: '$_id',totalRevenue: 1}},{$limit: 4}]);
+    
+            const productData = await orderdb.aggregate([
+            { $match: { status: 'Delivered' } },  { $group: { _id: { $dateToString: { format: '%Y-%m-%d',date: { $toDate: '$purchased' } }},totalRevenue: { $sum: '$grandtotal' } }},
+            {$sort: { _id: -1 }},{$project: { _id: 0, date: '$_id',totalRevenue: 1}},{$limit: 4}]);
     
           console.log(salesData);
     

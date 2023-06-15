@@ -42,9 +42,21 @@
 
     <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+	
+	<style>
+	
+.search-wrapper {
+  position: relative;
+}
+		
+
+	</style>
+
 </head>
 
 <body>
+
+
     <div class="page-wrapper">
         <header class="header header-8 ">
             <div class="header-top" style="background-color:  #ce901e7c;;">
@@ -157,21 +169,23 @@
 
                             </ul><!-- End .menu -->
                         </nav><!-- End .main-nav -->
-                        <a href="/profile"><i class="icon-user"></i></a>
-
+                       
                         <div class="header-search">
 
                             <a href="#" class="search-toggle" role="button"><i style="color: white;"
                                     class="icon-search"></i></a>
 
-
-                            <form action="#" method="get">
+                           
                                 <div class="header-search-wrapper">
                                     <label for="q" class="sr-only">Search</label>
-                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search in..."
-                                        required>
+									
+
+                                    <!-- <input type="text" class="form-control" name="q" id="searchInput" placeholder="Search in..."  required> -->
+									<!-- <div id="searchResults" class="search-results"></div> -->
+
+									
                                 </div><!-- End .header-search-wrapper -->
-                            </form>
+                          
                         </div><!-- End .header-search -->
 
                        
@@ -236,6 +250,10 @@
 
                                     
                                   
+
+
+
+
                                 <div class="product">
                                     <div class="product-cart-details">
                                         <h4 class="product-title">
@@ -265,9 +283,29 @@
             </div><!-- End .header-middle -->
         </header><!-- End .header -->
 
-      
+		<div class="search">
+			   
+				<div class="search-wrapper">
+					<label for="q" class="sr-only">Search</label>
+					
+
+					<input type="text" class="form-control" name="q" id="searchInput" placeholder="Search in..."  required>
+										
+				</div>
+				<div id="searchResults" class="search-results"></div>
+		  
+		</div><!-- End .header-search -->
+
+
+
+
+
 
 	<main class="main">
+		
+	
+
+
 		<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
 			<div class="container">
 				<h1 class="page-title">Banner Template<span>Shop</span></h1>
@@ -347,7 +385,7 @@
 
 											<div class="product-body">
 												<div class="product-cat">
-													<a href="#">Mens</a>
+													<a href="/product?productid=<%=product._id%>">Mens</a>
 												</div><!-- End .product-cat -->
 												<h3 class="product-title"><a style="display: -webkit-box;
 													-webkit-box-orient: vertical;
@@ -626,9 +664,10 @@
 
 	<!--Sweet Alert-->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+	
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+
+	
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 
 
@@ -740,25 +779,50 @@
 
 
 
-			$('.category-checkbox').on('click', function () {
-      var selectedCategories = $('.category-checkbox:checked').map(function () {
-        return $(this).val();
-      }).get();
+		
 
-      // Send the selected categories to the server using AJAX
-      $.ajax({
-        url: '/filterProducts',
-        type: 'POST',
-        data: { categories: selectedCategories },
-        success: function (response) {
-          // Update the page with the filtered data
-          $('.product-list').html(response);
-        },
-        error: function (error) {
-          console.log(error);
-        }
-      });
-    });
+
+
+	$('#searchInput').on('input', function() {
+ 
+ const searchTerm = $(this).val();
+console.log(searchTerm);
+ 
+ $.ajax({
+   url: '/search',
+   method: 'POST',
+   data: { pname: searchTerm },
+   success: function(response) {
+ console.log(response);
+	 renderSearchResults(response);
+   },
+   error: function(error) {
+	 console.error(error);
+   }
+ });
+});
+
+
+function renderSearchResults(results) {
+ const searchResultsContainer = $('#searchResults');
+ searchResultsContainer.empty();
+
+ if (results.length > 0) {
+   // Iterate over the search results and create HTML elements
+   for (let i = 0; i < results.length; i++) {
+	 const product = results[i];
+	 console.log(product.name);
+	 const productHTML = `<div><p>${product.name}</p></div>`;
+	 console.log(productHTML);
+	 searchResultsContainer.append(productHTML);
+   }
+ } else {
+   searchResultsContainer.append('<div>No results found.</div>');
+ }
+}
+
+
+
 
 
 
@@ -766,25 +830,25 @@
 
 		});
 
+  function filterProducts() {
+  const checkboxes = document.querySelectorAll('.filter-checkbox:checked');
+  const selectedCategories = Array.from(checkboxes).map(checkbox => checkbox.id);
+  const productItems = document.querySelectorAll('.product-item');
 
-	function filterProducts() {
+  productItems.forEach(item => {
+    const category = item.dataset.category;
 
-    const checkboxes = document.querySelectorAll('.filter-checkbox:checked');
-	console.log("checkboxes are :"+checkboxes);
-    const selectedCategories = Array.from(checkboxes).map(checkbox => checkbox.id);
+    if (selectedCategories.length === 0 || selectedCategories.includes(category)) {
+      item.style.display = 'block';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+}
 
-    const productItems = document.querySelectorAll('.product-item');
 
-    productItems.forEach(item => {
-      const category = item.dataset.category;
-	  console.log(category);
-      if (selectedCategories.includes(category)) {
-        item.style.display = 'block';
-      } else {
-        item.style.display = 'none';
-      }
-    });
-  }
+
+
 
 
 

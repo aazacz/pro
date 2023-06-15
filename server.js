@@ -8,7 +8,7 @@ const userRoute             = require("./routes/userRoute")
 const adminRoute            = require("./routes/adminRoute")
 const MongoStore            = require('connect-mongo');
 const cookieparser          =require('cookie-parser')
-const bodyparser            = require('body-parser')
+
 
 require('dotenv').config()                 //env  
 const PORT                  = process.env.PORT
@@ -26,9 +26,6 @@ app.use(cookieparser());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
-
-app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({extended:true}))
 
 
 app.use(                                         //session

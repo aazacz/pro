@@ -86,6 +86,7 @@
 						"name": "Kenvill",
 						"order_id": Response.order.id,
 						"handler":function(response){
+							
 							window.location.href = '/success?orderid=' + orderid + '&cartid=' + cartid + '&productIds' + productIds },
 						"theme": { "color": "#3399cc" }
 					              };

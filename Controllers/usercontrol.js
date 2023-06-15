@@ -330,10 +330,11 @@ exports.product = async (req, res) => {
    
     const session = req.session.userid
     console.log(session);
-    // console.log(req.query.productid)
+    console.log(req.query.productid)
     if(session){
         const product = await productdb.findOne({ _id: req.query.productid })
-        
+        const category = await categorydb.find({})
+
         const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
         res.render('product', { product: product, session: session, miniCart: miniCart,category:category })
     }
@@ -378,7 +379,7 @@ exports.category = async (req, res) => {
        
         const category = await categorydb.find({})
         
-        if(miniCart){
+        if(miniCart||session){
 
             res.render("category", { title: title[0] || "",
                                     currentPage:pageNum,
@@ -425,64 +426,16 @@ exports.category = async (req, res) => {
 
 }
 
-
-
-//filter products
-/* exports.filterProducts = async (req, res) => {
+exports.search=async (req, res) => {
     try {
-        const pageNum=req.query.page
-        const perpage = 2
-        let doCount;
-
-        const selectedCategories = req.body.categories || [];
-     
-
-        const session = req.session.userid
-        console.log("checking session exists before loading category page");
-        console.log(session);
-
-        const product = await productdb.find({}).countDocuments().then(documents=>{
-            doCount=documents
-            return productdb.find({category: { $in: selectedCategories }}).skip(((pageNum-1)*perpage)).limit(perpage)
-        })
-
-        // console.log(product);
-        const title = req.flash("title");
-
-
-        let user = await customerdetail.findOne({ _id: req.session.userid }).populate('address').populate('cartId')
-
-        const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
-        const category = await categorydb.find({})
-        console.log(category);
-        if(miniCart){
-
-            res.render("category", { title: title[0] || "",
-                                    currentPage:pageNum,
-                                    totalDocument:doCount, 
-                                    pages:Math.ceil(doCount/perpage),
-                                    product: product, 
-                                    session: session, 
-                                    user: user,
-                                    miniCart: miniCart,
-                                    category:category })
-
-        }
-        else{
-            const miniCart=undefined
-            res.render('404',{session: session,miniCart: miniCart})
-        }
-
-
-
-       
+      const productName = req.body.pname;
+      const productData = await productdb.find({ name: { $regex: productName, $options: 'i' } });
+  
+      res.json(productData);
     } catch (error) {
-        console.log(error.message)
+      res.status(404).json({ error: error.message });
     }
-
-}
- */
-
+  };
 
 
 

@@ -238,3 +238,20 @@ exports.checkout = async (req, res) => {
     console.log(error.messsage);
   }
 }
+
+
+exports.returnorder=async (req,res)=>{
+
+try {
+  const orderid=req.body.id
+
+  const return_item = await orderdb.findByIdAndUpdate(orderid,{$set:{status:"req for Return"}});
+  console.log(return_item);
+
+
+   res.send({ message: "returned"})
+} catch (error) {
+  console.log(error.message);
+}
+
+}

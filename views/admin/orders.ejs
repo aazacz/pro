@@ -53,8 +53,8 @@
 
 
 
-                                          
-                                            <%let k =1%>
+                                            <%let k=1%>
+                                           
                                             <% for (let i = order.length - 1; i >= 0; i--) { %>
 
                                                 
@@ -89,7 +89,7 @@
                                                       <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm">
                                                         <i class="material-icons md-more_horiz"></i>
                                                       </a>
-                                                      <% if (order[i].status === 'Pending') { %>
+                                                      <% if (order[i].status === 'Pending'|| order[i].status === 'req for Return') { %>
                                                       <div class="dropdown-menu">
                                                        
                                                           <a class="dropdown-item approve-btn" data-orderid="<%= order[i]._id %>">Approve</a>
