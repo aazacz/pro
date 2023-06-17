@@ -9,7 +9,8 @@ admin_route.use(flash());
 admin_route.use(express.static("public"))
 admin_route.use(express.static("../public/upload"))
 
-
+admin_route.use(express.json());
+admin_route.use(express.urlencoded({ extended: true }))
 //LOG_IN & LOG_OUT
 admin_route.get('/',validate.isLogout,adminControl.login)
 admin_route.get('/dashboard',validate.isLogin,adminControl.dashboard)
@@ -26,7 +27,7 @@ admin_route.route('/updateproduct').get(validate.isLogin,adminControl.updateprod
                                    .post(upload.array('image'),adminControl.updateproduct_todb)
 admin_route.post('/deleteproduct',adminControl.deleteproduct)
 
-
+//CHART
 admin_route.get('/chartData', adminControl.fetchChartData)
      
 
@@ -51,6 +52,11 @@ admin_route.put('/categories/:id/status', adminControl.categoriesList_Unlist)
 admin_route.get('/order',validate.isLogin,adminControl.order)
 admin_route.post('/updateOrderStatus',adminControl.updateOrderStatus)
 admin_route.get('/orderdetails',validate.isLogin,adminControl.orderdetails)
+
+//COUPON TAB
+admin_route.get('/coupons',validate.isLogin,adminControl.coupons)
+admin_route.get('/addcoupon',validate.isLogin,adminControl.addcoupon)
+admin_route.post('/addcoupon',adminControl.addcoupon_post)
 
 
 admin_route.get('/adminpage_sellers_list',validate.isLogin, adminControl.adminpage_sellers_list)

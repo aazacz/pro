@@ -208,6 +208,7 @@ $('.plus').on('click',function(){
 
 
 	$('.minus').on('click',function(){
+		 
 		console.log('minus button clicked')
 		let $quantityInput = $(this).siblings('.qty');
 		let value = $quantityInput.val();
@@ -264,22 +265,22 @@ $('.plus').on('click',function(){
 		success:function(response){
 			
 			toastr.options = {
-	"closeButton": false,
-	"debug": false,
-	"newestOnTop": true,
-	"progressBar": false,
-	"positionClass": "toast-top-right",
-	"preventDuplicates": false,
-	"onclick": null,
-	"showDuration": "200",
-	"hideDuration": "500",
-	"timeOut": "1000",
-	"extendedTimeOut": "1000",
-	"showEasing": "swing",
-	"hideEasing": "linear",
-	"showMethod": "fadeIn",
-	"hideMethod": "fadeOut"
-	}
+							"closeButton": false,
+							"debug": false,
+							"newestOnTop": true,
+							"progressBar": false,
+							"positionClass": "toast-top-right",
+							"preventDuplicates": false,
+							"onclick": null,
+							"showDuration": "200",
+							"hideDuration": "500",
+							"timeOut": "1000",
+							"extendedTimeOut": "1000",
+							"showEasing": "swing",
+							"hideEasing": "linear",
+							"showMethod": "fadeIn",
+							"hideMethod": "fadeOut"
+							}
 
 			if(response.message=="deleted"){
 				toastr["info"]("Product Removed Successfully", "Success")

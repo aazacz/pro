@@ -4,7 +4,8 @@ const bcrypt = require('bcrypt')
 const categorydb = require("../model/categorydb")
 const productdb = require('../model/productsdb')
 const orderdb = require('../model/orderdb')
-
+const coupondb = require('../model/coupondb')
+const letterCaseChangerHelper = require('../Helper/letterCaseChangerHelper')
 
 //                            <--------------------------ADMIN LOGIN AND VALIDATIONS------------------------------->
 
@@ -54,11 +55,26 @@ exports.login_verify = async (req, res) => {
 //dashboard
 exports.dashboard =async (req, res) => {
     const order= await orderdb.find({}).populate('userId')
+
+    const salesData = await orderdb.aggregate([
+        { $match: { status: 'Delivered' } },  { $group: { _id: { $dateToString: { format: '%Y-%m-%d',date: { $toDate: '$purchased' } }},totalRevenue: { $sum: '$grandtotal' } }},{$sort: { _id: -1 }},{$project: { _id: 0, date: '$_id',totalRevenue: 1}}]);
+
+        const numberOfProducts= await productdb.find({}).count()
+        console.log(numberOfProducts);
+        const totalSum  = salesData.reduce((sum, entry) => sum + entry.totalRevenue, 0);
+        const count     = salesData.reduce((sum, entry) => sum + 1, 0);
+
+        console.log(count)
+        console.log(totalSum)
+    
         // console.log(order)
+        // console.log(salesData)
 if(order){
-    res.render('dashboard',{order:order})
+    res.render('dashboard',{order:order,totalSum:totalSum,count:count,numberOfProducts:numberOfProducts})
 }else{
     const order=null
+    const totalSum=null
+    const count=null
     res.render('dashboard',{order:order})
 }
     
@@ -391,14 +407,7 @@ exports.categoriesList_Unlist = async (req, res) => {
 }
 
 
-
-
-
-
-
-
-
-
+//ORDER 
 exports.order = async (req, res) => {
     try {
     const order= await orderdb.find({}).populate('userId')
@@ -412,11 +421,11 @@ if(order){
 } catch (error) {
     console.log();
 }
-
-   
 }
 
 
+
+//ORDER STATUS UPDATING 
 exports.updateOrderStatus=async(req,res)=>{
 
 
@@ -440,6 +449,8 @@ exports.updateOrderStatus=async(req,res)=>{
 }
 }
 
+
+//ORDER DETAILS
 exports.orderdetails=async(req,res)=>{
 
 const orderid=req.query.id
@@ -467,10 +478,7 @@ exports.fetchChartData = async (req,res)=> {
             { $match: { status: 'Delivered' } },  { $group: { _id: { $dateToString: { format: '%Y-%m-%d',date: { $toDate: '$purchased' } }},totalRevenue: { $sum: '$grandtotal' } }},
             {$sort: { _id: -1 }},{$project: { _id: 0, date: '$_id',totalRevenue: 1}},{$limit: 4}]);
     
-            const productData = await orderdb.aggregate([
-            { $match: { status: 'Delivered' } },  { $group: { _id: { $dateToString: { format: '%Y-%m-%d',date: { $toDate: '$purchased' } }},totalRevenue: { $sum: '$grandtotal' } }},
-            {$sort: { _id: -1 }},{$project: { _id: 0, date: '$_id',totalRevenue: 1}},{$limit: 4}]);
-    
+           
           console.log(salesData);
     
           const data = [];
@@ -484,11 +492,11 @@ exports.fetchChartData = async (req,res)=> {
           }
         
           
-        console.log("DATA iS");
-        console.log(data);
+        // console.log("DATA iS");
+        // console.log(data);
           
-        console.log("DATE iS");
-        console.log(date);
+        // console.log("DATE iS");
+        // console.log(date);
     
 
         res.status(200).send({ data:data, date:date })
@@ -498,6 +506,60 @@ exports.fetchChartData = async (req,res)=> {
     }
     
   };
+
+//         <-----------------------Add coupons -------------------------------->
+
+
+//GET- coupon page 
+exports.coupons=async(req,res)=>{
+    const couponlist = await coupondb.find({})
+
+    res.render('coupons',{couponlist:couponlist})
+}
+  
+//GET- Coupon Add Page
+exports.addcoupon=async(req,res)=>{
+    const couponlist = await coupondb.find({})
+
+    res.render('addcoupon',{couponlist:couponlist})
+}
+  
+//POST- Adding the Coupon
+exports.addcoupon_post = async(req,res)=>{
+    try {
+    console.log(req.body.title);
+        const name = letterCaseChangerHelper.toTitleCase(req.body.title)
+        const description = req.body.description.trim();
+        const discount = req.body.discount.trim();
+        const expiry = req.body.expiry.trim();
+        
+        console.log("coupon name is : "+name);
+
+    const newCoupon=new coupondb({
+        name:name,
+        description:description,
+        discount:discount,
+        expiry: new Date(Date.now()+ parseInt(expiry)*24 * 60 * 60 * 1000)
+
+    })
+        
+    const couponSave=newCoupon.save().then(()=> console.log("coupon Saved Successfully"))
+                                     .catch((error)=>  console.log(error.message))
+    
+    console.log(couponSave);
+    if(couponSave){
+        res.redirect('/admin/coupons')
+    }
+
+    } catch (error) {
+            console.log(error.message);        
+    }
+    }
+  
+
+
+
+
 
 
 

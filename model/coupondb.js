@@ -1,28 +1,26 @@
 const mongoose = require('mongoose')
 
-const couponSchema = mongoose.Schema({
-    name: {
-        type: String,
-        required: true
+const couponSchema =mongoose.Schema({
+    name:{
+        type:String,
+        required:true
     },
-    description: {
-        type: String,
-        required: true
+    description:{
+        type:String,
+        required:true
     },
-    block:{
-        type: String,
-        required:true,
-        default:0
+    discount:{
+        type:Number,
+        required:true
+    },
+    expiry:{
+        type: Date, 
+        default: Date.now,
+         index: { expires: 0 }
     }
-    });
-
-  
     
-    
+})
 
-    
-   
+const coupon = new mongoose.model('coupon',couponSchema)
 
-const category= new mongoose.model("category",categoryschema)
-
-module.exports=category
+module.exports=coupon
