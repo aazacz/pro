@@ -526,7 +526,7 @@ exports.addcoupon=async(req,res)=>{
   
 //POST- Adding the Coupon
 exports.addcoupon_post = async(req,res)=>{
-    try {
+    try { 
     console.log(req.body.title);
         const name = letterCaseChangerHelper.toTitleCase(req.body.title)
         const description = req.body.description.trim();
@@ -557,7 +557,20 @@ exports.addcoupon_post = async(req,res)=>{
     }
   
 
+//POST - coupon delete 
 
+exports.deletecoupon = async (req,res)=>{
+    try {
+        const couponId=req.body.id
+        const deletedCoupon = await coupondb.findByIdAndDelete({_id:couponId})    
+        if(deletedCoupon){
+            res.status(200).send({ message:"success"})
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+     
+}
 
 
 

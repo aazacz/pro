@@ -11,6 +11,9 @@ user_route.use(flash());
 
 user_route.use(express.static("public"))
 
+user_route.use(express.json());
+user_route.use(express.urlencoded({ extended: true }))
+
 user_route.get('/',validate.isLogout,userController.index)
 
 user_route.route('/login').get(validate.isLogout,userController.login)
@@ -66,6 +69,8 @@ user_route.get('/checkout',validate.isLogin,userController.checkout)
 user_route.post('/checkout',cartController.checkout)  //Cash On Delivery
 user_route.post('/order',paymentController.order)   //Razorpay
 user_route.get('/success',userController.success)
+user_route.post('/checkout/applyCoupon',paymentController.applyCoupon)
+user_route.post('/checkout/removeCoupon',paymentController.removeCoupon)
 
 
 module.exports = user_route

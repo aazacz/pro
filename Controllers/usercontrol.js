@@ -12,6 +12,7 @@ const orderdb = require('../model/orderdb')
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Types;
 const letterCaseChanger = require('../Helper/letterCaseChangerHelper')
+const coupondb = require('../model/coupondb')
 
 //password Hashing
 const passwordHash = async (password) => {
@@ -503,7 +504,7 @@ exports.signup_post = async (req, res) => {
 
 
                     //creating a new cart DATABASE for the user   &&   inserting the cartDB_id in to the customer DB
-                    const addtocart = new cartdb({ userId: insertdata._id, product: [] });
+                    const addtocart = new cartdb({ userId: insertdata._id, product: [],couponid:[],couponFlag:0 });
                     const cart = await addtocart.save()
                     await customerdetail.findByIdAndUpdate(insertdata._id, { cartId: [new ObjectId(cart._id)] })
 
@@ -670,7 +671,7 @@ exports.signup_verify = async (req, res) => {
 
 
                     //creating a new cart DATABASE for the user   &&   inserting the cartDB_id in to the customer DB
-                    const addtocart = new cartdb({ userId: insertdata._id, product: [] });
+                    const addtocart = new cartdb({ userId: insertdata._id, product: [],couponid:[],couponFlag:0 });
                     const cart = await addtocart.save()
                     await customerdetail.findByIdAndUpdate(insertdata._id, { cartId: [new ObjectId(cart._id)] })
 
@@ -804,6 +805,8 @@ exports.otpverify = async (req, res) => {
 
 //checkout page
 exports.checkout = async (req, res) => {
+try {
+    
 
     if (req.session.userid) {
         const cart = await cartdb.findOne({userId: req.session.userid}).populate('product.product_id').exec()
@@ -812,13 +815,18 @@ exports.checkout = async (req, res) => {
 
         const session = req.session.userid
         const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
-       
-        res.render('checkout', { session: session, user: user, cart: cart, miniCart: miniCart })
+        const couponlist = await coupondb.find({})
+        console.log(couponlist);
+        
+        res.render('checkout', { session: session, user: user, cart: cart, miniCart: miniCart,couponlist:couponlist })
     }
     else {
         const session = null
         res.render('checkout', { session: session })
     }
+} catch (error) {
+    
+}
 
 
 }
@@ -838,8 +846,13 @@ exports.success = async (req, res) => {
         console.log("cartid from the query is "+cartid);
         console.log("productIds from the query is "+productIds);
 
-        
-        
+        const discount=0
+
+        const checkFlag=await cartdb.findOne({userId:session,couponFlag:1})
+        if (checkFlag) { //checking if any coupon used and 
+            const removeCoupon = await cartdb.findOneAndUpdate( { userId: session }, {$set: { couponFlag: 0,discount:discount } });
+            console.log("removed COupon is: "+removeCoupon);       
+        }
        
             const updatepayment= await orderdb.findByIdAndUpdate(orderid,{$set:{payment:"Paid"}}).exec()
             // console.log("amount paid: "+updatepayment)

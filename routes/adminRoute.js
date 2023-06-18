@@ -57,6 +57,7 @@ admin_route.get('/orderdetails',validate.isLogin,adminControl.orderdetails)
 admin_route.get('/coupons',validate.isLogin,adminControl.coupons)
 admin_route.get('/addcoupon',validate.isLogin,adminControl.addcoupon)
 admin_route.post('/addcoupon',adminControl.addcoupon_post)
+admin_route.post('/deletecoupon',adminControl.deletecoupon)
 
 
 admin_route.get('/adminpage_sellers_list',validate.isLogin, adminControl.adminpage_sellers_list)

@@ -16,7 +16,23 @@ const cartSchema = mongoose.Schema({
         required:false,
         default:1
     }
-      }]
+      }],
+
+    couponid:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "coupon",
+        required: false
+      }],
+      couponFlag:{
+        type:Number,
+        required:false,
+        default:0
+      },
+      discount:{
+        type:Number,
+        required:false,
+        default:0
+      }
     
     });
 
