@@ -3,10 +3,10 @@
 		$(document).ready(function () {
 			grandprice()
 			
-			
+					
+			 		
 			function grandprice(){
-
-				
+			
 				const subTotalText= $('#grandPrice').text();
 				const subTotal=parseFloat(subTotalText.replace(/[^\d.]/g, ''));
 				console.log(subTotal);
@@ -21,10 +21,20 @@
 				$('.grandTotal').text("₹"+GrandTotal+".00")
 
 
+				const walletAmount = parseInt($('#pay-from-wallet').data('wallet-amount'), 10);
+				console.log("walletAmount is : "+walletAmount);
+			
+				if (walletAmount > GrandTotal) {
+					$('#pay-from-wallet').removeAttr('hidden');
+				} else {
+					$('#pay-from-wallet').attr('hidden', 'hidden');
+				}
+				
+
 			}
 
 
-
+// Removing the Coupon	
 			$('.couponRemove').on('click',function(){
 				const couponDiscount=$(this).attr('data-discount')
 				console.log(couponDiscount);
@@ -51,6 +61,9 @@
 			
 			})
 
+
+
+// Applying the Coupon		
 			$(".couponApply").on("click",function(){
 				const couponDiscount=$(this).attr('data-discount')
 				const couponId=$(this).attr('data-value')
@@ -69,23 +82,25 @@
 					data:data,
 					success:function(response){
 
-toastr.options = {
-  "closeButton": true,
-  "debug": false,
-  "newestOnTop": true,
-  "progressBar": false,
-  "positionClass": "toast-top-right",
-  "preventDuplicates": false,
-  "onclick": null,
-  "showDuration": "500",
-  "hideDuration": "800",
-  "timeOut": "1000",
-  "extendedTimeOut": "1000",
-  "showEasing": "swing",
-  "hideEasing": "linear",
-  "showMethod": "fadeIn",
-  "hideMethod": "fadeOut"
-}
+					toastr.options = {
+					"closeButton": true,
+					"debug": false,
+					"newestOnTop": true,
+					"progressBar": false,
+					"positionClass": "toast-top-right",
+					"preventDuplicates": false,
+					"onclick": null,
+					"showDuration": "500",
+					"hideDuration": "800",
+					"timeOut": "1000",
+					"extendedTimeOut": "1000",
+					"showEasing": "swing",
+					"hideEasing": "linear",
+					"showMethod": "fadeIn",
+					"hideMethod": "fadeOut"
+					}
+
+
 						console.log(response);
 						console.log(response.message);
 						if(response.message=="coupon already applied"){
@@ -113,36 +128,34 @@ toastr.options = {
 
 
 
+// Placing the Order
 
 			$('#placeOrder').on('click', function () {
 				// e.preventDefault();
 				 
-				// $(this).prop('disabled', true);
-
-			
-
 				let cartId = $('#placeOrder').val();
 				let address = $('.form-check-input:checked').val();
 				let grandPriceText = $('#grandPrice').text();
 				let grandPrice = parseFloat(grandPriceText.replace(/[^\d.]/g, ''));
 				let paymentmethod = $('.accordion-summary .card-header .card-title a[aria-expanded="true"]').text().trim();
+				let walletAmount = parseInt($('#wallet-amount').text().trim());
 
 				const data = {
 					cartId: cartId,
 					address: address,
 					grandPrice: grandPrice,
 					paymentmethod: paymentmethod
+					
 				};
 
 				if (paymentmethod === "Razor Payment") {
-							grandprice()
+							
                             const data = {
                                 cartId: cartId,
                                 address: address,
                                 grandPrice: grandPrice,
                                 paymentmethod: paymentmethod };
-grandprice()
-                                $.ajax({
+							   $.ajax({
                                     url: `/order`,
                                     method: 'POST',
                                     data: data,
@@ -152,6 +165,36 @@ grandprice()
                                             
                                     }
                                 })
+				}
+
+				else if(paymentmethod === "Pay From Wallet"){
+					
+					const data = {
+						cartId: cartId,
+						address: address,
+						grandPrice: grandPrice,
+						paymentmethod: paymentmethod }
+
+					$.ajax({
+						url: `/walletCheckout`,
+						method: 'POST',
+						data: data,
+						success: function (response) {
+							if (response.message == "ordered successfully") {
+								const orderid = response.orderdb_Id
+								console.log(orderid)
+								const cartid=response.cartid
+								console.log(cartid)
+								const productIds=response.productIds
+								window.location.href = '/success?orderid=' + orderid + '&cartid=' + cartid + '&productIds' + productIds
+							} 
+						}
+					})
+
+
+
+
+
 				}
 
 				else {

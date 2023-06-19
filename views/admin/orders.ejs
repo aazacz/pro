@@ -77,7 +77,7 @@
                                                             alert-success
                                                           <% } else { %>
                                                             alert-danger
-                                                          <% } %>" >   <%= order[i].status %>      </span>
+                                                          <% } %>" >   <%= order[i].status %>  </span>
                                                       </td>
                                                       
 
@@ -92,22 +92,26 @@
                                                       <% if (order[i].status === 'Pending') { %>
                                                       <div class="dropdown-menu">
                                                        
-                                                          <a class="dropdown-item approve-btn" data-orderid="<%= order[i]._id %>">Approve</a>
-                                                          <a class="dropdown-item cancel-btn" data-orderid="<%= order[i]._id %>">Cancel</a>
-                                                          <a class="dropdown-item deliver-btn" data-orderid="<%= order[i]._id %>">Delivered</a>
+                                                          
+
+                                                          <a class="dropdown-item approve-btn" data-grandtotal="<%=order[i].grandtotal%>" data-userid="<%=order[i].userId._id%>" data-orderid="<%= order[i]._id %>">Approve</a>
+                                                          <a class="dropdown-item cancel-btn"  data-grandtotal="<%=order[i].grandtotal%>" data-userid="<%=order[i].userId._id%>" data-orderid="<%= order[i]._id %>">Cancel</a>
+                                                          <a class="dropdown-item deliver-btn" data-grandtotal="<%=order[i].grandtotal%>" data-userid="<%=order[i].userId._id%>" data-orderid="<%= order[i]._id %>">Delivered</a>
                                                       
                                                        
                                                       </div>
+
                                                       <% } else if(order[i].status === 'req for Return'){%>
                                                         <div class="dropdown-menu">
-                                                        <a class="dropdown-item approveReturn-btn" data-orderid="<%= order[i]._id %>">Approve Return</a>
-                                                        <a class="dropdown-item approve-btn" data-orderid="<%= order[i]._id %>">Cancel Return</a>
-                                                    </div>
+                                                            <a class="dropdown-item approveReturn-btn"  data-grandtotal="<%=order[i].grandtotal%>" data-userid="<%=order[i].userId._id%>" data-orderid="<%= order[i]._id %>">Approve Return</a>
+                                                            <a class="dropdown-item approve-btn"        data-grandtotal="<%=order[i].grandtotal%>" data-userid="<%=order[i].userId._id%>" data-orderid="<%= order[i]._id %>">Cancel Return</a>
+                                                        </div>
                                                         <% }else{%>
                                                         <div class="dropdown-menu" hidden></div>
                                                         <%} %>
                                                         
                                                     </div> <!-- dropdown //end -->
+
                                                   </td>
                                                 </tr>
                                                 <% k = k + 1 %>
@@ -225,28 +229,47 @@
             $(document).ready(function() {
               $('.approve-btn').click(function() {
                 const orderId = $(this).data('orderid');
+                const userId = $(this).data('userId')
+                const grandtotal = $(this).data('grandtotal')
                 console.log(orderId);
-                updateOrderStatus(orderId, 'Approved');
+                updateOrderStatus(orderId, 'Approved',userId,grandtotal);
               });
           
               $('.cancel-btn').click(function() {
                 const orderId = $(this).data('orderid');
+                const userId = $(this).data('userId')
+                const grandtotal = $(this).data('grandtotal')
                 console.log(orderId);
-                updateOrderStatus(orderId, 'Cancelled');
+                updateOrderStatus(orderId, 'Cancelled',userId,grandtotal);
               });
+
               $('.deliver-btn').click(function() {
                 const orderId = $(this).data('orderid');
+                const userId = $(this).data('userId')
+                const grandtotal = $(this).data('grandtotal')
                 console.log(orderId);
-                updateOrderStatus(orderId, 'Delivered');
+                updateOrderStatus(orderId, 'Delivered',userId,grandtotal);
               });
           
-    function updateOrderStatus(orderId, status) {
+              $('.approveReturn-btn').click(function() {
+                const orderId = $(this).data('orderid');
+                const userId = $(this).data('userid');
+                const grandtotal = $(this).data('grandtotal');
+                debugger
+                console.log(orderId,userId,grandtotal);
+                debugger
+                updateOrderStatus(orderId,'Returned',userId,grandtotal);
+              });
+          
+    function updateOrderStatus(orderId, status,userId,grandtotal) {
                 $.ajax({
                   url: '/admin/updateOrderStatus',
                   method: 'POST',
                   data: {
                     orderId: orderId,
-                    status: status
+                    status: status,
+                    userId : userId,
+                    grandtotal:grandtotal
                   },
                   success: function(response) {
                    

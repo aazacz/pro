@@ -6,6 +6,10 @@ const productdb = require('../model/productsdb')
 const orderdb = require('../model/orderdb')
 const coupondb = require('../model/coupondb')
 const letterCaseChangerHelper = require('../Helper/letterCaseChangerHelper')
+const walletdb = require('../model/walletdb')
+const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Types;
+
 
 //                            <--------------------------ADMIN LOGIN AND VALIDATIONS------------------------------->
 
@@ -410,8 +414,14 @@ exports.categoriesList_Unlist = async (req, res) => {
 //ORDER 
 exports.order = async (req, res) => {
     try {
-    const order= await orderdb.find({}).populate('userId')
-    // console.log(order)
+
+     const order= await orderdb.find({}).populate('userId')
+     console.log("=====================")
+     console.log(order[32].userId._id)
+     console.log(order[4].userId._id)
+    
+     console.log("=====================")
+
 if(order){
     res.render('orders',{order:order})
 }else{
@@ -431,9 +441,25 @@ exports.updateOrderStatus=async(req,res)=>{
 
     let orderId = req.body.orderId;
     let status  = req.body.status;
-    console.log(orderId,status)
+    let userId=req.body.userId
+    let amount=req.body.grandtotal
+    
+    console.log("orderId is: "+orderId)
+    console.log("status is: "+status)
+    console.log("userId is: "+userId)
+    console.log("amount is: "+amount)
 
     try {
+
+if(status=="Returned"){
+    const userId = req.body.userId
+    const updateOrderStatus=await orderdb.findByIdAndUpdate(orderId,{$set:{status:status}}).exec()
+
+    const walletAdd = await walletdb.findOneAndUpdate({userId:new ObjectId(userId)},{$set:{amount:amount}})
+
+    res.status(200).json({ success: true, message: "Status Updated Successfully" });
+}
+else{
     const updateOrderStatus=await orderdb.findByIdAndUpdate(orderId,{$set:{status:status}}).exec()
     console.log(updateOrderStatus)
     
@@ -444,6 +470,10 @@ exports.updateOrderStatus=async(req,res)=>{
         res.status(500).json({ success: false, message: "An error occurred" });
 
     }
+}
+
+
+    
 } catch (error) {
     console.log(error.message);
 }

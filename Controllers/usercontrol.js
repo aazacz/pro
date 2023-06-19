@@ -131,13 +131,17 @@ exports.dashboard = async (req, res) => {
         let cart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
 
         let user = await customerdetail.findOne({ _id: new ObjectId(req.session.userid) }).populate('address').populate('walletId').exec()
-        // console.log(user);
+       
+       
+        console.log(user.walletId.amount);
 
         const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
 
         const wishlist = await wishlistdb.findOne({ userId: req.session.userid }).populate('product').exec()
 
         const orderlist = await orderdb.find({userId: req.session.userid})
+        
+        
         
         
         console.log("orderlist is"+orderlist);
@@ -667,7 +671,7 @@ exports.signup_verify = async (req, res) => {
                     const insertdata = await newCustomer.save();
 
 
-                    //creating a new address DATABASE for the user   &&    Inserting the addressDB id in to the customer DB
+                    //creating a new address DATABASE for the user  &&  Inserting the addressDB id in to the customer DB
                     const newaddress = new addressdb({
                         name: insertdata.name,
                         houseno: " ",
@@ -824,8 +828,8 @@ try {
     if (req.session.userid) {
         const cart = await cartdb.findOne({userId: req.session.userid}).populate('product.product_id').exec()
           
-        let user = await customerdetail.findOne({ _id: req.session.userid }).populate('address').exec()
-
+        let user = await customerdetail.findOne({ _id: req.session.userid }).populate('address').populate('walletId').exec()
+        console.log(user.walletId.amount);
         const session = req.session.userid
         const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
         const couponlist = await coupondb.find({})

@@ -166,7 +166,7 @@
 																	<tr class="summary-total">
 																		<td colspan="3">Total:</td>
 																		<td>
-																			<h4 class="grandTotal"></h4>
+																			<h4 class="grandTotal" id="grand-total"></h4>
 																		</td>
 																	</tr>
 										</tbody>
@@ -217,8 +217,7 @@
 																			}
 																			</style>
 																	</tr>
-																	<%}
-																}else { %>
+																	<%} }else { %>
 																	  <tr>
 																		 <td>Sorry No Coupons </td>
 																			<td>&emsp; &emsp;</td>
@@ -237,7 +236,9 @@
 										
 				
 									</div><!-- End .accordion -->
+									
 									<div class="accordion-summary" id="accordion-payment">
+										
 										<div class="card">
 											<div class="card-header" id="heading-1">
 												<h2 class="card-title">
@@ -272,15 +273,30 @@
 											</div><!-- End .card-header -->
 											<div id="collapse-3" class="collapse" aria-labelledby="heading-3"
 												data-parent="#accordion-payment">
-												<div class="card-body">Quisque volutpat mattis eros.
-													Lorem ipsum dolor sit amet, consectetuer
-													adipiscing elit. Donec odio. Quisque volutpat
-													mattis eros.
+												<div class="card-body">Pay using Cash On Delivery
+												</div><!-- End .card-body -->
+											</div><!-- End .collapse -->
+										</div><!-- End .card -->
+										
+										
+											
+											<div class="card"  id="pay-from-wallet" data-wallet-amount="<%= user.walletId.amount %>">
+											<div class="card-header" id="heading-3">
+												<h2 class="card-title">
+													<a class="collapsed" role="button" data-toggle="collapse"
+														href="#collapse-4" aria-expanded="false"
+														aria-controls="collapse-3">
+														Pay From Wallet
+													</a>
+												</h2>
+											</div><!-- End .card-header -->
+											<div id="collapse-4" class="collapse" aria-labelledby="heading-3"
+												data-parent="#accordion-payment">
+												<div class="card-body"> <h6 id="wallet-amount" style="color: #815b13;">Your Wallet contains <br><br>₹ <%=user.walletId.amount%>.00</h6>
 												</div><!-- End .card-body -->
 											</div><!-- End .collapse -->
 										</div><!-- End .card -->
 
-										
 										
 									</div><!-- End .accordion -->
 

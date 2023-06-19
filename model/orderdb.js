@@ -23,14 +23,14 @@ const orderSchema = mongoose.Schema({
         default:1
     
       },
-      image: {
+    image: {
         type: Array,
         required: true,
         
      }
     } ],
 
-      grandtotal:{
+    grandtotal:{
         type:Number,
         required:true,
 

@@ -67,6 +67,7 @@ user_route.post('/editaddress',userController.editaddress)
 //      <-----------CHECKOUT AND PAYMENT----------->
 user_route.get('/checkout',validate.isLogin,userController.checkout)
 user_route.post('/checkout',cartController.checkout)  //Cash On Delivery
+user_route.post('/walletCheckout',cartController.walletCheckout)  //wallet Checkout
 user_route.post('/order',paymentController.order)   //Razorpay
 user_route.get('/success',userController.success)
 user_route.post('/checkout/applyCoupon',paymentController.applyCoupon)

@@ -549,8 +549,9 @@
 										<div class="col-md-12">
 										  <div style="background-color: #a0711acc; height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 10px;">
 											<div class="wallet-card">
+											  <h2>Wallet</h2>
 											  <h2>Account Balance</h2>
-											  <p>$500.00</p>
+											  <p>₹<%=user.walletId.amount%>.00</p>
 											</div>
 										  </div>
 										</div>
@@ -587,7 +588,7 @@
 														<% if (order.status=="req for Return") { %>
 														<td hidden class="remove-col"><button hidden data-orderid="<%= order._id %>" data-id="<%= order._id %>" class="cancelbtn btn-remove">Cancel/Return</button></td>
 													
-														<% }else if(order.status=="Cancelled"){%>
+														<% }else if(order.status=="Returned"){%>
 															<td style="text-align: center;" class="remove-col"><button style="background-color: blue; color: beige;" >Returned</button></td>
 
 														<%}else{ %>

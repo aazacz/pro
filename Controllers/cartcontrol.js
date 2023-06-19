@@ -8,7 +8,7 @@ const { ObjectId } = mongoose.Types;
 const productCopyHelper = require("../Helper/productCopyHelper")
 const cartHelper = require("../Helper/cartHelper")
 const Razorpay = require("razorpay")
-
+const walletdb = require('../model/walletdb')
 
 //cart page loading
 exports.cart = async (req, res) => {
@@ -240,6 +240,47 @@ exports.checkout = async (req, res) => {
 }
 
 
+//POST-checkout Wallet Checkout
+exports.walletCheckout = async (req, res) => {
+  try {
+    console.log("Wallet Checkout")
+    console.log("post checkout")
+    let cartid = req.body.cartId;
+    let addressid = req.body.address;
+    let grandtotal = req.body.grandPrice;
+    console.log(grandtotal)
+    let paymentmethod = req.body.paymentmethod;
+
+    const session = req.session.userid
+    console.log("session is " + session);
+
+ 
+  const {orderdbId,productids} = await productCopyHelper.copyProductIds(session, cartid, addressid, grandtotal, paymentmethod);
+  const orderdb_Id = orderdbId._id
+  console.log("the orderdb id is  " + orderdb_Id)
+  const productIds = productids
+  console.log(productIds);
+
+    
+
+    const addUserId = await orderdb.findByIdAndUpdate(orderdb_Id, { $set: { userId: req.session.userid, payment: "Paid" } })
+    console.log("new userid added to orderdb   &   user paid the Amount");
+  
+    const addtouser = await customerdetail.findByIdAndUpdate(req.session.userid, { myorderId: orderdb_Id }, { new: true });
+    console.log("new orderId added to customerDB")
+
+    const minusFromWallet = await walletdb.findOneAndUpdate({userId:new ObjectId(session)},{ $inc: { amount: -grandtotal } },{ new:true }).exec()
+
+    res.send({ message: "ordered successfully", orderdb_Id: orderdb_Id,cartid:cartid,productIds:productIds })
+
+  } catch (error) {
+    console.log(error.messsage);
+  }
+}
+
+
+
+//returning the order
 exports.returnorder=async (req,res)=>{
 
 try {
