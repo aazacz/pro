@@ -13,6 +13,7 @@ const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Types;
 const letterCaseChanger = require('../Helper/letterCaseChangerHelper')
 const coupondb = require('../model/coupondb')
+const walletdb = require('../model/walletdb')
 
 //password Hashing
 const passwordHash = async (password) => {
@@ -129,16 +130,18 @@ exports.dashboard = async (req, res) => {
 
         let cart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
 
-    let user = await customerdetail.findOne({ _id: new ObjectId(req.session.userid) }).populate('address').exec()
-    console.log(user);
+        let user = await customerdetail.findOne({ _id: new ObjectId(req.session.userid) }).populate('address').populate('walletId').exec()
+        // console.log(user);
 
-        
         const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
 
         const wishlist = await wishlistdb.findOne({ userId: req.session.userid }).populate('product').exec()
 
         const orderlist = await orderdb.find({userId: req.session.userid})
+        
+        
         console.log("orderlist is"+orderlist);
+
 
        
         if (req.session.userid) {
@@ -507,6 +510,16 @@ exports.signup_post = async (req, res) => {
                     const addtocart = new cartdb({ userId: insertdata._id, product: [],couponid:[],couponFlag:0 });
                     const cart = await addtocart.save()
                     await customerdetail.findByIdAndUpdate(insertdata._id, { cartId: [new ObjectId(cart._id)] })
+
+
+                    //creating a new wallet for the new user & adding the wallet id to the customer details
+                    const wallet = new walletdb({
+                        userId:insertdata._id,
+                        amount:0
+                    }) 
+                    const walletCreate = await wallet.save()  //wallet is also created
+                    await customerdetail.findByIdAndUpdate(insertdata._id, { walletId: [new ObjectId(walletCreate._id)] })
+
 
                     //creating a new wishlist Db for the user && inserting the cartDB_id in to the customer DB
                     const newWishListDb = new wishlistdb({ userId: insertdata._id, product: [] })

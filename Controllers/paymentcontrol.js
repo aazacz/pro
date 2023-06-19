@@ -3,6 +3,7 @@ const app=express()
 const cartdb = require('../model/cartdb')
 const orderdb = require('../model/orderdb')
 const customerdetail = require('../model/userdetailsdb')
+const walletdb = require('../model/walletdb')
 const productCopyHelper = require("../Helper/productCopyHelper")
 
 const mongoose = require('mongoose');
@@ -12,6 +13,7 @@ const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
 const Razorpay = require('razorpay'); 
 
 
+//  <=================================RAZORPAY CHECKOUT==========================================>
 exports.order = async(req,res)=>{
     try {
         console.log("1");
@@ -66,8 +68,7 @@ exports.order = async(req,res)=>{
     }
 }
 
-
-//applying coupon
+//  <================================= APPLYING COUPON ==========================================>
 exports.applyCoupon=async (req,res)=>{
     const couponDiscount = req.body.couponDiscount
     const couponId=req.body.couponId
@@ -109,7 +110,8 @@ exports.applyCoupon=async (req,res)=>{
     }
 }
 
-//removing coupon
+
+//  <================================= REMOVING COUPON ==========================================>
 exports.removeCoupon=async(req,res)=>{
     try {
         const session=req.session.userid
@@ -128,3 +130,7 @@ exports.removeCoupon=async(req,res)=>{
         console.log(error.message);
     }
 }
+
+
+
+//  <================================= ADDING TO WALLET ==========================================>

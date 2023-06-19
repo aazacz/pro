@@ -490,6 +490,7 @@ exports.fetchChartData = async (req,res)=> {
             for (const item of salesData) {
             date.push(item.date);
           }
+             date.reverse()
         
           
         // console.log("DATA iS");

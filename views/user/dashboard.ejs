@@ -3,7 +3,7 @@
         <main class="main">
         	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
         		<div class="container">
-        			<h1 class="page-title">My Account<span>Shop</span></h1>
+        			<h1 class="page-title">My Account</h1>
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
             <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
@@ -57,6 +57,11 @@
 								    <li class="nav-item">
 								        <a class="otherButton nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
 								    </li>
+									
+									<!-- WALLET -->
+								    <li class="nav-item">
+								        <a class="otherButton nav-link" id="tab-account-link" data-toggle="tab" href="#tab-wallet" role="tab" aria-controls="tab-account" aria-selected="false">Wallet</a>
+								    </li>
 
 									<!-- Signout -->
 								    <li class="nav-item">
@@ -64,19 +69,23 @@
 								    </li>
 
 								</ul>
-	                		</aside><!-- End .col-lg-3 -->
 
+
+
+			<!-- ------------------------------------------------ASIDE TAB-------------------------------------------------------->
+	                		</aside><!-- End .col-lg-3 -->
 	                		<div class="col-md-8 col-lg-9">
 	                			<div class="tab-content">
 
 
+			<!-- -------------------------------------------------DASHBOARD TAB--------------------------------------------------->
 								    <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
 								    	<p>Hello <span class="font-weight-bold text-dark"><%=user.name%></span>  
 								    	<br>
 								    	From your account dashboard you can view your <a href="#tab-orders" class="tab-trigger-link link-underline">recent orders</a>, manage your <a href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>, and <a href="#tab-account" class="tab-trigger-link">edit your password and account details</a>.</p>
 								    </div><!-- .End .tab-pane -->
 
-<!-- -------------------------------------Order Tab-------------------------------------------------------- -->
+			<!-- -------------------------------------------------ORDER TAB-------------------------------------------------------->
 
 									<div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
 										
@@ -110,12 +119,11 @@
 														<!-- <td><button class="cancelbtn"  type="submit">Cancel/Return</button></td> -->
 														<% if (order.status=="req for Return") { %>
 														<td hidden class="remove-col"><button hidden data-orderid="<%= order._id %>" data-id="<%= order._id %>" class="cancelbtn btn-remove">Cancel/Return</button></td>
-														<% }
-														else if(order.status=="Cancelled"){%>
+													
+														<% }else if(order.status=="Cancelled"){%>
 															<td style="text-align: center;" class="remove-col"><button style="background-color: blue; color: beige;" >Returned</button></td>
 
-															<%}
-														else{ %>
+														<%}else{ %>
 															<td style="text-align: center; font-size: 9px;"  class="remove-col"><button style="background-color: rgb(255, 0, 0); color: beige;"  data-orderid="<%= order._id %>" data-id="<%= order._id %>" class="cancelbtn ">Cancel/Return</button></td>
 
 														<%}%>
@@ -132,10 +140,12 @@
 										</div>
 										<% } else { %>
 											<p>No Orders yet</p>
-											<% } %>
-									  </div><!-- .End .tab-pane -->
+											<%}%>
+									  </div>
+									  <!-- .End .tab-pane -->
 
 
+			 <!-- -------------------------------------------------CART TAB--------------------------------------------------------->
 								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
 								    	<%if(cart){%>
 										
@@ -213,7 +223,7 @@
 									</div>
 								    </div><!--End of cart .tab-pane -->
 								   
-									<!-- my wishlist -->
+			<!-- -------------------------------------------------WISHLIST TAB--------------------------------------------------------->
 									
 									<div class="tab-pane fade" id="tab-wishlist" role="tabpanel" aria-labelledby="tab-wishlist-link">
 								    	
@@ -281,12 +291,9 @@
 								    </div><!-- .End .tab-pane -->
 
 								   
-									<!-- address TAB -->
+			<!-- -------------------------------------------------ADDRERSS TAB--------------------------------------------------------->
 									<div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
-																			
-											
-											
-
+													
 										<p>The following addresses will be used on the checkout page by default.</p>
 
 								    	<div class="row">
@@ -314,6 +321,8 @@
 								    			</div><!-- End .card-dashboard -->
 								    		<!-- End .col-lg-6 -->
 											
+
+			<!-- -------------------------------------------------EDIT ADDRESS TAB--------------------------------------------------------->								
 											<div class="tab-pane fade" id="tab-add" role="tabpanel" aria-labelledby="">
 												
                                                 <form action="/editaddress" method="post">
@@ -396,6 +405,10 @@
 										</div><!-- End .row -->
 								    </div><!-- .End .tab-pane -->
 
+
+
+
+			<!-- -------------------------------------------------USER ACCOUNT DETAILS TAB--------------------------------------------------------->
 								    <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
 								    	<form action="#" >
 			                				<div class="row">
@@ -466,11 +479,8 @@
 								    </div><!-- .End .tab-pane -->
 								  
 
-
-		
-
 									
-									<!-- update address tab  -->
+				<!-- -------------------------------------------------UPDATE ADDRESS TAB--------------------------------------------------------->
 									
 									<div class="tab-pane fade" id="tab-newaddress" role="tabpanel" aria-labelledby="tab-newaddress-link">
 								    
@@ -528,6 +538,81 @@
 			                				</button>
 			                			</form>
 								    </div><!-- .End .tab-pane -->
+
+
+
+
+			<!-- -------------------------------------------------WALLET TAB--------------------------------------------------------->
+								<div class="tab-pane fade" id="tab-wallet" role="tabpanel" aria-labelledby="tab-orders-link">
+										
+									<div class="row justify-content-center align-items-center" >
+										<div class="col-md-12">
+										  <div style="background-color: #a0711acc; height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 10px;">
+											<div class="wallet-card">
+											  <h2>Account Balance</h2>
+											  <p>$500.00</p>
+											</div>
+										  </div>
+										</div>
+									  </div>
+									  
+										<% if (orderlist) { %>
+										<div class="table-responsive" style="margin-top: 10px;">
+											<table class="table table-hover myTable">
+												<thead>
+													<tr>
+														<th>Product</th>
+														<th>Name</th>
+														<th>Price</th>
+														<th>Quantity</th>
+														<th>Total</th>
+														<th>Mode Of Payment</th>
+														<th>Date</th>
+														<th>Action</th>
+													</tr>
+												</thead>
+												 <tbody>              
+													
+													<% for (const order of orderlist) { %>
+														<% for (const product of order.orderProducts) { %>
+													<tr>
+														<td> <img src="upload/<%= product.image[0] %>" class="img-sm img-thumbnail" alt="Item"></td>
+														<td> <h6 class="mb-0"> <%= product.name %></h6> </td>
+														<td> <span > ₹ <%= product.price %></span></td>
+														<td><span class=><%= product.quantity %></span></td>
+														<td><span class=>₹<%= order.grandtotal * product.quantity %></span></td>
+														<td><span><%= order.paymentmethod %></span></td>
+														<td><span><%= new Date(order.purchased).toLocaleDateString()%></span></td>
+														<!-- <td><button class="cancelbtn"  type="submit">Cancel/Return</button></td> -->
+														<% if (order.status=="req for Return") { %>
+														<td hidden class="remove-col"><button hidden data-orderid="<%= order._id %>" data-id="<%= order._id %>" class="cancelbtn btn-remove">Cancel/Return</button></td>
+													
+														<% }else if(order.status=="Cancelled"){%>
+															<td style="text-align: center;" class="remove-col"><button style="background-color: blue; color: beige;" >Returned</button></td>
+
+														<%}else{ %>
+															<td style="text-align: center; font-size: 9px;"  class="remove-col"><button style="background-color: rgb(255, 0, 0); color: beige;"  data-orderid="<%= order._id %>" data-id="<%= order._id %>" class="cancelbtn ">Cancel/Return</button></td>
+
+														<%}%>
+
+
+
+														</tr>
+														<% } %>
+														<% } %>
+												</tbody>
+												
+											</table>
+								
+										</div>
+										<% } else { %>
+											<p>No Orders yet</p>
+											<%}%>
+									  </div>
+									  <!-- .End .tab-pane -->
+
+
+
 								</div>
 	                		</div><!-- End .col-lg-9 -->
 	                	</div><!-- End .row -->

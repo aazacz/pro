@@ -46,6 +46,11 @@ const userSchema = mongoose.Schema({
          ref: 'wishlist',
         required:false,
      },
+     walletId:{
+        type: mongoose.Schema.Types.ObjectId,
+         ref: 'wallet',
+        required:false,
+     },
      address: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "address",
