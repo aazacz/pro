@@ -9,13 +9,14 @@ const productCopyHelper = require("../Helper/productCopyHelper")
 const cartHelper = require("../Helper/cartHelper")
 const Razorpay = require("razorpay")
 const walletdb = require('../model/walletdb')
+const bannerdb = require('../model/bannerdb')
 
 //cart page loading
 exports.cart = async (req, res) => {
   const session = req.session.userid
   console.log("session id in the cart page is:    " + session);
 
-
+  const banners = await bannerdb.findOne({})
 
   const user = await customerdetail.findOne({ _id: req.session.userid }).populate('address').populate('cartId')
 
@@ -23,7 +24,7 @@ exports.cart = async (req, res) => {
 
   const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
 
-  res.render('cart', { session: session, cart: cart, user: user, miniCart: miniCart })
+  res.render('cart', { session: session, cart: cart, user: user, miniCart: miniCart,banners:banners })
 }
 
 

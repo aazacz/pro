@@ -7,7 +7,7 @@ const cors                  = require('cors')
 const userRoute             = require("./routes/userRoute")
 const adminRoute            = require("./routes/adminRoute")
 const MongoStore            = require('connect-mongo');
-const cookieparser          =require('cookie-parser')
+const cookieparser          = require('cookie-parser')
 
 
 require('dotenv').config()                 //env  

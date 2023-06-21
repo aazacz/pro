@@ -59,8 +59,19 @@ admin_route.get('/addcoupon',validate.isLogin,adminControl.addcoupon)
 admin_route.post('/addcoupon',adminControl.addcoupon_post)
 admin_route.post('/deletecoupon',adminControl.deletecoupon)
 
+//BANNER MANAGEMENT
+admin_route.get('/bannerManagement',validate.isLogin,adminControl.bannerManagement)
+admin_route.post('/upload',upload.single('image'),adminControl.bannerImageupload)
 
-admin_route.get('/adminpage_sellers_list',validate.isLogin, adminControl.adminpage_sellers_list)
+admin_route.get('/invoice',(req,res)=>{
+
+        res.render("invoice")
+})
+
+
+admin_route.get('/salesreport',validate.isLogin, adminControl.salesreport)
+
+
 admin_route.get('/adminpage_form_productadd',validate.isLogin, adminControl.adminpage_form_productadd)
 
 

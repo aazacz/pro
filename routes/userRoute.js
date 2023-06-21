@@ -24,6 +24,7 @@ user_route.route('/signup').get(userController.signup)
 
 user_route.get('/logout',validate.isLogin,userController.logout)
 
+
 user_route.get('/about',userController.about)
 user_route.get('/contact',userController.contact)
 user_route.get('/dashboard',validate.isLogin,userController.dashboard)
@@ -50,7 +51,6 @@ user_route.put('/returnorder',cartController.returnorder)
 user_route.route('/otplogin').get(validate.isLogin,userController.otplogin)
                              .post(userController.otplogin_verify)    
 user_route.post('/otpverify',userController.otpverify)
-
 
 
 

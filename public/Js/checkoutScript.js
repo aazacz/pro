@@ -101,19 +101,19 @@
 					}
 
 
-						console.log(response);
-						console.log(response.message);
+
 						if(response.message=="coupon already applied"){
 							grandprice()
 							toastr["info"]("Coupon Already used", "Sorry! ")
 						}
 						else if(response.message=="Coupon Applied"){
+							
 							discount=response.couponDiscount
 							$('#discountTab').text(discount)
 							grandprice()
 							toastr["success"]("You have saved some bucks", "Hurray! ")
-						}
-						else{
+							
+						}else{
 							grandprice()
 							toastr["error"]("Can't Use two Coupons", "oops!!")
 						}

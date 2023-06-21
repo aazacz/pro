@@ -7,6 +7,7 @@ const orderdb = require('../model/orderdb')
 const coupondb = require('../model/coupondb')
 const letterCaseChangerHelper = require('../Helper/letterCaseChangerHelper')
 const walletdb = require('../model/walletdb')
+const bannerdb = require('../model/bannerdb')
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Types;
 
@@ -14,12 +15,14 @@ const { ObjectId } = mongoose.Types;
 //                            <--------------------------ADMIN LOGIN AND VALIDATIONS------------------------------->
 
 
-//login page
+//GET - login page
 exports.login = (req, res) => {
     res.render('login')
 }
 
-//POST login page
+
+
+//POST - login page
 exports.login_verify = async (req, res) => {
     try {
         const userlog = await customerdetail.findOne({ email: req.body.email })
@@ -38,11 +41,9 @@ exports.login_verify = async (req, res) => {
                     res.redirect('/admin/login')
                     console.log("adminis unauthorised");
                 }
-
             }
             else {
                 console.log("password incorrect");
-
             }
         }
         else {
@@ -52,13 +53,14 @@ exports.login_verify = async (req, res) => {
     } catch (error) {
         console.log(error.message);
     }
-
-
 }
 
-//dashboard
+
+//Dashboard
 exports.dashboard =async (req, res) => {
     const order= await orderdb.find({}).populate('userId')
+    const delivered= await orderdb.find({status:"Delivered"}).populate('userId')
+    console.log(delivered); 
 
     const salesData = await orderdb.aggregate([
         { $match: { status: 'Delivered' } },  { $group: { _id: { $dateToString: { format: '%Y-%m-%d',date: { $toDate: '$purchased' } }},totalRevenue: { $sum: '$grandtotal' } }},{$sort: { _id: -1 }},{$project: { _id: 0, date: '$_id',totalRevenue: 1}}]);
@@ -74,7 +76,7 @@ exports.dashboard =async (req, res) => {
         // console.log(order)
         // console.log(salesData)
 if(order){
-    res.render('dashboard',{order:order,totalSum:totalSum,count:count,numberOfProducts:numberOfProducts})
+    res.render('dashboard',{order:order,totalSum:totalSum,count:count,numberOfProducts:numberOfProducts,delivered:delivered})
 }else{
     const order=null
     const totalSum=null
@@ -192,7 +194,7 @@ exports.productslist = async (req, res) => {
     }
 }
 
-//Add Product
+//GET  -  Add Product Page
 exports.addproduct = async (req, res) => {
     try {
         const category = await categorydb.find({})
@@ -411,17 +413,12 @@ exports.categoriesList_Unlist = async (req, res) => {
 }
 
 
-//ORDER 
+//GET  -  ORDER TAB 
 exports.order = async (req, res) => {
     try {
 
      const order= await orderdb.find({}).populate('userId')
-     console.log("=====================")
-     console.log(order[32].userId._id)
-     console.log(order[4].userId._id)
-    
-     console.log("=====================")
-
+  
 if(order){
     res.render('orders',{order:order})
 }else{
@@ -554,6 +551,8 @@ exports.addcoupon=async(req,res)=>{
 
     res.render('addcoupon',{couponlist:couponlist})
 }
+
+
   
 //POST- Adding the Coupon
 exports.addcoupon_post = async(req,res)=>{
@@ -604,14 +603,100 @@ exports.deletecoupon = async (req,res)=>{
 }
 
 
-
-
-
-
-
-exports.adminpage_sellers_list = (req, res) => {
-    res.render('adminpage_sellers_list')
+//GET - BannerManagement
+exports.bannerManagement=async(req,res)=>{
+    try {
+        let banners=await bannerdb.findOne({})
+        console.log(banners);
+        res.render('bannerManagement',{banners:banners})    
+    } catch (error) {
+        console.log(error.message);
+    }
+    
 }
+
+
+//POST - Banner Image Upload
+exports.bannerImageupload=async(req, res) => {
+
+
+    try {
+        
+    const query = req.query.num
+    console.log(req.file); 
+    console.log("query is: "+query);
+
+    if (req.file) {
+
+            if(query==1){
+                
+                const banner = await bannerdb.findOne({})
+                const bannerupload = await bannerdb.findOneAndUpdate({_id:banner._id},{$set:{image1:req.file.filename}})
+                console.log(bannerupload);
+                res.redirect("back")
+            }
+            else if(query==2){
+                const banner = await bannerdb.findOne({})
+                const bannerupload = await bannerdb.findOneAndUpdate({_id:banner._id},{$set:{image2:req.file.filename}})
+                console.log(bannerupload);
+                res.redirect("back")
+            }
+            else if(query==3){
+                const banner = await bannerdb.findOne({})
+                const bannerupload = await bannerdb.findOneAndUpdate({_id:banner._id},{$set:{image3:req.file.filename}})
+                console.log(bannerupload);
+                res.redirect("back")
+            }
+            else {
+                const banner = await bannerdb.findOne({})
+                const bannerupload = await bannerdb.findOneAndUpdate({_id:banner._id},{$set:{image4:req.file.filename}})
+                console.log(bannerupload);
+                res.redirect("back")
+            }
+     
+    } else {
+      res.status(400).send('File upload failed');
+    }
+
+
+        } catch (error) {
+            console.log(error.message);    
+        }
+  }
+
+
+
+
+
+
+exports.salesreport =async (req, res) => {
+
+    try {
+
+        const orders= await orderdb.find({}).populate('userId')
+        console.log("orders in order page");
+        console.log(orders[1].userId.name);
+        console.log("00000000000000000000000000000000000000000000000000");
+        console.log(orders);
+      
+     
+   if(orders){
+       res.render('salesreport',{orders:orders})
+   }else{
+       res.render('salesreport')
+   }
+       
+   } catch (error) {
+       console.log();
+   }
+
+
+}
+
+
+
+
+
 exports.adminpage_form_productadd = (req, res) => {
     res.render('adminpage_form_productadd')
 }

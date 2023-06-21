@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Invoice</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .invoice-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .invoice-logo {
+      float: left;
+      width: 150px;
+    }
+
+    .invoice-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 30px;
+    }
+
+    .customer-details {
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      text-align: center;
+    }
+
+    .invoice-info {
+      text-align: right;
+    }
+    h5 {
+    margin-bottom: 2px;
+  }
+
+  p {
+    margin-bottom: 0;
+    margin-top: 2px;
+  }
+  </style>
+</head>
+
+<body>
+  <h1 class="invoice-title" style="color: #815b13;"> PRODUCT INVOICE </h1>
+  
+  <div class="container" style="margin-bottom: 100px;">
+    <img class="invoice-logo" src="asset/KENVILL_LOGO-01.png" alt="Company Logo">
+  </div>
+
+  
+  <div class="container" style="margin-top: 50px;">
+    <div class="invoice-header">
+     
+  </div>
+
+<div class="row" style="margin-top:50px ">
+    <div class=" col-6" ">
+      <h5 style="font-family:fantasy ;">CUSTOMER DETAILS</h5>
+      <p>John Doe</p>
+      <p style="text-decoration: underline;">Address</p>
+      <p>Address: 123 Main St, City</p>
+      <p>Email: john.doe@example.com</p>
+    </div>
+
+    <div class="col-6 invoice-info" >
+      <p>Invoice Number: 12345</p>
+      <p>Invoice Date: June 21, 2023</p>
+    </div>
+    
+  </div>
+  </div>
+
+  <div class="container">
+    <table>
+      <thead>
+        <tr >
+          <th style="width:20px">Serial No.</th>
+          <th >Product Name</th>
+          <th>Qty</th>
+          <th>Price</th>
+          <th >Total</th>
+        </tr>
+
+      </thead>
+      <tbody>
+
+        <tr>
+          <td>1</td>
+          <td>Product A</td>
+          <td style="text-align: center;">2</td>
+          <td style="text-align: center;">$10</td>
+          <td style="text-align: center;">$18</td>
+        </tr>
+      
+      
+      </tbody>
+    </table>
+
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

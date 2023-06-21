@@ -1,0 +1,168 @@
+<%-include('../Partials/adminheader')-%>
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Banner Management</h2>
+                <p></p>
+            </div>
+
+        </div>
+        <div class="card mb-4">
+
+
+
+
+
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+
+                            <tr>
+                                
+                                <th class="col-lg-4 col-sm-2 col-4 col-status">Name</th>
+                                <th class="col-lg-4 col-sm-2 col-4 col-status">Description</th>
+                                <th class="col-lg-2 col-sm-2 col-4 col-status">Status</th>
+                                <th class="col-lg-2 col-sm-2 col-4 col-status">Action</th>
+
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                       <!-- IMAGE 1 -->
+                            <tr>
+                             <form action="/admin/upload?num=1" method="post" enctype="multipart/form-data"> 
+                                <td class="col-lg-3 col-sm-2 col-3 "><img src="upload/<%=banners.image1%>" class="img-sm img-thumbnail" alt="Item"> </td>
+
+                                <td class="col-lg-3 col-sm-2 col-3 ">Home Page Banner</td>
+                                
+                                
+                                <td class="col-lg-3 col-sm-2 col-3 ">  <input class="form-control" name="image" type="file" required> </td>
+                                
+                                <td class="text-end">
+                                    <div class="col-lg-1 col-sm-2 col-4 col-status">
+
+                                        <button value="name"    class="btn btn-sm font-sm btn-light rounded" type="submit"> Upload </button>
+                                    </div> <!-- dropdown //end -->
+                                </td>
+                            </form>
+                                
+                            </tr>
+                           
+                           <!-- IMAGE 2 -->
+                           
+                            <tr>
+                             <form action="/admin/upload?num=2" method="post" enctype="multipart/form-data"> 
+                                <td class="col-lg-3 col-sm-2 col-3 "><img src="upload/<%=banners.image2%>" class="img-sm img-thumbnail" alt="Item"> </td>
+
+                                <td class="col-lg-3 col-sm-2 col-3 ">Product Page Top Banner</td>
+                                
+                                
+                                <td class="col-lg-3 col-sm-2 col-3 ">  <input class="form-control" name="image" type="file" required> </td>
+                                
+                                <td class="text-end">
+                                    <div class="col-lg-1 col-sm-2 col-4 col-status">
+
+                                        <button value="name"    class="btn btn-sm font-sm btn-light rounded" type="submit"> Upload </button>
+                                    </div> <!-- dropdown //end -->
+                                </td>
+                            </form>
+                                
+                            </tr>
+                           
+                           <!-- IMAGE 3 -->
+                            <tr>
+                             <form action="/admin/upload?num=3" method="post" enctype="multipart/form-data"> 
+                                <td class="col-lg-3 col-sm-2 col-3 "><img src="upload/<%=banners.image3%>" class="img-sm img-thumbnail" alt="Item"> </td>
+
+                                <td class="col-lg-3 col-sm-2 col-3 ">Product Page Bottom Banner</td>
+                                
+                                
+                                <td class="col-lg-3 col-sm-2 col-3 ">  <input class="form-control" name="image" type="file" required> </td>
+                                
+                                <td class="text-end">
+                                    <div class="col-lg-1 col-sm-2 col-4 col-status">
+
+                                        <button value="name"    class="btn btn-sm font-sm btn-light rounded" type="submit"> Upload </button>
+                                    </div> <!-- dropdown //end -->
+                                </td>
+                            </form>
+                                
+                            </tr>
+                           
+
+                            <!-- IMAGE 4 -->
+                            <tr>
+                             <form action="/admin/upload?num=4" method="post" enctype="multipart/form-data"> 
+                                <td class="col-lg-3 col-sm-2 col-3 "><img src="upload/<%=banners.image4%>" class="img-sm img-thumbnail" alt="Item"> </td>
+
+                                <td class="col-lg-3 col-sm-2 col-3 ">Home Page Banner</td>
+                                
+                                
+                                <td class="col-lg-3 col-sm-2 col-3 ">  <input class="form-control" name="image" type="file" required> </td>
+                                
+                                <td class="text-end">
+                                    <div class="col-lg-1 col-sm-2 col-4 col-status">
+
+                                        <button value="name"    class="btn btn-sm font-sm btn-light rounded" type="submit"> Upload </button>
+                                    </div> <!-- dropdown //end -->
+                                </td>
+                            </form>
+                                
+                            </tr>
+
+                           
+                      
+
+
+                          
+
+                        </tbody>
+                    </table>
+                </div>
+            </div> <!-- .col// -->
+
+        </div> <!-- card end// -->
+        <div class="pagination-area mt-30 mb-50">
+            <nav aria-label="Page navigation example">
+
+            </nav>
+        </div>
+    </section> <!-- content-main end// -->
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+ <!--    <script>
+        $(document).ready(function () {
+
+
+        var formData = new FormData();
+        formData.append('image', $('input[name="image"]')[0].files[0]);
+
+        $.ajax({
+        url: '/upload?num="1"',
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            // Handle the response
+        },
+        error: function(error) {
+            // Handle the error
+        }
+        });
+
+
+
+
+
+
+        })
+    </script>
+ -->
+
+
+    <%-include('../Partials/adminfooter')-%>

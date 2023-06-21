@@ -7,7 +7,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-9">
+                <div class="col-md-12">
                     <div class="card mb-4">
                         <header class="card-header">
                             <div class="row gx-3">
@@ -50,16 +50,11 @@
 
                                         <% if (order) { %>
 
-
-
-
                                             <%let k=1%>
                                            
                                             <% for (let i = order.length - 1; i >= 0; i--) { %>
 
-                                                
-
-                                                    <tr>
+                                                   <tr>
                                                      
                                                   <td><%=k%></td>
                                                   
@@ -79,7 +74,7 @@
                                                             alert-danger
                                                           <% } %>" >   <%= order[i].status %>  </span>
                                                       </td>
-                                                      
+                                                        
 
 
                                                   <td><%= new Date(order[i].purchased).toLocaleDateString() %></td>
@@ -169,46 +164,7 @@
                         </div> <!-- card-body end// -->
                     </div> <!-- card end// -->
                 </div>
-                <div class="col-md-3">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="mb-3">Filter by</h5>
-                            <form>
-                                <div class="mb-4">
-                                    <label for="order_id" class="form-label">Order ID</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="order_id">
-                                </div>
-                                <div class="mb-4">
-                                    <label for="order_customer" class="form-label">Customer</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="order_customer">
-                                </div>
-                                <div class="mb-4">
-                                    <label class="form-label">Order Status</label>
-                                    <select class="form-select">
-                                        <option>Published</option>
-                                        <option>Draft</option>
-                                    </select>
-                                </div>
-                                <div class="mb-4">
-                                    <label for="order_total" class="form-label">Total</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="order_total">
-                                </div>
-                                <div class="mb-4">
-                                    <label for="order_created_date" class="form-label">Date Added</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="order_created_date">
-                                </div>
-                                <div class="mb-4">
-                                    <label for="order_modified_date" class="form-label">Date Modified</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="order_modified_date">
-                                </div>
-                                <div class="mb-4">
-                                    <label for="order_customer_1" class="form-label">Customer</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="order_customer_1">
-                                </div>
-                            </form>
-                        </div>
-                    </div> <!-- card end// -->
-                </div>
+               
             </div>
             <div class="pagination-area mt-15 mb-50">
                 <nav aria-label="Page navigation example">

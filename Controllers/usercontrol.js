@@ -1,19 +1,22 @@
-const bcrypt = require('bcrypt')
-const wishlistdb = require('../model/wishlistdb')
-const Otp = require('../model/otpdb')
-const otpGenerator = require('otp-generator')
-const nodemailer = require('nodemailer')
-const categorydb = require("../model/categorydb")
-const productdb = require('../model/productsdb')
-const cartdb = require('../model/cartdb')
-const customerdetail = require('../model/userdetailsdb')
-const addressdb = require('../model/addressdb')
-const orderdb = require('../model/orderdb')
-const mongoose = require('mongoose');
-const { ObjectId } = mongoose.Types;
+const bcrypt        = require('bcrypt')
+const wishlistdb    = require('../model/wishlistdb')
+const Otp           = require('../model/otpdb')
+const otpGenerator  = require('otp-generator')
+const nodemailer    = require('nodemailer')
+const categorydb    = require("../model/categorydb")
+const productdb     = require('../model/productsdb')
+const cartdb        = require('../model/cartdb')
+const customerdetail= require('../model/userdetailsdb')
+const addressdb     = require('../model/addressdb')
+const orderdb       = require('../model/orderdb')
+const mongoose      = require('mongoose');
+const { ObjectId }  = mongoose.Types;
 const letterCaseChanger = require('../Helper/letterCaseChangerHelper')
-const coupondb = require('../model/coupondb')
-const walletdb = require('../model/walletdb')
+const coupondb      = require('../model/coupondb')
+const walletdb      = require('../model/walletdb')
+const bannerdb      = require('../model/bannerdb')
+
+
 
 //password Hashing
 const passwordHash = async (password) => {
@@ -29,16 +32,13 @@ const passwordHash = async (password) => {
 
 //index page
 exports.index = async (req, res) => {
-    let session = req.session.userid
-    if (session) {
-        console.log(""); const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product').exec()
-
-        res.render('index', { session: session, miniCart: miniCart })
-    }
-    else {
+    try {
+        let banners=await bannerdb.findOne({})
         const session = null
         const miniCart = null
-        res.render('index', { session: session, miniCart: miniCart })
+        res.render('index', { session: session, miniCart: miniCart,banners:banners })
+    } catch (error) {
+     console.log(error.message);   
     }
 
 }
@@ -362,21 +362,32 @@ exports.product = async (req, res) => {
 exports.category = async (req, res) => {
     try {
         const pageNum=req.query.page
-        const perpage = 2
-        let doCount;
+        const perpage = 6
+        let   doCount;
+        let sortAB=req.query.sortAB
+        console.log(sortAB);
 
         const selectedCategories = req.body.categories || [];
         
-
+        let banners = await bannerdb.findOne({})
         const session = req.session.userid
         console.log("checking session exists before loading category page");
         console.log(session);
-
-        const product = await productdb.find({}).countDocuments().then(documents=>{
-            doCount=documents
-            return productdb.find({}).skip(((pageNum-1)*perpage)).limit(perpage)
-        })
-
+        let product
+        if(sortAB){
+            product = await productdb.find({}).countDocuments().then(documents=>{
+                doCount=documents
+                return productdb.find({}).skip(((pageNum-1)*perpage)).limit(perpage).sort({price:sortAB})
+            })
+        }else{
+            product = await productdb.find({}).countDocuments().then(documents=>{
+                doCount=documents
+                return productdb.find({}).skip(((pageNum-1)*perpage)).limit(perpage)
+            })
+        }
+         
+        const products = await productdb.distinct("brand");
+        console.log(products);
         // console.log(product);
         const title = req.flash("title");
 
@@ -393,11 +404,13 @@ exports.category = async (req, res) => {
                                     currentPage:pageNum,
                                     totalDocument:doCount, 
                                     pages:Math.ceil(doCount/perpage),
-                                    product: product, 
+                                    product: product,
+                                    products:products, 
                                     session: session, 
                                     user: user,
                                     miniCart: miniCart,
-                                    category:category })
+                                    category:category,
+                                    banners:banners })
 
         }
         else{
