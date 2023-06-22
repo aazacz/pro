@@ -155,12 +155,13 @@
                                 address: address,
                                 grandPrice: grandPrice,
                                 paymentmethod: paymentmethod };
+
 							   $.ajax({
                                     url: `/order`,
                                     method: 'POST',
                                     data: data,
                                     success:  function (response) {	
-                                        console.log(response);
+                                       
                                             razorpay(response)
                                             
                                     }
@@ -237,6 +238,7 @@
 					const cartid=Response.cartid
 					console.log(cartid)
 					const productIds=Response.productIds
+					
 					var options = {
 						"key": "rzp_test_c9kyL8vciS4dlx",
 						"amount": "<%=Response.amount%>",

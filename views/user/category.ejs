@@ -362,7 +362,13 @@
 								class="col-6 col-md-3 col-lg-3 product-item mb-4 "  data-price="<%=product.price%>" data-category="<%-product.category%>">
 											<div class="product product-7 text-center">
 												<figure class="product-media">
-													<span class="product-label label-new">New</span>
+													
+													<% if(product.isOffer==true){%>
+														
+														<% let discount = Math.trunc( (product.offer - product.price) / product.offer * 100) %>
+														<span class="product-label label-new"><%=discount%>% Offer</span>	
+													<%}%>
+
 													<a href="/product?productid=<%=product._id%>">
 														<img src="/upload/<%=product.image[0]%>" alt="Product image"
 															class="product-image">
@@ -394,14 +400,15 @@
 													<h3 class="product-title"><a style="display: -webkit-box;
 													-webkit-box-orient: vertical;
 													-webkit-line-clamp: 2;
-													overflow: hidden;" href="product.html">
-															<%=product.description%>
-														</a></h3><!-- End .product-title -->
-
-													<div class="product-price">
-														<%=product.price%>
-													</div> <!-- End .product-price -->
-
+													overflow: hidden;" href="product.html">	<%=product.description%></a>
+													</h3><!-- End .product-title -->
+									<div class="d-flex" style="align-items: center; justify-content: center;">
+													<div class="product-price font-weight-bold " style="font-size :18px;"> ₹ <%=product.price%> </div> <!-- End .product-price -->
+												<span>&emsp;</span>
+													<% if(product.isOffer==true){%>
+													<div class="product-price" style="text-decoration: line-through;"> ₹ <%=product.offer%> </div> <!-- End .product-price -->
+														<%}%>
+											</div>
 													<div class="ratings-container">
 														<div class="ratings">
 															<div class="ratings-val" style="width: 20%;"></div>

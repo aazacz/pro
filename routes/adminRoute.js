@@ -26,6 +26,9 @@ admin_route.route('/addproduct').get(adminControl.addproduct)
 admin_route.route('/updateproduct').get(validate.isLogin,adminControl.updateproduct)
                                    .post(upload.array('image'),adminControl.updateproduct_todb)
 admin_route.post('/deleteproduct',adminControl.deleteproduct)
+admin_route.post('/offerUpdate',adminControl.offerUpdate)
+
+
 
 //CHART
 admin_route.get('/chartData', adminControl.fetchChartData)
@@ -69,6 +72,7 @@ admin_route.get('/invoice',(req,res)=>{
 })
 
 
+//BANNER MANAGEMENT
 admin_route.get('/salesreport',validate.isLogin, adminControl.salesreport)
 
 

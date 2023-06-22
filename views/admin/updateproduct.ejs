@@ -8,7 +8,7 @@
                     <div class="content-header">
                         <h2 class="content-title">Update Product</h2>
                         <div>
-                                <button class="btn btn-md rounded font-sm hover-up" type="submit">Publish</button>
+                            <button class="btn btn-md rounded font-sm hover-up" type="submit">Publish</button>
                         </div>
                     </div>
                 </div>
@@ -18,62 +18,65 @@
                             <h4>Update</h4>
                         </div>
                         <div class="card-body">
-                            
-                                <div class="mb-4">
-                                    <label for="product_name" class="form-label">Product Name</label>
-                                    <input type="text" value="<%=product.name%>" name="name"  class="form-control"
-                                        id="product_name">
-                                </div>
-                                <div class="mb-4">
-                                    <label for="product_name" class="form-label">Brand</label>
-                                    <input type="text" name="brand" value="<%=product.brand%>" placeholder="<%=product.brand%>" class="form-control"
-                                        id="product_name">
-                                </div>
-                                <div class="mb-4">
-                                    <label class="form-label">Product Description</label>
-                                    <input type="text" value="<%=product.description%>"  name="description" placeholder="<%=product.description%>" class="form-control"
-                                        id="product_name">
+
+                            <div class="mb-4">
+                                <label for="product_name" class="form-label">Product Name</label>
+                                <input type="text" value="<%=product.name%>" name="name" class="form-control"
+                                    id="product_name">
+                            </div>
+                            <div class="mb-4">
+                                <label for="product_name" class="form-label">Brand</label>
+                                <input type="text" name="brand" value="<%=product.brand%>"
+                                    placeholder="<%=product.brand%>" class="form-control" id="product_name">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Product Description</label>
+                                <input type="text" value="<%=product.description%>" name="description"
+                                    placeholder="<%=product.description%>" class="form-control" id="product_name">
 
 
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <div class="mb-4">
-                                            <label class="form-label">Regular price</label>
-                                            <div class="row gx-2">
-                                                <input placeholder="<%=product.price%>" value="<%=product.price%>" name="price" type="text" class="form-control">
-                                            </div>
-
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <label class="form-label">Regular price</label>
+                                        <div class="row gx-2">
+                                            <input placeholder="<%=product.price%>" value="<%=product.price%>"
+                                                name="price" type="text" class="form-control">
                                         </div>
+
                                     </div>
-                                    <div class="col-lg-4">
-                                        <div class="mb-4">
-
-                                            <label class="form-label">Quantity</label>
-                                            <input type="text" value="<%=product.quantity%>" name="quantity" placeholder="<%=product.quantity%>"
-                                                class="form-control" id="product_name">
-                                        </div>
-                                    </div>
-                    
-                                    <div class="col-lg-4">
-                                        <div class="mb-4">
-
-                                            <label class="form-label">size</label>
-                                            <input type="text" value="<%=product.size%>" name="size" placeholder="<%=product.size%>" class="form-control"
-                                                id="product_name">
-                                        </div>
-                                    </div>
-                                    
-
-
                                 </div>
-                            
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+
+                                        <label class="form-label">Quantity</label>
+                                        <input type="text" value="<%=product.quantity%>" name="quantity"
+                                            placeholder="<%=product.quantity%>" class="form-control" id="product_name">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+
+                                        <label class="form-label">size</label>
+                                        <input type="text" value="<%=product.size%>" name="size"
+                                            placeholder="<%=product.size%>" class="form-control" id="product_name">
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <!----------------------Add Offer------------------------->
+
 
 
                         </div>
-                    </div> 
-
+                    </div>
                 </div>
+
+
                 <div class="col-lg-3">
                     <div class="card mb-4">
                         <div class="card-header">
@@ -82,7 +85,7 @@
                         <div class="card-body">
                             <div class="input-upload">
                                 <img src="upload/<%=product.image[0]%>" alt="">
-                                <input class="form-control"  name="image" id="uploadimage" type="file" multiple>
+                                <input class="form-control" name="image" id="uploadimage" type="file" multiple>
                             </div>
                         </div>
                     </div> <!-- card end// -->
@@ -97,52 +100,190 @@
                                 <div class="col-sm-12 mb-3">
                                     <label class="form-label">Category</label>
                                     <select class="form-select" name="categoryName">
-                                       
-                                        <% category.forEach(function(category) { 
-                                            %><option 
-                                            value="<%=category.name%>">  <%=category.name%> 
-                                                            
-                                            </option> <%   }) %>
-                                      </select>
+
+                                        <% category.forEach(function(category) { %>
+                                            <option value="<%=category.name%>">
+                                                <%=category.name%>
+
+                                            </option>
+                                            <% }) %>
+                                    </select>
 
 
                                 </div>
-                                    
+
                             </div> <!-- row// -->
                         </div>
                     </div> <!-- card end// -->
-                    
+
                     <input type="hidden" value="<%=product._id%>" name="id">
-                     </div>
+                </div>
             </div>
         </form>
+
+
+        <!-- offer Section --> 
+       <div class="row">
+        <div class="col-9">
+            <div class="col-6">
+                <div class="card mb-4">
+                    <div class="card-header"> <h4>Add Offer</h4> </div>
+
+                    <div class="card-body">
+                        <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label">Offer Amount</label>
+                                    <div class="d-flex" style="column-gap: 10px;">
+                                        
+                                        <input type="checkbox" value="<%=product.isOffer%>" name="isOffer" id="addOffer" <%if(product.isOffer==true){%>checked<%}%> >
+                                        
+                                        <input style="width: 100px;" type="text" value="<%=product.offer%>" name="offer" id="offerAmount" placeholder="<%=product.offer%>" class="form-control">
+                                       
+                                        <button class="btn btn-md rounded font-sm hover-up updateOffer" data-id="<%=product._id%>" data-price="<%=product.price%>" type="submit">Add</button>
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     </section> <!-- content-main end// -->
-   
 
-     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-document.getElementById('uploadimage').addEventListener('click', function() {
+    <script src="asset/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- toastr -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
 
-    Swal.fire({
-  position: 'top-end',
-  icon: 'info',
-  title: 'Upload the 4 Photos',
-  text: 'Upload exactly 4 Images .',
-  showConfirmButton: false,
-  timer: 2000
-})
-})
+        $(document).ready(function () {
+
+            $(".updateOffer").on('click', function () {
+                console.log("button clicked");
+                const checkedButton = $("#addOffer").is(":checked");
+                const offer = $('#offerAmount').val().trim();
+                const currentPrice=$(this).data('price')
+                const id = $(this).data('id')
+                
+                if (checkedButton == "true" && offer > 1) {
+                    $.ajax({
+                        url: "/admin/offerUpdate",
+                        type: "post",
+                        data: {
+                            isOffer: checkedButton,
+                            offer: offer,
+                            id: id,
+                            currentPrice:currentPrice
+                        },
+                        success: function (response) {
+                            toastr.options = {
+                            "closeButton": false,
+                            "debug": false,
+                            "newestOnTop": true,
+                            "progressBar": true,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": true,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                            }
+                        if(response.message=="offerAdded"){
+                            console.log("added");
+                            toastr["success"]("Offer Added Successfully", "Success")
+                        }
+                        else{
+                            console.log("removed");
+                            toastr["info"]("Offer Removed", "Success")
+                        }
+                        }
+
+                    })
+
+
+                } else {
+                    $.ajax({
+                        url: "/admin/offerUpdate",
+                        type: "post",
+                        data: {
+                            isOffer: checkedButton,
+                            offer: offer,
+                            id: id,
+                            currentPrice:currentPrice
+                        },
+                        success: function (response) {
+
+                            toastr.options = {
+                            "closeButton": false,
+                            "debug": false,
+                            "newestOnTop": true,
+                            "progressBar": true,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": true,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                            }
+                        if(response.message=="offerAdded"){
+                            toastr["success"]("Offer Added Successfully", "Success")
+                        }
+                        else{
+                            toastr["info"]("Offer Removed", "Success")
+                    }
+                        }
+
+                    })
+                }
+
+            });
+        });
 
 
 
 
-</script>
-        
-        
-     
-        <script src="asset/js/vendors/jquery-3.6.0.min.js"></script>   
+        //for adding the required attribute to the offer amount input type
+        document.getElementById('addOffer').addEventListener("change", function () {
+            const offer = document.getElementById('offerAmount')
+            if (this.checked) {
+                offer.setAttribute("required", "")
+            }
+            else {
+                offer.removeAttribute("required")
+            }
+        })
+
+
+        document.getElementById('uploadimage').addEventListener('click', function () {
+
+            Swal.fire({
+                position: 'top-end',
+                icon: 'info',
+                title: 'Upload the 4 Photos',
+                text: 'Upload exactly 4 Images .',
+                showConfirmButton: false,
+                timer: 2000
+            })
+        })
+
+
+
+
+    </script>
+
+
+
+
     <%-include("../partials/adminfooter")-%>
-
-
-
-

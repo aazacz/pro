@@ -16,8 +16,8 @@ const Razorpay = require('razorpay');
 //  <=================================RAZORPAY CHECKOUT==========================================>
 exports.order = async(req,res)=>{
     try {
-        console.log("1");
-         console.log("post razorpay checkout")
+      
+        console.log("post razorpay checkout")
         let cartid = req.body.cartId;
         let addressid = req.body.address;
         let grandtotal = req.body.grandPrice;
@@ -56,7 +56,8 @@ exports.order = async(req,res)=>{
                 receipt: 'ReceiptNo'
             });
 
-            console.log('Order created:', order);
+            console.log('Order created:', order); 
+            
             res.status(201).json({ success: true, order, amount ,orderdb_Id,cartid,productIds:productIds});
             
         } catch (error) {

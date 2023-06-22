@@ -186,7 +186,7 @@ exports.customerList_Unlist = async (req, res) => {
 exports.productslist = async (req, res) => {
     try {
         const productlist = await productdb.find({})
-        console.log(productlist);
+        // console.log(productlist);
         res.render('productslist', { productlist: productlist })
 
     } catch (error) {
@@ -232,7 +232,7 @@ exports.addproducttodb = async (req, res) => {
             }
         }
         console.log("2");
-        console.log(req.body.name, req.body.brand, req.body.price);
+        // console.log(req.body.name, req.body.brand, req.body.price);
         const product = new productdb({
             name: req.body.name,
             brand: req.body.brand,
@@ -246,8 +246,8 @@ exports.addproducttodb = async (req, res) => {
         })
         // console.log(product);
         const insertproduct = await product.save();
-        console.log("product added is ");
-        console.log(insertproduct);
+        // console.log("product added is ");
+        // console.log(insertproduct);
         if (insertproduct) {
             res.status(200).redirect('/admin/productslist')
 
@@ -279,7 +279,7 @@ exports.updateproduct = async (req, res) => {
 exports.updateproduct_todb = async (req, res) => {
     try {
 
-        console.log(req.body.id, req.body.name, req.body.brand, req.body.price);
+        // console.log(req.body.id, req.body.name, req.body.brand, req.body.price);
         const arrImages = [];
         let product
         console.log(req.files.length);
@@ -321,7 +321,7 @@ exports.updateproduct_todb = async (req, res) => {
 
         const data = await productdb.updateOne({ _id: req.body.id }, { $set: product })
         const updateddata = await productdb.findOne({_id: req.body.id})
-        console.log(updateddata);
+        // console.log(updateddata);
 
 
         if (data) {
@@ -337,6 +337,44 @@ exports.updateproduct_todb = async (req, res) => {
     }
 
 }
+
+
+//POST - offerUpdate in database
+exports.offerUpdate=async(req,res)=>{
+   
+    try {
+        const isOffer = req.body.isOffer
+        const offer = req.body.offer
+        const id = req.body.id
+        const currentPrice = req.body.currentPrice
+        console.log(isOffer,offer,id,currentPrice);
+
+        const discount =Math.trunc( (currentPrice - offer) / currentPrice * 100)
+        console.log(discount);
+
+if(isOffer=="true"){
+    console.log("checked true case");
+    const updateProducts = await productdb.findOneAndUpdate({_id:id},{$set:{price:offer,isOffer:isOffer,offer:currentPrice}})
+    res.status(200).send({message:"offerAdded"})
+}else{
+    const isOffer = false
+    const offer = req.body.offer
+    const currentPrice = req.body.currentPrice
+    console.log("checked false case");
+    const updateProducts = await productdb.findOneAndUpdate({_id:id},{$set:{price:offer,isOffer:isOffer,offer:currentPrice}})
+    res.status(200).send({message:"offerRemoved"})
+}
+
+    } catch (error) {
+        console.log(error.message);
+    }
+
+
+}
+
+
+
+
 
 
 //                          <----------------------CATEGORY LISTING AND ADDING---------------------->
@@ -498,6 +536,8 @@ if(order){
 }
 
 
+
+//FETCH CHART DATA
 exports.fetchChartData = async (req,res)=> {
 
     try {
@@ -534,6 +574,8 @@ exports.fetchChartData = async (req,res)=> {
     }
     
   };
+
+
 
 //         <-----------------------Add coupons -------------------------------->
 

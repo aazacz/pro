@@ -31,8 +31,8 @@ const productschema = mongoose.Schema({
         required: true
       },
     purchased:{
-    type:Number,
-    required:false
+        type:Number,
+        required:false
       },
       
     isCreated: {
@@ -51,13 +51,23 @@ const productschema = mongoose.Schema({
        isselected:{
         type: Number,
         default:0
-    },
-    isDeleted: {
-      type:Number,
-      required:false,
-      default:0
-    }
-    
+      },
+      isDeleted: {
+        type:Number,
+        required:false,
+        default:0
+      },
+      isOffer:{
+        type:Boolean,
+        required:false,
+        default:false
+      },
+      offer:{
+        type:Number,
+        required:false,
+
+      }
+      
     });
 
 
