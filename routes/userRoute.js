@@ -54,7 +54,6 @@ user_route.post('/otpverify',userController.otpverify)
 
 
 
-
 user_route.get('/otpsignup',validate.isLogin,userController.otpsignup)
 user_route.post('/otpsignup',userController.otpsignup_verify)
 user_route.post('/otpsignupverify',userController.signup_verify)

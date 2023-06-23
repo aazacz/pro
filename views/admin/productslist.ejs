@@ -34,6 +34,7 @@
                                 <th>Delete</th>
                             </tr>
                         </thead>
+                       
                          <tbody>              
                              
                             <%productlist.forEach(function(product) {%>
@@ -46,7 +47,9 @@
                                 <td> <span class="badge rounded-pill alert-success"> <%=product.quantity%></span></td>
                                 <td><span class="badge rounded-pill alert-success"><%-product.category%></span></td>
                                 <td><span class="badge rounded-pill alert-success"><%-product.price%></span></td>
-                                <td><span><%-product.description%></span></td>
+                                <td class="description-truncate" style=" display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+                                         max-width: 150px;">
+                                         <span><%-product.description%></span></td>
                                 <% if (product.isDeleted==0) {%>
                                 <td> <a href="/admin/updateproduct?productid=<%=product._id %>"
                                         class="btn btn-sm font-sm rounded btn-brand">

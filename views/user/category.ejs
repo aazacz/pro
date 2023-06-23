@@ -47,8 +47,10 @@
 		.search-wrapper {
 			position: relative;
 		}
+
 		.products .row {
-  column-gap: 20px; }
+			column-gap: 20px;
+		}
 	</style>
 
 </head>
@@ -83,7 +85,7 @@
 									<li><a href="/about">About Us</a></li>
 									<li><a href="/contact">Contact Us</a></li>
 
-									
+
 
 									<li class="dropdown">
 										<button class="btn  dropdown-toggle" data-bs-toggle="dropdown" href="#"
@@ -198,6 +200,7 @@
 							</a>
 
 							<div class="dropdown-menu dropdown-menu-right">
+								
 								<% if (miniCart!=null) { %>
 									<div class="dropdown-cart-products">
 
@@ -205,7 +208,7 @@
 										<%miniCart.product.forEach(function(item) { %>
 
 
-											<div class="product" >
+											<div class="product">
 
 												<div class="product-cart-details">
 													<h4 class="product-title">
@@ -242,7 +245,7 @@
 													<% } %>
 
 														<span class="cart-total-price"> ₹ <%=subTotal.toFixed(2)%>
-																</span>
+														</span>
 									</div><!-- End .dropdown-cart-total -->
 
 									<div class="dropdown-cart-action">
@@ -282,29 +285,26 @@
 			</div><!-- End .container -->
 	</div><!-- End .header-middle -->
 	</header><!-- End .header -->
-
-	<div class="search">
-
-		<div class="search-wrapper">
-			<label for="q" class="sr-only">Search</label>
-
-
-			<input type="text" class="form-control" name="q" id="searchInput" placeholder="Search in..." required>
-
-		</div>
-		<div id="searchResults" class="search-results"></div>
-
-	</div><!-- End .header-search -->
-
-
+	<div>
+		<div class="search" style="max-width: 400px; position: absolute; left: 570px;">
+			<div class="search-wrapper">
+				<label for="q" class="sr-only">Search</label>
+				<input type="text" class="form-control" name="q" id="searchInput" placeholder="Search in..." required>
+			</div>
+			<div id="searchResultsContainer" class="search-results-container" style="max-height: 200px; overflow: auto;">
+				<div id="searchResults" class="search-results" style="max-width: 400px;"></div>
+			</div>
+		</div><!-- End .header-search -->
+	</div>
+	
 
 
 
 
 	<main class="main">
 
-	<div class="page-header text-center"
-			style="background-size: cover; background-image: url('upload/<%=banners.image2%>')">
+		<div class="page-header text-center"
+			style="background-size: cover; background-image: url('upload/<%=banners.image2%>');height: 300px;">
 			<div class="container">
 				<h1 class="page-title"><span>Shop</span></h1>
 			</div><!-- End .container -->
@@ -314,7 +314,7 @@
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item"><a href="index.html">Home</a></li>
 					<li class="breadcrumb-item"><a href="#">Shop</a></li>
-					
+
 				</ol>
 			</div><!-- End .container -->
 		</nav><!-- End .breadcrumb-nav -->
@@ -333,63 +333,70 @@
 								</div><!-- End .toolbox-info -->
 							</div><!-- End .toolbox-left -->
 
-		<!-- -------------------------------------------Sorting ----------------------------------------- -->
-		<div class="toolbox-right">
-			<div class="toolbox-sort">
-			  <label for="sortby">Sort by:</label>
-			  <div class="select-custom">
-				<select name="sortby" id="sortby" class="form-control">
-				  <option value="all" selected="selected">All</option>
-				  <option value="price-low-high"><a href="/category?sortAB=-1">Price Low-High</a></option>
-				  <option value="price-high-low"><a href="/category?sortAB=1">Price High-Low</a></option>
-				</select>
-			  </div>
-			</div>
-		  </div>
-		  
+							<!-- -------------------------------------------Sorting ----------------------------------------- -->
+							<div class="toolbox-right">
+								<div class="toolbox-sort">
+									<label for="sortby">Sort by:</label>
+									<div class="select-custom">
+										<select name="sortby" id="sortby" class="form-control">
+											<option value="all" selected="selected">All</option>
+											<option value="price-low-high"><a href="/category?sortAB=-1">Price
+													Low-High</a></option>
+											<option value="price-high-low"><a href="/category?sortAB=1">Price
+													High-Low</a></option>
+										</select>
+									</div>
+								</div>
+							</div>
+
 
 
 						</div><!-- End .toolbox -->
 
-				<!-- -----------------------------PRODUCTS ITERATION ------------------------------------- -->					
+						<!-- -----------------------------PRODUCTS ITERATION ------------------------------------- -->
 						<div class="products mb-3" id="product-list">
-							<div  class="row row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-center g-4">
-						  
-							  <%product.forEach(function(product){%>
-							  <% if (product.isDeleted==0) {%>
-						  
-							  <div style="box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;" id="items"
-								class="col-6 col-md-3 col-lg-3 product-item mb-4 "  data-price="<%=product.price%>" data-category="<%-product.category%>">
+							<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-center g-4">
+
+								<%product.forEach(function(product){%>
+									<% if (product.isDeleted==0) {%>
+
+										<div style="box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;"
+											id="items" class="col-6 col-md-3 col-lg-3 product-item mb-4 "
+											data-price="<%=product.price%>" data-category="<%-product.category%>">
 											<div class="product product-7 text-center">
 												<figure class="product-media">
-													
+
 													<% if(product.isOffer==true){%>
-														
-														<% let discount = Math.trunc( (product.offer - product.price) / product.offer * 100) %>
-														<span class="product-label label-new"><%=discount%>% Offer</span>	
-													<%}%>
 
-													<a href="/product?productid=<%=product._id%>">
-														<img src="/upload/<%=product.image[0]%>" alt="Product image"
-															class="product-image">
-													</a>
+														<% let discount=Math.trunc( (product.offer - product.price) /
+															product.offer * 100) %>
+															<span class="product-label label-new">
+																<%=discount%>% Offer
+															</span>
+															<%}%>
 
-													<div class="product-action-vertical">
-														<!-- add to wishlist --> <button type="radio"
-															style="border: none;" data-id="<%=product._id%>"
-															class="addtowishlist btn-product-icon btn-wishlist btn-expandable">
-															<span>add to wishlist </span> </button>
+																<a href="/product?productid=<%=product._id%>">
+																	<img src="/upload/<%=product.image[0]%>"
+																		alt="Product image" class="product-image">
+																</a>
+
+																<div class="product-action-vertical">
+																	<!-- add to wishlist --> <button type="radio"
+																		style="border: none;" data-id="<%=product._id%>"
+																		class="addtowishlist btn-product-icon btn-wishlist btn-expandable">
+																		<span>add to wishlist </span> </button>
 
 
-													</div> <!-- End .product-action-vertical -->
+																</div> <!-- End .product-action-vertical -->
 
-													<div class="product-action">
+																<div class="product-action">
 
-														<!-- add to cart --> <button type="button"
-															class="addtocart btn-product btn-cart"
-															data-id="<%=product._id%>"> Add to cart </button>
+																	<!-- add to cart --> <button type="button"
+																		class="addtocart btn-product btn-cart"
+																		data-id="<%=product._id%>"> Add to cart
+																	</button>
 
-													</div><!-- End .product-action -->
+																</div><!-- End .product-action -->
 
 												</figure><!-- End .product-media -->
 
@@ -400,15 +407,23 @@
 													<h3 class="product-title"><a style="display: -webkit-box;
 													-webkit-box-orient: vertical;
 													-webkit-line-clamp: 2;
-													overflow: hidden;" href="product.html">	<%=product.description%></a>
+													overflow: hidden;" href="product.html">
+															<%=product.description%>
+														</a>
 													</h3><!-- End .product-title -->
-									<div class="d-flex" style="align-items: center; justify-content: center;">
-													<div class="product-price font-weight-bold " style="font-size :18px;"> ₹ <%=product.price%> </div> <!-- End .product-price -->
-												<span>&emsp;</span>
-													<% if(product.isOffer==true){%>
-													<div class="product-price" style="text-decoration: line-through;"> ₹ <%=product.offer%> </div> <!-- End .product-price -->
-														<%}%>
-											</div>
+													<div class="d-flex"
+														style="align-items: center; justify-content: center;">
+														<div class="product-price font-weight-bold "
+															style="font-size :18px;"> ₹ <%=product.price%>
+														</div> <!-- End .product-price -->
+														<span>&emsp;</span>
+														<% if(product.isOffer==true){%>
+															<div class="product-price"
+																style="text-decoration: line-through;"> ₹
+																<%=product.offer%>
+															</div> <!-- End .product-price -->
+															<%}%>
+													</div>
 													<div class="ratings-container">
 														<div class="ratings">
 															<div class="ratings-val" style="width: 20%;"></div>
@@ -426,7 +441,7 @@
 														</a>
 
 														<a href="#">
-															<img src="/upload/<%=product.image[1]%>" alt="img">
+															<img src="/upload/<%=product.image[2]%>" alt="img">
 														</a>
 													</div><!-- End .product-nav -->
 												</div><!-- End .product-body -->
@@ -482,7 +497,7 @@
 							</div><!-- End .widget widget-clean -->
 
 
-				<!-- -----------------------------CATEGORY ITERATION ------------------------------------- -->					
+							<!-- -----------------------------CATEGORY ITERATION ------------------------------------- -->
 
 
 							<div class="widget widget-collapsible">
@@ -564,7 +579,7 @@
 
 
 
-				<!-- -----------------------------BRAND ITERATION ------------------------------------- -->					
+							<!-- -----------------------------BRAND ITERATION ------------------------------------- -->
 
 							<div class="widget widget-collapsible">
 								<h3 class="widget-title">
@@ -752,32 +767,49 @@
 		});
 
 
-			function renderSearchResults(results) {
-				const searchResultsContainer = $('#searchResults');
-				searchResultsContainer.empty();
+		function renderSearchResults(results) {
+    const searchResultsContainer = $('#searchResults');
+    searchResultsContainer.empty();
 
-				if (results.length > 0) {
-					// Iterate over the search results and create HTML elements
-					for (let i = 0; i < results.length; i++) {
-						const product = results[i];
-						console.log(product.name);
-						const productHTML = `<div><p>${product.name}</p></div>`;
-						console.log(productHTML);
-						searchResultsContainer.append(productHTML);
-					}
-				} else {
-					searchResultsContainer.append('<div>No results found.</div>');
-				}
-			}
+    if (results.length > 0) {
+        // Iterate over the search results and create HTML elements
+        for (let i = 0; i < results.length; i++) {
+            const product = results[i];
+            console.log(product.name);
+            const productHTML = `<div style="max-width: 500px; background-color:white; display: flex; align-items: center;">
+					<figure class="product-image-container" style="display: inline-block;">
+						<img src="upload/${product.image[0]}" alt="product" style="width: 40px; height: 40px;">
+					</figure>
+					<a href="/product?productid=${product._id}" style="font-size: 15px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">
+						${product.name}
+					</a>
+				</div>`;
+            console.log(productHTML);
+            searchResultsContainer.append(productHTML);
+        }
+    } else {
+        searchResultsContainer.append('<div>No results found.</div>');
+    }
+}
+
+// Click event listener for the document
+$(document).on('click', function(event) {
+    const target = $(event.target);
+    const searchInput = $('#searchInput');
+
+    // Check if the click occurred outside the search bar
+    if (!target.closest('.search').length && !target.is(searchInput)) {
+        const searchResultsContainer = $('#searchResults');
+        searchResultsContainer.empty();
+    }
+});
 
 
-	
 
 
 
 
 
-		
 
 		function filterProducts() {
 			const checkboxes = document.querySelectorAll('.filter-checkbox:checked');
@@ -799,20 +831,20 @@
 
 		var sortSelect = document.getElementById("sortby");
 
-sortSelect.addEventListener("change", function() {
-  var selectedOption = sortSelect.value;
+		sortSelect.addEventListener("change", function () {
+			var selectedOption = sortSelect.value;
 
-  if (selectedOption === "all") {
-	// Redirect to the desired URL for "All" option
-	window.location.href = "/category";
-  } else if (selectedOption === "price-low-high") {
-	// Redirect to the desired URL for "Price Low-High" option
-	window.location.href = "/category?sortAB=1";
-  } else if (selectedOption === "price-high-low") {
-	// Redirect to the desired URL for "Price High-Low" option
-	window.location.href = "/category?sortAB=-1";
-  }
-});
+			if (selectedOption === "all") {
+				// Redirect to the desired URL for "All" option
+				window.location.href = "/category";
+			} else if (selectedOption === "price-low-high") {
+				// Redirect to the desired URL for "Price Low-High" option
+				window.location.href = "/category?sortAB=1";
+			} else if (selectedOption === "price-high-low") {
+				// Redirect to the desired URL for "Price High-Low" option
+				window.location.href = "/category?sortAB=-1";
+			}
+		});
 
 
 

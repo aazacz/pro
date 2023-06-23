@@ -394,12 +394,13 @@ exports.category = async (req, res) => {
 
         let user = await customerdetail.findOne({ _id: req.session.userid }).populate('address').populate('cartId')
 
-        const miniCart = await cartdb.findOne({_id: req.session.userid}).populate('product.product_id').exec()
+        const miniCart = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
        
         const category = await categorydb.find({})
         
         if(miniCart||session){
-
+            console.log("if condition worked");
+            console.log(miniCart);
             res.render("category", { title: title[0] || "",
                                     currentPage:pageNum,
                                     totalDocument:doCount, 
@@ -414,7 +415,7 @@ exports.category = async (req, res) => {
 
         }
         else{
-            
+            console.log("else condition worked");
 
             const product = await productdb
               .find({})
