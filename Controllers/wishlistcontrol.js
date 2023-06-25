@@ -26,16 +26,16 @@ exports.addtowishlist = async (req, res) => {
                 // Wishlist Helper function
                 const WishlistHelper = await wishlistHelper.addToWishlist(userId, productId)
 
-                if (WishlistHelper) { 
-                    res.send({message:'Added To Wishlist'})
+                if (WishlistHelper) {
+                    res.send({ message: 'Added To Wishlist' })
                     return
                 }
-                else { 
-                    res.send({message:'Already Exists'})
+                else {
+                    res.send({ message: 'Already Exists' })
                     return
                 }
-                
-                
+
+
             }
             else {
                 res.send({ message: "Already Exists" })
@@ -47,7 +47,8 @@ exports.addtowishlist = async (req, res) => {
 
             const newWishListyDb = new wishlistdb({
                 userid: userid,
-                product: []                      })
+                product: []
+            })
 
             await newWishListyDb.save()
 
@@ -58,10 +59,10 @@ exports.addtowishlist = async (req, res) => {
             const WishlistHelper = await wishlistHelper.addToWishlist(userid, productId)
 
             if (wishlistHelper) {
-                res.send({message:'Added To Wishlist'})
+                res.send({ message: 'Added To Wishlist' })
             }
             else {
-                res.send({message:'Already Exists'})
+                res.send({ message: 'Already Exists' })
             }
 
 
@@ -78,23 +79,23 @@ exports.addtowishlist = async (req, res) => {
 
 
 
-exports.deleteFromWishlist=async (req,res)=>{
-   try {
+exports.deleteFromWishlist = async (req, res) => {
+    try {
         const productId = new ObjectId(req.body.id);
-    const wishlistid = req.body.cartid
-    console.log("the product Id is: " + productId + "\n wishlist ID is :" + wishlistid)
+        const wishlistid = req.body.cartid
+        console.log("the product Id is: " + productId + "\n wishlist ID is :" + wishlistid)
 
- // calling wishlist Helper
- const productdel = await wishlistHelper.productDelete(wishlistid, productId)
+        // calling wishlist Helper
+        const productdel = await wishlistHelper.productDelete(wishlistid, productId)
 
- if (productdel) {
-    res.send({ message: "deleted" })
-  }
-  else {
-    res.send({ message: "not deleted" })
-  }
+        if (productdel) {
+            res.send({ message: "deleted" })
+        }
+        else {
+            res.send({ message: "not deleted" })
+        }
 
-} catch (error) {
-    console.log(error.message);
-}
+    } catch (error) {
+        console.log(error.message);
+    }
 }

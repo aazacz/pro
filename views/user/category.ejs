@@ -362,7 +362,7 @@
 
 										<div style="box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;"
 											id="items" class="col-6 col-md-3 col-lg-3 product-item mb-4 "
-											data-price="<%=product.price%>" data-category="<%-product.category%>">
+											data-price="<%=product.price%>" data-brand="<%=product.brand%>" data-category="<%-product.category%>">
 											<div class="product product-7 text-center">
 												<figure class="product-media">
 
@@ -472,8 +472,7 @@
 												</a></li>
 
 											<%}%>
-
-												<%}%>
+											<%}%>
 
 													<!--  <li class="page-item">
 							             <a class="page-link page-link-next" href="#" aria-label="Next">
@@ -581,33 +580,31 @@
 
 							<!-- -----------------------------BRAND ITERATION ------------------------------------- -->
 
-							<div class="widget widget-collapsible">
-								<h3 class="widget-title">
-									<a data-toggle="collapse" href="#widget-4" role="button" aria-expanded="true"
-										aria-controls="widget-4">
-										Brand
-									</a>
-								</h3><!-- End .widget-title -->
+	<div class="widget widget-collapsible">
+    <h3 class="widget-title">
+        <a data-toggle="collapse" href="#widget-4" role="button" aria-expanded="true" aria-controls="widget-4">
+            Brand
+        </a>
+    </h3><!-- End .widget-title -->
 
-								<div class="collapse show" id="widget-4">
-									<div class="widget-body">
-										<div class="filter-items">
-											<% for (let i=0; i < products.length; i++) { %>
-												<div class="filter-item">
-													<div class="custom-control custom-checkbox">
-														<input type="checkbox" class="custom-control-input"
-															id="brand-1">
-														<label class="custom-control-label" for="brand-1">
-															<%=products[i]%>
-														</label>
-													</div><!-- End .custom-checkbox -->
-												</div><!-- End .filter-item -->
-												<%}%>
+    <div class="collapse show" id="widget-4">
+        <div class="widget-body">
+            <div class="filter-items">
+                <% for (let i = 0; i < products.length; i++) { %>
+                    <div class="filter-item">
+                        <div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input brandCheck" id="<%=products[i]%>"  onchange="brands()">
+                                <label class="custom-control-label" for="<%= products[i] %>">  <%= products[i] %>    </label>
+                            </div><!-- End .custom-checkbox -->
+                        </div>
+                    </div><!-- End .filter-item -->
+                <% } %>
+            </div><!-- End .filter-items -->
+        </div><!-- End .widget-body -->
+    </div><!-- End .collapse -->
+</div><!-- End .widget -->
 
-										</div><!-- End .filter-items -->
-									</div><!-- End .widget-body -->
-								</div><!-- End .collapse -->
-							</div><!-- End .widget -->
 
 						</div><!-- End .sidebar sidebar-shop -->
 					</aside><!-- End .col-lg-3 -->
@@ -637,7 +634,9 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 	<script>
+
 		$(document).ready(function () {
+			
 
 			$('.addtocart').on('click', function () {
 				var idFrombutton = $(this).data('id');
@@ -806,11 +805,6 @@ $(document).on('click', function(event) {
 
 
 
-
-
-
-
-
 		function filterProducts() {
 			const checkboxes = document.querySelectorAll('.filter-checkbox:checked');
 			const selectedCategories = Array.from(checkboxes).map(checkbox => checkbox.id);
@@ -820,6 +814,27 @@ $(document).on('click', function(event) {
 				const category = item.dataset.category;
 
 				if (selectedCategories.length === 0 || selectedCategories.includes(category)) {
+					item.style.display = 'block';
+				} else {
+					item.style.display = 'none';
+				}
+			});
+		}
+
+
+
+		function brands() {
+			const checkboxes= document.querySelectorAll('.brandCheck:checked');
+			const selectedCategories = Array.from(checkboxes).map(checkbox => checkbox.id);
+			const productItems = document.querySelectorAll('.product-item');
+
+			// console.log(checkboxes);
+			console.log(selectedCategories);
+			productItems.forEach(item => {
+				const brand = item.dataset.brand;
+				console.log(brand);
+
+				if (selectedCategories.length === 0 || selectedCategories.includes(brand)) {
 					item.style.display = 'block';
 				} else {
 					item.style.display = 'none';

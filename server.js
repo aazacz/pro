@@ -8,7 +8,7 @@ const userRoute             = require("./routes/userRoute")
 const adminRoute            = require("./routes/adminRoute")
 const MongoStore            = require('connect-mongo');
 const cookieparser          = require('cookie-parser')
-
+const cacheControlMiddleware= require('./Middleware/cacheControl');
 
 require('dotenv').config()                 //env  
 const PORT                  = process.env.PORT
@@ -17,8 +17,8 @@ connectToMongoDB()                         //mongodb server
 
 
 
-app.set('view engine', 'ejs')              //view engine
-userRoute.set('views', './views/user')     //views folder
+app .set('view engine', 'ejs')              //view engine
+userRoute.set('views', './views/user')      //views folder
 adminRoute.set('views','./views/admin')
 
 app.use(cookieparser());
@@ -39,10 +39,7 @@ app.use(                                         //session
 );
 
 
-app.use((req, res, next) => {
-    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    next();
-});
+app.use(cacheControlMiddleware);        //cache Control Middleware
 
 app.use('/', userRoute)
 app.use('/admin', adminRoute)

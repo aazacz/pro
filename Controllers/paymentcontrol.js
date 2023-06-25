@@ -78,6 +78,7 @@ exports.applyCoupon=async (req,res)=>{
     console.log(req.session.userid);
     const couponFind = await cartdb.findOne({couponid:new ObjectId(couponId)})
     
+
     if(couponFind){
         console.log("coupon IF Condition");
         const couponDiscount=0
@@ -85,8 +86,7 @@ exports.applyCoupon=async (req,res)=>{
         console.log(couponDiscount);
         console.log(couponId);
         res.status(200).send({couponId,couponDiscount,message:"coupon already applied"})
-    }
-    else{
+    }else{
         try {
             console.log("coupon else Condition");
             const checkFlag=await cartdb.findOne({userId:session,couponFlag:0})

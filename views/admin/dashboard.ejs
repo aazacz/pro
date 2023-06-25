@@ -23,7 +23,7 @@
                 </article>
             </div>
         </div>
-        <div class="col-lg-3">
+        <!-- <div class="col-lg-3">
             <div class="card card-body mb-4">
                 <article class="icontext">
                     <span class="icon icon-sm rounded-circle bg-success-light"><i class="text-success material-icons md-local_shipping"></i></span>
@@ -33,7 +33,7 @@
                     </div>
                 </article>
             </div>
-        </div>
+        </div> -->
         <div class="col-lg-3">
             <div class="card card-body mb-4">
                 <article class="icontext">
@@ -87,13 +87,6 @@
                     <!-- <canvas id="myChart2" height="217"> -->
 
 
-
-
-
-
-
-
-
                     </canvas>
                 </article>
             </div>
@@ -144,15 +137,13 @@
 
                                     <% if (delivered) { %>
 
-                                        
                                         <%let k =1%>
                                         <% for (let i = delivered.length - 1; i >= 0; i--) { %>
 
                                     <tr>
-                                        
-                                        <td><a href="#" class="fw-bold">#SK2540</a> </td>
-                                        <td><%=delivered[i].userId?.name %></td>
-                                        <td><%=new Date(delivered[i].purchased).toLocaleDateString() %> </td>
+                                        <td> <a href="#" class="fw-bold">#<%= delivered[i]._id.toString().slice(-7) %> </a> </td>
+                                        <td> <%=delivered[i].userId?.name %> </td>
+                                        <td> <%=new Date(delivered[i].purchased).toLocaleDateString()%> </td>
 
                                         <td><%=delivered[i].grandtotal%> </td>
                                         

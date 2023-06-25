@@ -66,13 +66,23 @@ exports.dashboard =async (req, res) => {
         { $match: { status: 'Delivered' } },  { $group: { _id: { $dateToString: { format: '%Y-%m-%d',date: { $toDate: '$purchased' } }},totalRevenue: { $sum: '$grandtotal' } }},{$sort: { _id: -1 }},{$project: { _id: 0, date: '$_id',totalRevenue: 1}}]);
 
         const numberOfProducts= await productdb.find({}).count()
-        console.log(numberOfProducts);
+        // console.log(numberOfProducts);
         const totalSum  = salesData.reduce((sum, entry) => sum + entry.totalRevenue, 0);
         const count     = salesData.reduce((sum, entry) => sum + 1, 0);
 
-        console.log(count)
-        console.log(totalSum)
-    
+     /*    const year=await orderdb.aggregate([
+            {
+              $match: {
+                $expr: {
+                  $eq: [{ $year: "$purchased" }, [2023,2024,2025]]
+                }
+              }
+            }
+          ]) */
+console.log("ppppppppppppppppppppppppppppp");
+         /*  console.log(year); */
+        // console.log(count)
+        // console.log(totalSum)
         // console.log(order)
         // console.log(salesData)
 if(order){
@@ -612,8 +622,8 @@ exports.addcoupon_post = async(req,res)=>{
         description:description,
         discount:discount,
         expiry: new Date(Date.now()+ parseInt(expiry)*24 * 60 * 60 * 1000)
+                                })
 
-    })
         
     const couponSave=newCoupon.save().then(()=> console.log("coupon Saved Successfully"))
                                      .catch((error)=>  console.log(error.message))
@@ -720,6 +730,7 @@ exports.salesreport =async (req, res) => {
         console.log(orders[1].userId.name);
         console.log("00000000000000000000000000000000000000000000000000");
         console.log(orders);
+       
       
      
    if(orders){
