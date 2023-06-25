@@ -6,7 +6,7 @@ const wishlistController = require('../Controllers/wishlistcontrol');
 const paymentController = require('../Controllers/paymentcontrol');
 const flash = require('connect-flash');
 const validate=require('../Middleware/userAuthentication')
-   
+user_route.set('views', './views/user')   
 user_route.use(flash());
 
 user_route.use(express.static("public"))

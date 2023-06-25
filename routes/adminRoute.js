@@ -5,8 +5,8 @@ const flash=require('connect-flash')
 const validate=require('../Middleware/adminAuthentication')
 const {upload}=require('../Helper/imageUploader.js')
 admin_route.use(flash());
-
-admin_route.use(express.static("public"))
+admin_route.set('views','./views/admin')          //views folder
+admin_route.use(express.static("public"))         //Public folder
 admin_route.use(express.static("../public/upload"))
 
 admin_route.use(express.json());
