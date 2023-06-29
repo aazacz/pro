@@ -5,11 +5,12 @@ const session               = require('express-session');
 const cors                  = require('cors')
 const userRoute             = require("./routes/userRoute")
 const adminRoute            = require("./routes/adminRoute")
-const MongoStore            = require('connect-mongo');
+const mongoose              = require('mongoose');
 const cookieparser          = require('cookie-parser')
 const cacheControlMiddleware= require('./Middleware/cacheControl');
 require('dotenv').config()                 //env  
 const PORT                  = process.env.PORT
+
 
 app.use(cors())                            //cors
 connectToMongoDB()                         //mongodb server
@@ -18,15 +19,13 @@ app.use(cookieparser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
-app.use(                                   //session
-    session({
-        secret: 'your-secret-key',
-        resave: false,
-        saveUninitialized: false,
-        store: MongoStore.create({ mongoUrl: 'mongodb://0.0.0.0:27017/kenvillSession' }),
-        cookie: { maxAge: 24 * 60 * 60 * 1000 }, 
-    })                                     // session duration (1 day)
-);
+app.use(session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 24 * 60 * 60 * 1000 }, // Session duration (1 day)
+  }));
+
 app.use(cacheControlMiddleware);           //cache Control Middleware
 
 app.use('/', userRoute)
