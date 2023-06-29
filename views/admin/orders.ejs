@@ -89,17 +89,17 @@
                                                        
                                                           
 
-                                                          <a class="dropdown-item approve-btn" data-grandtotal="<%=order[i].grandtotal%>" data-userid="<%=order[i].userId._id%>" data-orderid="<%= order[i]._id %>">Approve</a>
-                                                          <a class="dropdown-item cancel-btn"  data-grandtotal="<%=order[i].grandtotal%>" data-userid="<%=order[i].userId._id%>" data-orderid="<%= order[i]._id %>">Cancel</a>
-                                                          <a class="dropdown-item deliver-btn" data-grandtotal="<%=order[i].grandtotal%>" data-userid="<%=order[i].userId._id%>" data-orderid="<%= order[i]._id %>">Delivered</a>
+                                                          <a class="dropdown-item approve-btn" data-paymentmethod="<%=order[i].paymentmethod%>" data-grandtotal="<%=order[i].grandtotal%>" data-userid="<%=order[i].userId._id%>" data-orderid="<%= order[i]._id %>">Approve</a>
+                                                          <a class="dropdown-item cancel-btn"  data-paymentmethod="<%=order[i].paymentmethod%>" data-grandtotal="<%=order[i].grandtotal%>" data-userid="<%=order[i].userId._id%>" data-orderid="<%= order[i]._id %>">Cancel</a>
+                                                          <a class="dropdown-item deliver-btn" data-paymentmethod="<%=order[i].paymentmethod%>" data-grandtotal="<%=order[i].grandtotal%>" data-userid="<%=order[i].userId._id%>" data-orderid="<%= order[i]._id %>">Delivered</a>
                                                       
                                                        
                                                       </div>
 
                                                       <% } else if(order[i].status === 'req for Return'){%>
                                                         <div class="dropdown-menu">
-                                                            <a class="dropdown-item approveReturn-btn"  data-grandtotal="<%=order[i].grandtotal%>" data-userid="<%=order[i].userId._id%>" data-orderid="<%= order[i]._id %>">Approve Return</a>
-                                                            <a class="dropdown-item approve-btn"        data-grandtotal="<%=order[i].grandtotal%>" data-userid="<%=order[i].userId._id%>" data-orderid="<%= order[i]._id %>">Cancel Return</a>
+                                                            <a class="dropdown-item approveReturn-btn" data-paymentmethod="<%=order[i].paymentmethod%>"  data-grandtotal="<%=order[i].grandtotal%>" data-userid="<%=order[i].userId._id%>" data-orderid="<%= order[i]._id %>">Approve Return</a>
+                                                            <a class="dropdown-item approve-btn"       data-paymentmethod="<%=order[i].paymentmethod%>" data-grandtotal="<%=order[i].grandtotal%>" data-userid="<%=order[i].userId._id%>" data-orderid="<%= order[i]._id %>">Cancel Return</a>
                                                         </div>
                                                         <% }else{%>
                                                         <div class="dropdown-menu" hidden></div>
@@ -179,45 +179,51 @@
                 </nav>
             </div>
         </section> <!-- content-main end// -->
-        <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 
         <script>
             $(document).ready(function() {
+              
+
               $('.approve-btn').click(function() {
                 const orderId = $(this).data('orderid');
                 const userId = $(this).data('userId')
                 const grandtotal = $(this).data('grandtotal')
+                const paymentmethod = $(this).data('paymentmethod');
                 console.log(orderId);
-                updateOrderStatus(orderId, 'Approved',userId,grandtotal);
+                updateOrderStatus(orderId, 'Approved',userId,grandtotal,paymentmethod);
               });
           
               $('.cancel-btn').click(function() {
                 const orderId = $(this).data('orderid');
                 const userId = $(this).data('userId')
                 const grandtotal = $(this).data('grandtotal')
+                const paymentmethod = $(this).data('paymentmethod');
                 console.log(orderId);
-                updateOrderStatus(orderId, 'Cancelled',userId,grandtotal);
+                updateOrderStatus(orderId, 'Cancelled',userId,grandtotal,paymentmethod);
               });
 
               $('.deliver-btn').click(function() {
                 const orderId = $(this).data('orderid');
                 const userId = $(this).data('userId')
                 const grandtotal = $(this).data('grandtotal')
-                console.log(orderId);
-                updateOrderStatus(orderId, 'Delivered',userId,grandtotal);
+                const paymentmethod = $(this).data('paymentmethod');
+                console.log(orderId,paymentmethod);
+                updateOrderStatus(orderId,'Delivered',userId,grandtotal,paymentmethod);
               });
           
               $('.approveReturn-btn').click(function() {
                 const orderId = $(this).data('orderid');
                 const userId = $(this).data('userid');
                 const grandtotal = $(this).data('grandtotal');
+                const paymentmethod = $(this).data('paymentmethod');
                 debugger
-                console.log(orderId,userId,grandtotal);
+                console.log(orderId,userId,grandtotal,paymentmethod);
+                updateOrderStatus(orderId,'Returned',userId,grandtotal,paymentmethod);
                 debugger
-                updateOrderStatus(orderId,'Returned',userId,grandtotal);
               });
           
-    function updateOrderStatus(orderId, status,userId,grandtotal) {
+    function updateOrderStatus(orderId, status,userId,grandtotal,paymentmethod) {
                 $.ajax({
                   url: '/admin/updateOrderStatus',
                   method: 'POST',
@@ -225,8 +231,10 @@
                     orderId: orderId,
                     status: status,
                     userId : userId,
-                    grandtotal:grandtotal
-                  },
+                    grandtotal:grandtotal,
+                    paymentmethod:paymentmethod
+                        },
+
                   success: function(response) {
                    
                     console.log(response)
@@ -256,7 +264,6 @@
           </script>
 
 
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 
 
 

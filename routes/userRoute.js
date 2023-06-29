@@ -1,11 +1,12 @@
-const express = require('express');
-const user_route = express();
-const userController = require('../Controllers/usercontrol');
-const cartController = require('../Controllers/cartcontrol');
-const wishlistController = require('../Controllers/wishlistcontrol');
+const express           = require('express');
+const user_route        = express();
+const userController    = require('../Controllers/usercontrol');
+const cartController    = require('../Controllers/cartcontrol');
+const wishlistController= require('../Controllers/wishlistcontrol');
 const paymentController = require('../Controllers/paymentcontrol');
-const flash = require('connect-flash');
-const validate=require('../Middleware/userAuthentication')
+const flash             = require('connect-flash');
+const validate          =require('../Middleware/userAuthentication')
+
 user_route.set('views', './views/user')   
 user_route.use(flash());
 

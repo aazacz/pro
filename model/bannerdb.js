@@ -13,7 +13,7 @@ const bannerSchema = mongoose.Schema({
         type: String,
         required: false
     },
-    image4: {
+    image4: {   
         type: String,
         required: false
     },

@@ -15,7 +15,7 @@ const letterCaseChanger = require('../Helper/letterCaseChangerHelper')
 const coupondb          = require('../model/coupondb')
 const walletdb          = require('../model/walletdb')
 const bannerdb          = require('../model/bannerdb')
-
+const referraldb        = require('../model/referraldb')
 
 
 //password Hashing
@@ -118,7 +118,10 @@ exports.dashboard = async (req, res) => {
         const miniCart  = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
         const wishlist  = await wishlistdb.findOne({ userId: req.session.userid }).populate('product').exec()
         const orderlist = await orderdb.find({ userId: req.session.userid })
-
+        const referralcode= await referraldb.findOne({UserId:req.session.userid})
+        console.log(referralcode.code);
+        orderlist.reverse()
+        console.log(orderlist);
         if (req.session.userid) {
             const session = req.session.userid
             res.render('dashboard', {
@@ -127,7 +130,8 @@ exports.dashboard = async (req, res) => {
                 user: user,
                 miniCart: miniCart,
                 wishlist: wishlist,
-                orderlist: orderlist
+                orderlist: orderlist,
+                referralcode:referralcode
             })
         }
         else {
@@ -452,6 +456,16 @@ exports.signup_post = async (req, res) => {
                     const insertedAddress = await newaddress.save();
                     await customerdetail.findByIdAndUpdate(insertdata._id, { address: [new ObjectId(insertedAddress._id)] })
 
+                    //create a new user referral number on signup
+                    const email=insertdata.email
+                    const referralCode = email.split('@')[0].substring(0, 4).toUpperCase() + Math.floor(Math.random() * 900) 
+                    console.log("referral Code is: "+referralCode);
+
+                    const newReferralcode  = new referraldb({
+                        code: referralCode,
+                        UserId :new ObjectId(insertdata._id),
+                    })
+                    await newReferralcode.save()
 
                     //creating a new cart DATABASE for the user   &&   inserting the cartDB_id in to the customer DB
                     const addtocart = new cartdb({ userId: insertdata._id, product: [], couponid: [], couponFlag: 0 });
@@ -616,7 +630,9 @@ exports.signup_verify = async (req, res) => {
                         customerid: new ObjectId(insertdata._id)
                     })
 
+                    r
                     const insertedAddress = await newaddress.save();
+                    
                     await customerdetail.findByIdAndUpdate(insertdata._id, { address: [new ObjectId(insertedAddress._id)] })
 
                     //creating a new cart DATABASE for the user   &&   inserting the cartDB_id in to the customer DB

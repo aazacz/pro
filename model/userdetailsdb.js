@@ -48,8 +48,12 @@ const userSchema = mongoose.Schema({
      },
      walletId:{
         type: mongoose.Schema.Types.ObjectId,
-         ref: 'wallet',
+        ref: 'wallet',
         required:false,
+     },
+     isreferred:{
+        type:Number,
+        deafult:0
      },
      address: [{
         type: mongoose.Schema.Types.ObjectId,

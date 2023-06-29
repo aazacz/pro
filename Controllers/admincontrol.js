@@ -57,34 +57,20 @@ exports.login_verify = async (req, res) => {
 
 
 //Dashboard
-exports.dashboard =async (req, res) => {
-    const order= await orderdb.find({}).populate('userId')
-    const delivered= await orderdb.find({status:"Delivered"}).populate('userId')
+exports.dashboard       = async (req, res) => {
+    const order         = await orderdb.find({}).populate('userId')
+    const delivered     = await orderdb.find({status:"Delivered"}).populate('userId')
+    console.log("SIDFERBFIRWHIUERHFWEHFIELUWHFEUILWFHEUILWFHEWUIFHUI"); 
     console.log(delivered); 
 
-    const salesData = await orderdb.aggregate([
-        { $match: { status: 'Delivered' } },  { $group: { _id: { $dateToString: { format: '%Y-%m-%d',date: { $toDate: '$purchased' } }},totalRevenue: { $sum: '$grandtotal' } }},{$sort: { _id: -1 }},{$project: { _id: 0, date: '$_id',totalRevenue: 1}}]);
 
-        const numberOfProducts= await productdb.find({}).count()
-        // console.log(numberOfProducts);
-        const totalSum  = salesData.reduce((sum, entry) => sum + entry.totalRevenue, 0);
-        const count     = salesData.reduce((sum, entry) => sum + 1, 0);
 
-     /*    const year=await orderdb.aggregate([
-            {
-              $match: {
-                $expr: {
-                  $eq: [{ $year: "$purchased" }, [2023,2024,2025]]
-                }
-              }
-            }
-          ]) */
-console.log("ppppppppppppppppppppppppppppp");
-         /*  console.log(year); */
-        // console.log(count)
-        // console.log(totalSum)
-        // console.log(order)
-        // console.log(salesData)
+    const salesData     = await orderdb.aggregate([ { $match: { status: 'Delivered' } },  { $group: { _id: { $dateToString: { format: '%Y-%m-%d',date: { $toDate: '$purchased' } }},totalRevenue: { $sum: '$grandtotal' } }},{$sort: { _id: -1 }},{$project: { _id: 0, date: '$_id',totalRevenue: 1}}]);
+
+    const numberOfProducts= await productdb.find({}).count()
+    const totalSum      = salesData.reduce((sum, entry) => sum + entry.totalRevenue, 0);
+    const count         = salesData.reduce((sum, entry) => sum + 1, 0);
+
 if(order){
     res.render('dashboard',{order:order,totalSum:totalSum,count:count,numberOfProducts:numberOfProducts,delivered:delivered})
 }else{
@@ -93,8 +79,9 @@ if(order){
     const count=null
     res.render('dashboard',{order:order})
 }
-    
 }
+
+
 
 //Admin Logout
 exports.logout = async (req, res) => {  
@@ -466,6 +453,7 @@ exports.order = async (req, res) => {
     try {
 
      const order= await orderdb.find({}).populate('userId')
+     
   
 if(order){
     res.render('orders',{order:order})
@@ -482,33 +470,38 @@ if(order){
 
 //ORDER STATUS UPDATING 
 exports.updateOrderStatus=async(req,res)=>{
-
+    console.log("1");
 
     let orderId = req.body.orderId;
     let status  = req.body.status;
     let userId=req.body.userId
     let amount=req.body.grandtotal
+    let paymentmethod=req.body.paymentmethod
+    console.log(paymentmethod);
     
-    console.log("orderId is: "+orderId)
-    console.log("status is: "+status)
-    console.log("userId is: "+userId)
-    console.log("amount is: "+amount)
-
     try {
 
 if(status=="Returned"){
-    const userId = req.body.userId
-    const updateOrderStatus=await orderdb.findByIdAndUpdate(orderId,{$set:{status:status}}).exec()
+    console.log("2");
 
-    const walletAdd = await walletdb.findOneAndUpdate({userId:new ObjectId(userId)},{$set:{amount:amount}})
-
+    if (paymentmethod=="Cash on delivery") {  //if cash on delivery dont send the amount to the wallet
+    console.log("3");
+    const userId                 = req.body.userId
+    const updateOrderStatus      =await orderdb.findByIdAndUpdate(orderId,{$set:{status:status}}).exec()
     res.status(200).json({ success: true, message: "Status Updated Successfully" });
-}
-else{
-    const updateOrderStatus=await orderdb.findByIdAndUpdate(orderId,{$set:{status:status}}).exec()
-    console.log(updateOrderStatus)
-    
+    }else{
+        console.log("4");
+        const userId             = req.body.userId
+        const updateOrderStatus  = await orderdb.findByIdAndUpdate(orderId,{$set:{status:status}}).exec()
+        const walletAdd          = await walletdb.findOneAndUpdate({userId:new ObjectId(userId)},{ $inc: { amount:amount}})
+        res.status(200).json({ success: true, message: "Status Updated Successfully" });
+    }
+    }else{
+    console.log("5");
+    const updateOrderStatus      = await orderdb.findByIdAndUpdate(orderId,{$set:{status:status}}).exec()
+      
     if(updateOrderStatus){
+        console.log("6");
         res.status(200).json({ success: true, message: "Status Updated Successfully" });
     }
     else{
@@ -516,8 +509,6 @@ else{
 
     }
 }
-
-
     
 } catch (error) {
     console.log(error.message);

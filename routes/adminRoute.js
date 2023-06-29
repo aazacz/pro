@@ -11,7 +11,9 @@ admin_route.use(express.static("../public/upload"))
 
 admin_route.use(express.json());
 admin_route.use(express.urlencoded({ extended: true }))
-//LOG_IN & LOG_OUT
+
+//LOG_IN & LOG_OUT\
+
 admin_route.get('/',validate.isLogout,adminControl.login)
 admin_route.get('/dashboard',validate.isLogin,adminControl.dashboard)
 admin_route.post('/logout',validate.isLogin,adminControl.logout)
@@ -27,8 +29,6 @@ admin_route.route('/updateproduct').get(validate.isLogin,adminControl.updateprod
                                    .post(upload.array('image'),adminControl.updateproduct_todb)
 admin_route.post('/deleteproduct',adminControl.deleteproduct)
 admin_route.post('/offerUpdate',adminControl.offerUpdate)
-
-
 
 //CHART
 admin_route.get('/chartData', adminControl.fetchChartData)

@@ -83,7 +83,22 @@
 								    	<p>Hello <span class="font-weight-bold text-dark"><%=user.name%></span>  
 								    	<br>
 								    	From your account dashboard you can view your <a href="#tab-orders" class="tab-trigger-link link-underline">recent orders</a>, manage your <a href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>, and <a href="#tab-account" class="tab-trigger-link">edit your password and account details</a>.</p>
-								    </div><!-- .End .tab-pane -->
+								 
+									<div style="display: flex; position: absolute; top: 400px;">
+										<p>Refer Your Friend using this code&emsp;&emsp;   </p> <p style="font-style: oblique;
+										 font-weight: 500;
+										  font-family:system-ui, 
+										  -apple-system,
+										   BlinkMacSystemFont, 
+										   'Segoe UI', Roboto,
+										    Oxygen, Ubuntu,
+											 Cantarell, 
+											 'Open Sans',
+											  'Helvetica Neue', 
+											  sans-serif;"><%=referralcode?.code%></p>
+
+									</div>
+									</div><!-- .End .tab-pane -->
 
 			<!-- -------------------------------------------------ORDER TAB-------------------------------------------------------->
 
@@ -96,8 +111,8 @@
 													<tr>
 														<th>Product</th>
 														<th>Name</th>
-														<th>Price</th>
-														<th>Quantity</th>
+														
+														<!-- <th>Quantity</th>  -->
 														<th>Total</th>
 														<th>Mode Of Payment</th>
 														<th>Date</th>
@@ -107,31 +122,38 @@
 												 <tbody>              
 													
 													<% for (const order of orderlist) { %>
-														<% for (const product of order.orderProducts) { %>
+													
 													<tr>
-														<td> <img src="upload/<%= product.image[0] %>" class="img-sm img-thumbnail" alt="Item"></td>
-														<td> <h6 class="mb-0"> <%= product.name %></h6> </td>
-														<td> <span > ₹ <%= product.price %></span></td>
-														<td><span class=><%= product.quantity %></span></td>
-														<td><span class=>₹<%= order.grandtotal * product.quantity %></span></td>
+
+														<td> <img src="upload/<%=order.orderProducts[0].image[0] %>" class="img-sm img-thumbnail" alt="Item"></td>
+																										
+													
+														<!-- <td> <h6 class="mb-0"> </h6> </td> -->
+														
+
+														<td><span class=><% for (const product of order.orderProducts) { %> <%product.name%>   <%}%></span></td>
+														
+														<td><span class=>₹<%= order.grandtotal%></span></td>
 														<td><span><%= order.paymentmethod %></span></td>
 														<td><span><%= new Date(order.purchased).toLocaleDateString()%></span></td>
 														<!-- <td><button class="cancelbtn"  type="submit">Cancel/Return</button></td> -->
-														<% if (order.status=="req for Return") { %>
-														<td hidden class="remove-col"><button hidden data-orderid="<%= order._id %>" data-id="<%= order._id %>" class="cancelbtn btn-remove">Cancel/Return</button></td>
+														
+														<% if (order.status=="req for Return") {%>
+														<td  class="remove-col"><span>Return Processing</span></td>
 													
-														<% }else if(order.status=="Cancelled"){%>
-															<td style="text-align: center;" class="remove-col"><button style="background-color: blue; color: beige;" >Returned</button></td>
+														<%}else if(order.status=="Cancelled"){%>
+															<td style="text-align: center;" class="remove-col"><button style="background-color: rgb(255, 30, 0); color: beige; " >Cancelled</button></td>
 
-														<%}else{ %>
+														<%}else if(order.status=="Returned"){%>
+															<td style="text-align: center;" class="remove-col"><button style="background-color: rgb(11, 137, 255); color: beige;" >Returned</button></td>
+
+														<%}	else{%>
 															<td style="text-align: center; font-size: 9px;"  class="remove-col"><button style="background-color: rgb(255, 0, 0); color: beige;"  data-orderid="<%= order._id %>" data-id="<%= order._id %>" class="cancelbtn ">Cancel/Return</button></td>
 
 														<%}%>
 
-
-
 														</tr>
-														<% } %>
+													
 														<% } %>
 												</tbody>
 												

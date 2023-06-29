@@ -3,8 +3,7 @@ axios.get('/admin/chartData')
     const data = response.data.data;
     const date = response.data.date; 
 
-    console.log(data[0]);
-    console.log(data);
+   
     /*Sale statistics Chart*/
     if ($('#myChart').length) {
         var ctx = document.getElementById('myChart').getContext('2d');
