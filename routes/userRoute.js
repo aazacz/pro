@@ -37,7 +37,7 @@ user_route.put('/cartd',cartController.decreaseQuantity)
 user_route.put('/cartdel',cartController.cartdel)
 
 //      <-----------CATEGORY PAGE----------->
-user_route.get('/category',validate.isLogin,userController.category)
+user_route.get('/category',userController.category)
 
 user_route.put('/addtocart',cartController.addtocart) //add to cart
 user_route.put('/addtowishlist',wishlistController.addtowishlist) //add to wishlist

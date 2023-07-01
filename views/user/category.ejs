@@ -65,13 +65,7 @@
 					<div class="header-left">
 						<div class="header-dropdown">
 							<a href="#">Eng</a>
-							<div class="header-menu">
-								<ul>
-									<li><a href="#">English</a></li>
-									<li><a href="#">French</a></li>
-									<li><a href="#">Spanish</a></li>
-								</ul>
-							</div><!-- End .header-menu -->
+							
 						</div><!-- End .header-dropdown -->
 					</div><!-- End .header-left -->
 
@@ -80,8 +74,7 @@
 							<li>
 								<a href="#">Links</a>
 								<ul>
-									<li><a href="wishlist.html"><i class="icon-heart-o"></i>My Wishlist
-											<span>(3)</span></a></li>
+									
 									<li><a href="/about">About Us</a></li>
 									<li><a href="/contact">Contact Us</a></li>
 
@@ -91,7 +84,7 @@
 										<button class="btn  dropdown-toggle" data-bs-toggle="dropdown" href="#"
 											aria-expanded="false" type="button" id="dropdownAccount dropdownMenuButton"
 											data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <img
-												class="img-xs rounded-circle" src="asset/imgs/people/avatar2.jpg"
+												class="img-xs rounded-circle" src="asset/imgs/useraccount.png"
 												alt="User"></button>
 										<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 											<a class="dropdown-item" href="/dashboard">Dashboard</a>
@@ -407,7 +400,7 @@
 													<h3 class="product-title"><a style="display: -webkit-box;
 													-webkit-box-orient: vertical;
 													-webkit-line-clamp: 2;
-													overflow: hidden;" href="product.html">
+													overflow: hidden;" href="/product?productid=<%=product._id%>">
 															<%=product.description%>
 														</a>
 													</h3><!-- End .product-title -->
@@ -616,8 +609,8 @@
 
 	</main><!-- End .main -->
 	<!-- jQuery CDN -->
-	<script src="https://code.jquery.com/jquery-3.7.0.min.js"
-		integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	
 
 
 	<!--Sweet Alert-->
@@ -637,53 +630,97 @@
 
 		$(document).ready(function () {
 			
-
 			$('.addtocart').on('click', function () {
-				var idFrombutton = $(this).data('id');
-				console.log(idFrombutton)
+    var idFrombutton = $(this).data('id');
+    console.log(idFrombutton);
 
-				const session = '<%=session %>';
-				console.log(session);
-				console.log("session Printing");
-				console.log(session);
+    const session = '<%=session %>';
+    console.log(session);
+    console.log("session Printing " + session);
+    console.log();
 
-				const data = {
-					_id: idFrombutton,
-					userid: session
-				};
+    const data = {
+        _id: idFrombutton,
+        userid: session
+    };
 
-				$.ajax({
-					url: `/addtocart`,
-					method: "put",
-					data: data,
-					success: function (response) {
+    if (session != 1) {
+        $.ajax({
+            url: `/addtocart`,
+            method: "put",
+            data: data,
+            success: function (response) {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "showDuration": "200",
+                    "hideDuration": "500",
+                    "timeOut": "1000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
 
-						toastr.options = {
-							"closeButton": false,
-							"debug": false,
-							"newestOnTop": false,
-							"progressBar": false,
-							"positionClass": "toast-top-right",
-							"preventDuplicates": false,
-							"showDuration": "200",
-							"hideDuration": "500",
-							"timeOut": "1000",
-							"extendedTimeOut": "1000",
-							"showEasing": "swing",
-							"hideEasing": "linear",
-							"showMethod": "fadeIn",
-							"hideMethod": "fadeOut"
-						};
+                if (response.message == "product already added") {
+                    toastr["info"]("Product Already Added to your cart", "Don't worry");
+                } else {
+                    toastr["success"]("Product Added to the cart", "Added");
+                }
+            }
+        });
 
-						if (response.message == "product already added") {
-							toastr["info"]("Product Already Added to your cart", "Don't worry");
-						} else {
-							toastr["success"]("Product Added to the cart", "Added");
-						}
-					}
-				});
+    } else {
+        $.ajax({
+            url: `/login`,
+            method: "get",
+            data: data,
+            success: function (response) {
+                console.log(response);
+                if (response.title == "logged in") {
+                    $.ajax({
+                        url: `/addtocart`,
+                        method: "put",
+                        data: data,
+                        success: function (response) {
+                            toastr.options = {
+                                "closeButton": false,
+                                "debug": false,
+                                "newestOnTop": false,
+                                "progressBar": false,
+                                "positionClass": "toast-top-right",
+                                "preventDuplicates": false,
+                                "showDuration": "200",
+                                "hideDuration": "500",
+                                "timeOut": "1000",
+                                "extendedTimeOut": "1000",
+                                "showEasing": "swing",
+                                "hideEasing": "linear",
+                                "showMethod": "fadeIn",
+                                "hideMethod": "fadeOut"
+                            };
 
-			})
+                            if (response.message == "product already added") {
+                                toastr["info"]("Product Already Added to your cart", "Don't worry");
+                            } else {
+                                toastr["success"]("Product Added to the cart", "Added");
+                            }
+                        }
+                    });
+                } else {
+                    // Redirect to login URL
+                    window.location.href = "/login";
+                }
+            }
+        });
+    }
+});
+ 	
 
 
 			$('.addtowishlist').on('click', function () {

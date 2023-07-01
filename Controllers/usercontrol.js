@@ -33,10 +33,36 @@ const passwordHash = async (password) => {
 //index page
 exports.index = async (req, res) => {
     try {
-        let banners     = await bannerdb.findOne({})
-        const session   = null
-        const miniCart  = null
-        res.render('index', { session: session, miniCart: miniCart, banners: banners })
+
+        if(req.session.userid){
+            let banners     = await bannerdb.findOne({})
+            const session   = req.session.userid
+            const miniCart  = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
+            let product = await productdb.aggregate([
+                                { $sample: { size: 8 } }     ]).exec();          
+            console.log(product); 
+              
+              
+            res.render('index', { session: session,
+                                 miniCart: miniCart,
+                                  banners: banners,
+                                  product: product })
+        }
+        else{
+            let banners     = await bannerdb.findOne({})
+            const session = 1
+            const miniCart  = null
+            let product = await productdb.aggregate([
+                                { $sample: { size: 8 } }     ]).exec();          
+            console.log(product); 
+              
+              
+            res.render('index', { session: session,
+                                 miniCart: miniCart,
+                                  banners: banners,
+                                  product: product })
+        }
+       
     } catch (error) {
         console.log(error.message);
     }
@@ -65,7 +91,15 @@ exports.login_post = async (req, res) => {
 
                 req.session.userid = userlog._id
                 console.log("session"+req.session.userid);
-                res.redirect('/')
+                req.flash("title", "logged in");
+               
+            if(req.query.page==1){
+              res.redirect('back')
+            }else{
+                res.redirect('/category')
+            }
+
+
             }
             else {
                 req.flash("title", "password incorrect");
@@ -99,14 +133,51 @@ exports.logout = async (req, res) => {
 
 
 //about page
-exports.about = (req, res) => {
-    res.render('about')
+exports.about = async (req, res) => {
+try {
+    
+    if(req.session.userid){
+        let session = req.session.userid
+        const miniCart      = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
+        res.render('about',{session:session,
+                            miniCart:miniCart})
+    }
+    else{
+        let session = null
+        const miniCart      = null
+        res.render('about',{session,
+                            miniCart:miniCart})
+}
+} catch (error) {
+ console.log(error.message);   
+}
+    
 }
 
 //contact page
-exports.contact = (req, res) => {
-    res.render('contact')
+exports.contact = async (req, res) => {
+    try {
+    
+        if(req.session.userid){
+            let session = req.session.userid
+            const miniCart      = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
+            res.render('contact',{session:session,
+                                miniCart:miniCart})
+        }
+        else{
+            let session = null
+            const miniCart      = null
+            res.render('contact',{session,
+                                miniCart:miniCart})
+    }
+    } catch (error) {
+     console.log(error.message);   
+    }
+
 }
+
+
+
 //dashboard page
 exports.dashboard = async (req, res) => {
 
@@ -286,14 +357,15 @@ exports.product = async (req, res) => {
         if (session) {
             const product   = await productdb.findOne({ _id: req.query.productid })
             const category  = await categorydb.find({})
-
             const miniCart  = await cartdb.findOne({ userId: req.session.userid }).populate('product.product_id').exec()
             res.render('product', { product: product, session: session, miniCart: miniCart, category: category })
         }
         else {
+            const session = 1
             const product   = await productdb.findOne({ _id: req.query.productid })
             const category  = await categorydb.find({})
             const miniCart  = null
+            console.log(product);
             res.render('product', { product: product, session: session, miniCart: miniCart, category: category })
         }
 
@@ -353,7 +425,8 @@ exports.category = async (req, res) => {
         }
         else {
             console.log("else condition worked");
-
+            const products      = await productdb.distinct("brand");
+            console.log(products);
             const product = await productdb
                 .find({})
                 .countDocuments()
@@ -365,7 +438,7 @@ exports.category = async (req, res) => {
                         .limit(perpage);
                 });
 
-            const session = null
+            const session = 1
             const miniCart = undefined
             res.render('category', {
                 session:     session,
@@ -374,7 +447,9 @@ exports.category = async (req, res) => {
                 currentPage: pageNum,
                 totalDocument: doCount,
                 pages:       Math.ceil(doCount / perpage),
-                category:    category
+                category:    category,
+                banners:     banners,
+                products:    products
             })
         }
     } catch (error) { console.log(error.message)}
