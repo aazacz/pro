@@ -31,4 +31,4 @@ app.use(cacheControlMiddleware);           //cache Control Middleware
 app.use('/', userRoute)
 app.use('/admin', adminRoute)
 
-app.listen(PORT, () => console.log('Server is running on http://localhost:6001'))
+app.listen(PORT, () => console.log('Server is running on http://localhost:6002'))

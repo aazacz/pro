@@ -137,6 +137,7 @@
 				let address = $('.form-check-input:checked').val();
 				let grandPriceText = $('#grandPrice').text();
 				let grandPrice = parseFloat(grandPriceText.replace(/[^\d.]/g, ''));
+				
 				let paymentmethod = $('.accordion-summary .card-header .card-title a[aria-expanded="true"]').text().trim();
 				let walletAmount = parseInt($('#wallet-amount').text().trim());
 
@@ -209,7 +210,7 @@
                                     url: `/checkout`,
                                     method: 'POST',
                                     data: data,
-                                    success: function (response) {
+                                    success: function (response) {                                                 
                                         if (response.message == "ordered successfully") {
                                             const orderid = response.orderdb_Id
                                             console.log(orderid)
